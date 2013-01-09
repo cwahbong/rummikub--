@@ -1,0 +1,3 @@
+PROJECT(game)
+
+ADD_SUBDIRECTORY(src)
