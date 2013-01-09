@@ -1,0 +1,5 @@
+SET(core_SOURCES
+  Tile.cpp
+)
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${core_SOURCES})
