@@ -21,3 +21,4 @@ Tile::getValue() const
 
 } // namespace core
 } // namespace rummikub
+

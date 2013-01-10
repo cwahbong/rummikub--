@@ -18,3 +18,4 @@ MainWindow::~MainWindow()
 
 } // namespace game
 } // namespace rummikub
+

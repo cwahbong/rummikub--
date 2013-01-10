@@ -26,3 +26,4 @@ private:
 } // namespace game
 } // namespace rummikub
 #endif // RUMMIKUB_GAME__MAINWINDOW_H
+

@@ -28,3 +28,4 @@ public:
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__TILE_H
+
