@@ -9,10 +9,6 @@ namespace rummikub {
 namespace core {
 
 class Tile {
-private:
-  Tile(const Tile&) = delete;
-  const Tile& operator=(const Tile&) = delete;
-
 public:
   enum Color {RED, BLUE, YELLOW, BLACK};
   typedef unsigned char Value;
@@ -29,10 +25,12 @@ private:
 
 public:
   Tile(Color, Value) noexcept;
-  static Tile joker(Color) noexcept;
-
+  Tile(const Tile&) noexcept = default;
+  Tile& operator=(const Tile&) noexcept = default;
   Tile(Tile&&) noexcept = default;
   Tile& operator=(Tile&&) noexcept = default;
+
+  static Tile joker(Color) noexcept;
 
   Color getColor() const noexcept;
   Value getValue() const noexcept;
@@ -44,10 +42,10 @@ public:
 
 static_assert(!std::is_default_constructible<Tile>::value,
               "Tile should NOT be default constructible.");
-static_assert(!std::is_copy_constructible<Tile>::value,
-              "Tile should NOT be copy constructible.");
-static_assert(!std::is_copy_assignable<Tile>::value,
-              "Tile should NOT be copy assignable.");
+static_assert(std::is_copy_constructible<Tile>::value,
+              "Tile should BE nothrow copy constructible.");
+static_assert(std::is_copy_assignable<Tile>::value,
+              "Tile should BE nothrow copy assignable.");
 static_assert(std::is_nothrow_move_constructible<Tile>::value,
               "Tile should BE nothrow move constructible.");
 static_assert(std::is_nothrow_move_assignable<Tile>::value,
