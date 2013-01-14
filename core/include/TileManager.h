@@ -7,7 +7,12 @@ namespace rummikub {
 namespace core {
 
 class TileManager {
+private:
+  TileManager(const TileManager&) = delete;
+  TileManager& operator=(const TileManager&) = delete;
+
 public:
+  TileManager() = default;
   static TileManager* newShuffledTiles();
 
   virtual ~TileManager() {}
