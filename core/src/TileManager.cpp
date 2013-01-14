@@ -1,5 +1,4 @@
 #include "TileManager.h"
-
 #include "TileManagerImpl.h"
 
 namespace rummikub {

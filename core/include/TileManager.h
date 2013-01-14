@@ -17,7 +17,7 @@ protected:
 public:
   static TileManager* newShuffledTiles();
 
-  virtual ~TileManager() {}
+  virtual ~TileManager() = default;
   virtual Tile getAndRemoveTile() = 0;
 };
 
