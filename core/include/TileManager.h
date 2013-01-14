@@ -11,8 +11,10 @@ private:
   TileManager(const TileManager&) = delete;
   TileManager& operator=(const TileManager&) = delete;
 
-public:
+protected:
   TileManager() = default;
+
+public:
   static TileManager* newShuffledTiles();
 
   virtual ~TileManager() {}
