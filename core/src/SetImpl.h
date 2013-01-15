@@ -3,7 +3,12 @@
  */
 #include "Set.h"
 
+#include "Tile.h"
+
 #include <memory>
+
+using std::unique_ptr;
+using std::vector;
 
 namespace rummikub {
 namespace core {
@@ -14,7 +19,7 @@ private:
   SetImpl& operator=(const SetImpl&) = delete;
 
 private:
-  std::unique_ptr<std::vector<Tile>> m_up_tiles;
+  unique_ptr<vector<Tile>> m_up_tiles;
   mutable bool m_validated;
   mutable Type m_type;
 
@@ -23,11 +28,14 @@ private:
 public:
   SetImpl();
 
+  SetImpl(SetImpl&&) = default;
+  SetImpl& operator=(SetImpl&&) = default;
+
   void insert(const Tile&);
   bool remove(const Tile&);
 
   Type getType() const;
-  std::vector<Tile> getValidatedTiles() const;
+  vector<Tile> getValidatedTiles() const;
 };
 
 } // namespace core

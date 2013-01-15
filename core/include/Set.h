@@ -3,6 +3,7 @@
 
 #include "CoreFwd.h"
 
+#include <memory>
 #include <vector>
 
 namespace rummikub {
@@ -19,10 +20,13 @@ public:
 protected:
   Set() = default;
 
-public:
-  virtual ~Set() = default;
+  Set(Set&&) = default;
+  Set& operator=(Set&&) = default;
 
-  static Set* newSet();
+public:
+  virtual ~Set() noexcept = default;
+
+  static std::shared_ptr<Set> newSet();
 
   virtual void insert(const Tile&) = 0;
   virtual bool remove(const Tile&) = 0;
