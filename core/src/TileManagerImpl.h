@@ -3,10 +3,9 @@
  */
 #include "TileManager.h"
 
-#include <memory>
 #include <vector>
 
-using std::unique_ptr;
+using std::shared_ptr;
 using std::vector;
 
 namespace rummikub {
@@ -18,7 +17,7 @@ private:
   TileManagerImpl& operator=(const TileManagerImpl&) = delete;
 
 private:
-  unique_ptr<vector<Tile>> m_up_tiles;
+  vector<Tile> m_tiles;
 
 public:
   TileManagerImpl();
@@ -26,7 +25,7 @@ public:
 
   Tile getAndRemoveTile();
 
-  static TileManagerImpl* newShuffledTiles();
+  static shared_ptr<TileManagerImpl> newShuffledTiles();
 };
 
 } // namespace core

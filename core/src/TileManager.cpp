@@ -4,7 +4,7 @@
 namespace rummikub {
 namespace core {
 
-TileManager*
+shared_ptr<TileManager>
 TileManager::newShuffledTiles()
 {
   return TileManagerImpl::newShuffledTiles();

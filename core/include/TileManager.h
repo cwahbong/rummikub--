@@ -3,6 +3,8 @@
 
 #include "CoreFwd.h"
 
+#include <memory>
+
 namespace rummikub {
 namespace core {
 
@@ -15,7 +17,7 @@ protected:
   TileManager() = default;
 
 public:
-  static TileManager* newShuffledTiles();
+  static std::shared_ptr<TileManager> newShuffledTiles();
 
   virtual ~TileManager() = default;
   virtual Tile getAndRemoveTile() = 0;
