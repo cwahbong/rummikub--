@@ -7,7 +7,6 @@
 
 #include <memory>
 
-using std::unique_ptr;
 using std::vector;
 
 namespace rummikub {
