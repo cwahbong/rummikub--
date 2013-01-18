@@ -19,7 +19,7 @@ private:
   SetImpl& operator=(const SetImpl&) = delete;
 
 private:
-  unique_ptr<vector<Tile>> m_up_tiles;
+  mutable vector<Tile> m_tiles;
   mutable bool m_validated;
   mutable Type m_type;
 

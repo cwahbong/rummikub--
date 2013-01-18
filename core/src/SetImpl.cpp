@@ -74,7 +74,7 @@ validate(RandomAccessContainer& tiles)
 } // namespace
 
 SetImpl::SetImpl()
-  : m_up_tiles(new vector<Tile>{}),
+  : m_tiles(),
     m_validated(false),
     m_type(NONE)
 {/* Empty. */}
@@ -82,7 +82,7 @@ SetImpl::SetImpl()
 void
 SetImpl::validate() const
 {
-  m_type = ::rummikub::core::validate(*m_up_tiles);
+  m_type = ::rummikub::core::validate(m_tiles);
   m_validated = true;
 }
 
@@ -90,15 +90,15 @@ void
 SetImpl::insert(const Tile& tile)
 {
   m_validated = false;
-  m_up_tiles->push_back(tile);
+  m_tiles.push_back(tile);
 }
 
 bool
 SetImpl::remove(const Tile& tile)
 {
-  auto it = find(m_up_tiles->begin(), m_up_tiles->end(), tile);
-  if (it != m_up_tiles->end()) {
-    m_up_tiles->erase(it);
+  auto it = find(m_tiles.begin(), m_tiles.end(), tile);
+  if (it != m_tiles.end()) {
+    m_tiles.erase(it);
     m_validated = false;
     return true;
   }
@@ -120,7 +120,7 @@ SetImpl::getValidatedTiles() const
   if (!m_validated) {
     validate();
   }
-  return vector<Tile>{m_up_tiles->begin(), m_up_tiles->end()};
+  return vector<Tile>{m_tiles.begin(), m_tiles.end()};
 }
 
 } // namespace core

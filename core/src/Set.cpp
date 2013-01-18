@@ -11,7 +11,7 @@ namespace core {
 shared_ptr<Set>
 Set::newSet()
 {
-  return dynamic_pointer_cast<Set>(make_shared<SetImpl>(SetImpl{}));
+  return shared_ptr<Set>{new SetImpl{}};
 }
 
 } // namespace core
