@@ -12,7 +12,7 @@ FUNCTION(ADD_GTEST_TEST target_name)
     pthread
   )
 
-  ADD_TEST(${target_name}Test ${target_name})
+  ADD_TEST(${target_name}Test ${target_name}Test)
 
 ENDFUNCTION()
 
