@@ -32,6 +32,7 @@ public:
 
   void insert(const Tile&);
   bool remove(const Tile&);
+  bool empty() const;
 
   Type getType() const;
   vector<Tile> getValidatedTiles() const;

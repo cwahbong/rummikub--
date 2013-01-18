@@ -30,6 +30,7 @@ public:
 
   virtual void insert(const Tile&) = 0;
   virtual bool remove(const Tile&) = 0;
+  virtual bool empty() const = 0;
 
   virtual Type getType() const = 0;
   virtual std::vector<Tile> getValidatedTiles() const = 0;

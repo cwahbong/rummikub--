@@ -105,6 +105,12 @@ SetImpl::remove(const Tile& tile)
   return false;
 }
 
+bool
+SetImpl::empty() const
+{
+  return m_tiles.empty();
+}
+
 Set::Type
 SetImpl::getType() const
 {
