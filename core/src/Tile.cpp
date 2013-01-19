@@ -3,6 +3,12 @@
 namespace rummikub {
 namespace core {
 
+// We still need definition here, see DR 712 for more detail.
+// http://gcc.gnu.org/wiki/VerboseDiagnostics#missing_static_const_definition
+const Tile::Value Tile::NO_VALUE;
+const Tile::Value Tile::MIN_VALUE;
+const Tile::Value Tile::MAX_VALUE;
+
 Tile::Tile(Color color, Value value, bool joker) noexcept
   : m_color(color),
     m_value(value),

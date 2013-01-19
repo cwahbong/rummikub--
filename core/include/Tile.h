@@ -11,10 +11,10 @@ namespace core {
 class Tile {
 public:
   enum Color {RED, BLUE, YELLOW, BLACK};
-  typedef unsigned char Value;
-  static const Value NO_VALUE = -1;
-  static const Value MIN_VALUE = 1;
-  static const Value MAX_VALUE = 13;
+  typedef signed Value;
+  static const Value NO_VALUE{-1};
+  static const Value MIN_VALUE{1};
+  static const Value MAX_VALUE{13};
 
 private:
   Color m_color;
