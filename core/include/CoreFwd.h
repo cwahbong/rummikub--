@@ -4,6 +4,9 @@
 namespace rummikub {
 namespace core {
 
+class Agent;
+class AgentDelegate;
+class Player;
 class Set;
 class Table;
 class Tile;
