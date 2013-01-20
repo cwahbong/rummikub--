@@ -1,10 +1,14 @@
-#include <QApplication>
-
+#include "MainConsole.h"
 #include "MainWindow.h"
 
 #include <cstring>
 #include <memory>
 
+#include <QApplication>
+#include <QObject>
+#include <QTimer>
+
+using rummikub::game::MainConsole;
 using rummikub::game::MainWindow;
 
 using std::make_shared;
@@ -25,11 +29,14 @@ int main(int argc, char* argv[])
   }
   QApplication app(argc, argv, useGui);
   shared_ptr<MainWindow> sp_window;
+  shared_ptr<MainConsole> sp_console;
   if (useGui) {
     sp_window = make_shared<MainWindow>();
     sp_window->show();
   } else {
-    // TODO console ver
+    sp_console = make_shared<MainConsole>();
+    QObject::connect(sp_console.get(), SIGNAL(end()), &app, SLOT(quit()));
+    QTimer::singleShot(0, sp_console.get(), SLOT(start()));
   }
   return app.exec();
 }
