@@ -2,6 +2,8 @@
 
 #include "Set.h"
 
+using std::const_pointer_cast;
+
 namespace rummikub {
 namespace core {
 
@@ -22,10 +24,20 @@ TableImpl::addSet(const shared_ptr<Set>& set)
   m_sets.insert(set);
 }
 
-vector<weak_ptr<Set>>
-TableImpl::getSets()
+weak_ptr<Set>
+TableImpl::setRemoveConst(const shared_ptr<const Set>& set)
 {
-  return vector<weak_ptr<Set>>{m_sets.begin(), m_sets.end()};
+  auto it = m_sets.find(const_pointer_cast<Set>(set));
+  if (it != m_sets.end()) {
+    return weak_ptr<Set>{*it};
+  }
+  return weak_ptr<Set>{};
+}
+
+vector<weak_ptr<const Set>>
+TableImpl::getSets() const
+{
+  return vector<weak_ptr<const Set>>{m_sets.begin(), m_sets.end()};
 }
 
 void

@@ -27,7 +27,8 @@ public:
   TableImpl() noexcept = default;
 
   void addSet(const shared_ptr<Set>&);
-  vector<weak_ptr<Set>> getSets();
+  weak_ptr<Set> setRemoveConst(const shared_ptr<const Set>&);
+  vector<weak_ptr<const Set>> getSets() const;
   void clean();
 };
 

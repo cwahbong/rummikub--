@@ -24,7 +24,8 @@ public:
   virtual ~Table() = default;
 
   virtual void addSet(const std::shared_ptr<Set>&) = 0;
-  virtual std::vector<std::weak_ptr<Set>> getSets() = 0;
+  virtual std::weak_ptr<Set> setRemoveConst(const std::shared_ptr<const Set>&) = 0;
+  virtual std::vector<std::weak_ptr<const Set>> getSets() const = 0;
   virtual void clean() = 0;
 };
 
