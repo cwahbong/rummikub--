@@ -3,6 +3,8 @@
 
 #include "CoreFwd.h"
 
+#include <memory>
+
 namespace rummikub {
 namespace core {
 
@@ -10,6 +12,7 @@ class Player {
 public:
   virtual void addTile() = 0;
   virtual void removeTile() = 0;
+  virtual std::weak_ptr<Agent> getAgent() = 0;
 };
 
 } // namespace core
