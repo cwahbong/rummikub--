@@ -13,6 +13,19 @@ using std::weak_ptr;
 namespace rummikub {
 namespace core {
 
+Rummikub::Rummikub(std::vector<std::shared_ptr<Player>>::size_type playerNum)
+  : m_sp_tileManager{TileManager::newShuffledTiles()},
+    m_sp_table{Table::newTable()},
+    m_sp_players{playerNum},
+    m_turnStartCallbacks{},
+    m_turnEndCallbacks{},
+    m_gameEndCallbacks{}
+{
+  for (auto& sp_player : m_sp_players) {
+    sp_player = Player::newPlayer();
+  }
+}
+
 void
 Rummikub::turnStart(const shared_ptr<const Player>& sp_player)
 {
@@ -64,6 +77,8 @@ Rummikub::addGameEndCallback(GameCallback c)
 void
 Rummikub::startGame()
 {
+  // TODO get initial tiles.
+
   while (true) {
     for (auto sp_player : m_sp_players) {
       turnStart(sp_player);
@@ -75,9 +90,11 @@ Rummikub::startGame()
           sp_delegate->restore();
           sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
         }
+      } else {
+        sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
       }
       turnEnd(sp_player);
-      if (sp_player->empty()) {
+      if (sp_player->empty() || m_sp_tileManager->empty()) {
         gameEnd();
         return;
       }

@@ -24,6 +24,7 @@ public:
   TileManagerImpl(TileManagerImpl&&);
 
   Tile getAndRemoveTile();
+  bool empty();
 
   static shared_ptr<TileManagerImpl> newShuffledTiles();
 };

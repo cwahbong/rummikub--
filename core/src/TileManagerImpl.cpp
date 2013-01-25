@@ -37,6 +37,12 @@ TileManagerImpl::getAndRemoveTile()
   return result;
 }
 
+bool
+TileManagerImpl::empty()
+{
+  return m_tiles.empty();
+}
+
 shared_ptr<TileManagerImpl>
 TileManagerImpl::newShuffledTiles()
 {

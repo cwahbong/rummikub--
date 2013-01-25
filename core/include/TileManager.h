@@ -21,6 +21,7 @@ public:
 
   virtual ~TileManager() = default;
   virtual Tile getAndRemoveTile() = 0;
+  virtual bool empty() = 0;
 };
 
 } // namespace core

@@ -31,12 +31,7 @@ private:
   void gameEnd();
 
 public:
-  template <typename InputIterator>
-  Rummikub(InputIterator first, InputIterator last)
-    : m_sp_tileManager{TileManager::newShuffledTiles()},
-      m_sp_table{Table::newTable()},
-      m_sp_players{first, last}
-  {/* Empty. */}
+  Rummikub(std::vector<std::shared_ptr<Player>>::size_type playerNum);
 
   std::vector<std::weak_ptr<Player>> getPlayers();
   void addTurnStartCallback(TurnCallback);
