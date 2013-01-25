@@ -10,8 +10,9 @@ namespace core {
 
 class Player {
 public:
-  virtual void addTile() = 0;
-  virtual void removeTile() = 0;
+  virtual void addTile(Tile tile) = 0;
+  virtual bool removeTile(Tile tile) = 0;
+  virtual bool empty() = 0;
   virtual std::weak_ptr<Agent> getAgent() = 0;
 };
 
