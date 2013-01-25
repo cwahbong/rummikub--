@@ -14,7 +14,8 @@ bool
 AgentDelegate::putTile(Tile tile, const shared_ptr<const Set>& set)
 {
   auto sp_set = m_sp_table->setRemoveConst(set).lock();
-  if (!sp_set) return false;
+  if (!sp_set /* or player.notCaontainTile(tile)*/) return false;
+  // TODO player.removeTile(tile);
   sp_set->insert(tile);
   return true;
 }
@@ -33,6 +34,15 @@ AgentDelegate::moveTile(
   return true;
 }
 
+bool
+AgentDelegate::validate()
+{
+}
+
+void
+AgentDelegate::restore()
+{
+}
 
 } // namespace core
 } // namespace rummikub

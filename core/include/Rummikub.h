@@ -4,6 +4,7 @@
 #include "CoreFwd.h"
 
 #include "Table.h"
+#include "TileManager.h"
 
 #include <functional>
 #include <memory>
@@ -14,32 +15,33 @@ namespace core {
 
 class Rummikub {
 public:
-  typedef std::function<void()> Callback;
+  typedef std::function<void(const std::shared_ptr<const Player>)> TurnCallback;
+  typedef std::function<void()> GameCallback;
 
 private:
+  std::shared_ptr<TileManager> m_sp_tileManager;
   std::shared_ptr<Table> m_sp_table;
-  std::shared_ptr<AgentDelegate> m_sp_delegate;
   std::vector<std::shared_ptr<Player>> m_sp_players;
-  std::vector<Callback> m_turnStartCallbacks;
-  std::vector<Callback> m_turnEndCallbacks;
-  std::vector<Callback> m_gameEndCallbacks;
+  std::vector<TurnCallback> m_turnStartCallbacks;
+  std::vector<TurnCallback> m_turnEndCallbacks;
+  std::vector<GameCallback> m_gameEndCallbacks;
 
-  void turnStart();
-  void turnEnd();
+  void turnStart(const std::shared_ptr<const Player>&);
+  void turnEnd(const std::shared_ptr<const Player>&);
   void gameEnd();
 
 public:
   template <typename InputIterator>
   Rummikub(InputIterator first, InputIterator last)
-    : m_sp_table{Table::newTable()},
-      m_sp_delegate{std::make_shared<AgentDelegate>(m_sp_table)},
+    : m_sp_tileManager{TileManager::newShuffledTiles()},
+      m_sp_table{Table::newTable()},
       m_sp_players{first, last}
   {/* Empty. */}
 
   std::vector<std::weak_ptr<Player>> getPlayers();
-  void addTurnStartCallback(Callback);
-  void addTurnEndCallback(Callback);
-  void addGameEndCallback(Callback);
+  void addTurnStartCallback(TurnCallback);
+  void addTurnEndCallback(TurnCallback);
+  void addGameEndCallback(GameCallback);
   void startGame();
 };
 

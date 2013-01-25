@@ -3,7 +3,10 @@
 #include "Agent.h"
 #include "Player.h"
 #include "Table.h"
+#include "Tile.h"
 
+using std::make_shared;
+using std::shared_ptr;
 using std::vector;
 using std::weak_ptr;
 
@@ -11,18 +14,18 @@ namespace rummikub {
 namespace core {
 
 void
-Rummikub::turnStart()
+Rummikub::turnStart(const shared_ptr<const Player>& sp_player)
 {
   for (const auto& callback : m_turnStartCallbacks) {
-    callback();
+    callback(sp_player);
   }
 }
 
 void
-Rummikub::turnEnd()
+Rummikub::turnEnd(const shared_ptr<const Player>& sp_player)
 {
   for (const auto& callback : m_turnEndCallbacks) {
-    callback();
+    callback(sp_player);
   }
 }
 
@@ -41,19 +44,19 @@ Rummikub::getPlayers()
 }
 
 void
-Rummikub::addTurnStartCallback(Callback c)
+Rummikub::addTurnStartCallback(TurnCallback c)
 {
   m_turnStartCallbacks.push_back(c);
 }
 
 void
-Rummikub::addTurnEndCallback(Callback c)
+Rummikub::addTurnEndCallback(TurnCallback c)
 {
   m_turnEndCallbacks.push_back(c);
 }
 
 void
-Rummikub::addGameEndCallback(Callback c)
+Rummikub::addGameEndCallback(GameCallback c)
 {
   m_gameEndCallbacks.push_back(c);
 }
@@ -63,12 +66,20 @@ Rummikub::startGame()
 {
   while (true) {
     for (auto sp_player : m_sp_players) {
-      turnStart();
-      sp_player->getAgent().lock()->response(m_sp_delegate, sp_player, m_sp_table);
-      turnEnd();
+      turnStart(sp_player);
+      const auto& sp_agent = sp_player->getAgent().lock();
+      if (sp_agent) {
+        auto sp_delegate = make_shared<AgentDelegate>(m_sp_table, sp_player);
+        sp_agent->response(sp_delegate, sp_player, m_sp_table);
+        if (!sp_delegate->validate()) {
+          sp_delegate->restore();
+          sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+        }
+      }
+      turnEnd(sp_player);
       if (sp_player->empty()) {
         gameEnd();
-        break;
+        return;
       }
     }
   }
