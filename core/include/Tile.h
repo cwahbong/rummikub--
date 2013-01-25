@@ -36,6 +36,7 @@ public:
   Value getValue() const noexcept;
   bool isJoker() const noexcept;
 
+  friend bool operator< (const Tile&, const Tile&) noexcept;
   friend bool operator==(const Tile&, const Tile&) noexcept;
   friend bool operator!=(const Tile&, const Tile&) noexcept;
 };

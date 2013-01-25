@@ -44,6 +44,15 @@ Tile::isJoker() const noexcept
 }
 
 bool
+operator< (const Tile& lhs, const Tile& rhs) noexcept
+{
+  if (lhs.m_color != rhs.m_color) {
+    return lhs.m_color < rhs.m_color;
+  }
+  return lhs.m_value < rhs.m_value;
+}
+
+bool
 operator==(const Tile& lhs, const Tile& rhs) noexcept
 {
   return (lhs.m_color == rhs.m_color) && (lhs.m_value == rhs.m_value);

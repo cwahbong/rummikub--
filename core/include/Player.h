@@ -4,6 +4,7 @@
 #include "CoreFwd.h"
 
 #include <memory>
+#include <map>
 
 namespace rummikub {
 namespace core {
@@ -24,6 +25,7 @@ public:
 
   virtual void addTile(Tile tile) = 0;
   virtual bool removeTile(Tile tile) = 0;
+  virtual const std::map<Tile, int>& getTiles() const = 0;
   virtual bool empty() = 0;
 
   virtual std::weak_ptr<Agent> getAgent() = 0;
