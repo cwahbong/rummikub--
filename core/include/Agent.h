@@ -12,24 +12,27 @@ namespace core {
  */
 class Agent {
 public:
-  virtual void response(const std::shared_ptr<const AgentDelegate>&,
-                        const std::shared_ptr<const Player>&,
-                        const std::shared_ptr<const Table>&) = 0;
+  virtual void response(const std::shared_ptr<AgentDelegate>&) = 0;
 };
 
 class AgentDelegate {
 private:
-  std::shared_ptr<Table> m_sp_table;
-  std::shared_ptr<Player> m_sp_player;
+  const std::shared_ptr<const Table> m_sp_oldTable;
+  const std::shared_ptr<const Player> m_sp_oldPlayer;
+  const std::shared_ptr<Table> m_sp_table;
+  const std::shared_ptr<Player> m_sp_player;
 
 public:
   AgentDelegate(const std::shared_ptr<Table>& sp_table,
-                const std::shared_ptr<Player>& sp_player)
-    : m_sp_table{sp_table}, m_sp_player{sp_player} {/* Empty. */}
-  bool putTile(Tile, const std::shared_ptr<const Set>&);
-  bool moveTile(Tile, const std::shared_ptr<const Set>&, const std::shared_ptr<const Set>&);
-  bool validate();
-  void restore();
+                const std::shared_ptr<Player>& sp_player);
+  bool putTile(Tile, const std::shared_ptr<const Set>& = std::shared_ptr<const Set>{}) const;
+  bool moveTile(Tile,
+                const std::shared_ptr<const Set>&,
+                const std::shared_ptr<const Set>&) const;
+  const Table& getTable() const;
+  const Player& getPlayer() const;
+  bool validate() const;
+  void restore() const;
 };
 
 } // namespace core
