@@ -10,18 +10,18 @@ namespace rummikub {
 namespace core {
 
 class Player {
-private:
-  Player(const Player&) = delete;
-  Player& operator=(const Player&) = delete;
-
 protected:
   Player() = default;
 
+  Player(const Player&) = default;
+  Player& operator=(const Player&) = default;
   Player(Player&&) = default;
   Player& operator=(Player&&) = default;
 
 public:
   static std::shared_ptr<Player> newPlayer();
+
+  virtual std::shared_ptr<Player> clone() = 0;
 
   virtual void addTile(Tile tile) = 0;
   virtual bool removeTile(Tile tile) = 0;

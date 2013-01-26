@@ -17,7 +17,15 @@ private:
   shared_ptr<Agent> m_sp_agent{};
   map<Tile, int> m_tilemap{};
 
+protected:
+  PlayerImpl(const PlayerImpl&) = default;
+  PlayerImpl& operator=(const PlayerImpl&) = default;
+
 public:
+  PlayerImpl() = default;
+
+  shared_ptr<Player> clone();
+
   void addTile(Tile tile);
   bool removeTile(Tile tile);
   bool empty();

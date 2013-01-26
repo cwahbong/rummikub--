@@ -9,6 +9,12 @@ using std::make_pair;
 namespace rummikub {
 namespace core {
 
+shared_ptr<Player>
+PlayerImpl::clone()
+{
+  return shared_ptr<Player>{new PlayerImpl{*this}};
+}
+
 void
 PlayerImpl::addTile(Tile tile)
 {
