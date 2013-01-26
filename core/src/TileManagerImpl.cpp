@@ -15,11 +15,13 @@ TileManagerImpl::TileManagerImpl()
   : m_tiles()
 {
   m_tiles.reserve(106);
-  for (auto v = Tile::MIN_VALUE; v<Tile::MAX_VALUE; ++v) {
-    m_tiles.push_back(Tile{Tile::RED, v});
-    m_tiles.push_back(Tile{Tile::BLUE, v});
-    m_tiles.push_back(Tile{Tile::YELLOW, v});
-    m_tiles.push_back(Tile{Tile::BLACK, v});
+  for (auto v = Tile::MIN_VALUE; v <= Tile::MAX_VALUE; ++v) {
+    for(unsigned i=0; i<2; ++i) {
+      m_tiles.push_back(Tile{Tile::RED, v});
+      m_tiles.push_back(Tile{Tile::BLUE, v});
+      m_tiles.push_back(Tile{Tile::YELLOW, v});
+      m_tiles.push_back(Tile{Tile::BLACK, v});
+    }
   }
   m_tiles.push_back(Tile::joker(Tile::RED));
   m_tiles.push_back(Tile::joker(Tile::BLACK));
