@@ -7,6 +7,12 @@ using std::const_pointer_cast;
 namespace rummikub {
 namespace core {
 
+shared_ptr<Table>
+TableImpl::clone() const
+{
+  return shared_ptr<Table>{new TableImpl{*this}};
+}
+
 bool
 TableImpl::validate() const
 {

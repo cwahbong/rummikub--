@@ -11,17 +11,17 @@ namespace rummikub {
 namespace core {
 
 class Table {
-private:
-  Table(const Table&) = delete;
-  Table& operator=(const Table&) = delete;
-
 protected:
   Table() = default;
+  Table(const Table&) = default;
+  Table& operator=(const Table&) = default;
 
 public:
   static std::shared_ptr<Table> newTable();
 
   virtual ~Table() = default;
+
+  virtual std::shared_ptr<Table> clone() const = 0;
 
   virtual void addSet(const std::shared_ptr<Set>&) = 0;
   virtual std::weak_ptr<Set> setRemoveConst(const std::shared_ptr<const Set>&) = 0;
