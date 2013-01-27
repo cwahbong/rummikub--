@@ -20,8 +20,8 @@ private:
   bool validate() const;
 
 protected:
-  TableImpl(const TableImpl&) = default;
-  TableImpl& operator=(const TableImpl&) = default;
+  TableImpl(const TableImpl&);
+  TableImpl& operator=(const TableImpl&);
 
 public:
   TableImpl() noexcept = default;

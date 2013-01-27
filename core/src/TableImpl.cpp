@@ -7,6 +7,13 @@ using std::const_pointer_cast;
 namespace rummikub {
 namespace core {
 
+TableImpl::TableImpl(const TableImpl& tableImpl)
+{
+  for (const auto& sp_set : tableImpl.m_sets) {
+    m_sets.insert(sp_set->clone());
+  }
+}
+
 shared_ptr<Table>
 TableImpl::clone() const
 {
