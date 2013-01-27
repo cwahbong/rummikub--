@@ -10,16 +10,14 @@ namespace rummikub {
 namespace core {
 
 class Set {
-private:
-  Set(const Set&) = delete;
-  Set& operator=(const Set&) = delete;
-
 public:
   enum Type {RUN, GROUP, NONE};
 
 protected:
   Set() = default;
 
+  Set(const Set&) = default;
+  Set& operator=(const Set&) = default;
   Set(Set&&) = default;
   Set& operator=(Set&&) = default;
 
@@ -27,6 +25,8 @@ public:
   virtual ~Set() noexcept = default;
 
   static std::shared_ptr<Set> newSet();
+
+  virtual std::shared_ptr<Set> clone() = 0;
 
   virtual void insert(const Tile&) = 0;
   virtual bool remove(const Tile&) = 0;

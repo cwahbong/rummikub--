@@ -73,6 +73,12 @@ validate(RandomAccessContainer& tiles)
 
 } // namespace
 
+shared_ptr<Set>
+SetImpl::clone()
+{
+  return shared_ptr<Set>{new SetImpl{*this}};
+}
+
 SetImpl::SetImpl()
   : m_tiles(),
     m_validated(false),

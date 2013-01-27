@@ -5,16 +5,14 @@
 
 #include "Tile.h"
 
-#include <memory>
-
 using std::vector;
+using std::shared_ptr;
 
 namespace rummikub {
 namespace core {
 
 class SetImpl : public Set {
 private:
-  SetImpl(const SetImpl&) = delete;
   SetImpl& operator=(const SetImpl&) = delete;
 
 private:
@@ -27,8 +25,11 @@ private:
 public:
   SetImpl();
 
+  SetImpl(const SetImpl&) = default;
   SetImpl(SetImpl&&) = default;
   SetImpl& operator=(SetImpl&&) = default;
+
+  shared_ptr<Set> clone();
 
   void insert(const Tile&);
   bool remove(const Tile&);
