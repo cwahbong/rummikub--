@@ -3,9 +3,11 @@
 
 #include "CoreFwd.h"
 
+#include "Player.h"
 #include "Table.h"
 #include "TileManager.h"
 
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -31,7 +33,22 @@ private:
   void gameEnd();
 
 public:
-  Rummikub(std::vector<std::shared_ptr<Player>>::size_type playerNum);
+  template <typename InputIterator>
+  Rummikub(InputIterator first, InputIterator end)
+    : m_sp_tileManager{TileManager::newShuffledTiles()},
+      m_sp_table{Table::newTable()},
+      m_sp_players{},
+      m_turnStartCallbacks{},
+      m_turnEndCallbacks{},
+      m_gameEndCallbacks{}
+  {
+    std::for_each(first, end, [this] (const std::shared_ptr<Agent>& agent) mutable {
+      const auto& sp_player = Player::newPlayer();
+      sp_player->setAgent(agent);
+      m_sp_players.push_back(sp_player);
+    });
+  }
+
 
   std::vector<std::weak_ptr<Player>> getPlayers();
   void addTurnStartCallback(TurnCallback);

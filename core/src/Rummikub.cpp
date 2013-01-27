@@ -5,6 +5,8 @@
 #include "Table.h"
 #include "Tile.h"
 
+#include <iostream>
+
 using std::make_shared;
 using std::shared_ptr;
 using std::vector;
@@ -12,19 +14,6 @@ using std::weak_ptr;
 
 namespace rummikub {
 namespace core {
-
-Rummikub::Rummikub(std::vector<std::shared_ptr<Player>>::size_type playerNum)
-  : m_sp_tileManager{TileManager::newShuffledTiles()},
-    m_sp_table{Table::newTable()},
-    m_sp_players{playerNum},
-    m_turnStartCallbacks{},
-    m_turnEndCallbacks{},
-    m_gameEndCallbacks{}
-{
-  for (auto& sp_player : m_sp_players) {
-    sp_player = Player::newPlayer();
-  }
-}
 
 void
 Rummikub::turnStart(const shared_ptr<const Player>& sp_player)
@@ -77,15 +66,20 @@ Rummikub::addGameEndCallback(GameCallback c)
 void
 Rummikub::startGame()
 {
-  // TODO get initial tiles.
-
+  // get initial tiles.
+  for (auto sp_player : m_sp_players) {
+    for (unsigned i=0; i<14; ++i) {
+      sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+    }
+  }
+  // start turns loop
   while (true) {
     for (auto sp_player : m_sp_players) {
       turnStart(sp_player);
       const auto& sp_agent = sp_player->getAgent().lock();
       if (sp_agent) {
         auto sp_delegate = make_shared<AgentDelegate>(m_sp_table, sp_player);
-        sp_agent->response(sp_delegate, sp_player, m_sp_table);
+        sp_agent->response(sp_delegate);
         if (!sp_delegate->validate()) {
           sp_delegate->restore();
           sp_player->addTile(m_sp_tileManager->getAndRemoveTile());

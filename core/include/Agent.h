@@ -12,7 +12,7 @@ namespace core {
  */
 class Agent {
 public:
-  virtual void response(const std::shared_ptr<AgentDelegate>&) = 0;
+  virtual void response(const std::shared_ptr<const AgentDelegate>&) = 0;
 };
 
 class AgentDelegate {
