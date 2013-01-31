@@ -3,7 +3,6 @@
 
 #include "CoreFwd.h"
 
-#include <array>
 #include <map>
 #include <string>
 #include <type_traits>
