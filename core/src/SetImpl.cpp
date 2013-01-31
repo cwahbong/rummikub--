@@ -23,11 +23,11 @@ validate(RandomAccessContainer& tiles)
   }
   array<int, 14> valueCount{};
   array<int, 4> colorCount{};
-  Tile::Value minValue{};
-  Tile::Value maxValue = valueCount.size();
+  Tile::ValueType minValue{};
+  Tile::ValueType maxValue = valueCount.size();
   int jokerCount{};
   for (const auto& tile : tiles) {
-    if (tile.getValue() != Tile::NO_VALUE) {
+    if (tile.getValue() != Tile::JOKER_VALUE) {
       ++valueCount[tile.getValue()];
       ++colorCount[tile.getColor()];
       minValue = std::min(minValue, tile.getValue());
