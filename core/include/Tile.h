@@ -2,6 +2,7 @@
 #define RUMMIKUB_CORE__TILE_H
 
 #include "CoreFwd.h"
+#include "Util.h"
 
 #include <map>
 #include <string>
@@ -19,7 +20,9 @@ enum Color {
 };
 
 template <typename ValueT, typename NameT, typename Enable = void>
-struct ValueTraits {};
+struct ValueTraits {
+  MUST_SPECIALIZE(ValueTraits);
+};
 
 template <typename ValueT>
 struct ValueTraits<ValueT, std::string,
@@ -88,7 +91,9 @@ private:
 };
 
 template <typename ColorT, typename NameT, typename Enable = void>
-struct ColorTraits {};
+struct ColorTraits {
+  MUST_SPECIALIZE(ColorTraits);
+};
 
 template <typename NameT>
 struct ColorTraits<Color, NameT> {
