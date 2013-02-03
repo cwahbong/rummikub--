@@ -10,46 +10,45 @@ namespace rummikub {
 namespace core {
 
 shared_ptr<Player>
-PlayerImpl::clone()
+PlayerImpl::clone() const
 {
   return shared_ptr<Player>{new PlayerImpl{*this}};
 }
 
 void
-PlayerImpl::addTile(Tile tile)
+PlayerImpl::addTile(const Tile& tile)
 {
-  if (m_tilemap.find(tile) == m_tilemap.end()) {
-    m_tilemap.insert(make_pair(tile, 0));
-  }
-  ++m_tilemap[tile];
+  m_holder.add(tile);
 }
 
 bool
-PlayerImpl::removeTile(Tile tile)
+PlayerImpl::removeTile(const Tile& tile)
 {
-  auto it = m_tilemap.find(tile);
-  if (it == m_tilemap.end() || it->second == 0) {
-    return false;
-  }
-  if (m_tilemap[tile]==1) {
-    m_tilemap.erase(tile);
-  }
-  else {
-    --m_tilemap[tile];
-  }
-  return true;
+  return m_holder.remove(tile);
 }
 
 bool
-PlayerImpl::empty()
+PlayerImpl::hasTile(const Tile& tile) const
 {
-  return m_tilemap.empty();
+  return m_holder.has(tile);
 }
 
-const map<Tile, int>&
-PlayerImpl::getTiles() const
+size_t
+PlayerImpl::count(const Tile& tile) const
 {
-  return m_tilemap;
+  return m_holder.count(tile);
+}
+
+bool
+PlayerImpl::empty() const
+{
+  return m_holder.empty();
+}
+
+vector<Tile>
+PlayerImpl::getKinds() const
+{
+  return m_holder.kinds();
 }
 
 std::weak_ptr<Agent>
