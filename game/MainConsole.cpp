@@ -7,20 +7,24 @@
 #include "Set.h"
 #include "Tile.h"
 
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <map>
 #include <memory>
+#include <stdexcept>
+#include <sstream>
 #include <string>
-
-#include <QCoreApplication>
 
 using std::array;
 using std::cout;
 using std::cin;
 using std::endl;
+using std::exception;
 using std::getline;
+using std::istringstream;
 using std::map;
+using std::ostream;
 using std::shared_ptr;
 using std::string;
 
@@ -29,6 +33,7 @@ using rummikub::core::AgentDelegate;
 using rummikub::core::Player;
 using rummikub::core::Rummikub;
 using rummikub::core::Table;
+using rummikub::core::Tile;
 
 namespace rummikub {
 namespace game {
@@ -38,41 +43,86 @@ private:
   enum CmdType {PUT, MOVE, RESTORE, END};
   static const map<string, CmdType> CMD_MAP;
 
-public:
-  void response(const shared_ptr<const AgentDelegate>& sp_delegate)
+  void
+  printTile(const Tile& tile) const {
+    cout << "(" << tile.getColorName()
+         << " " << tile.getValueName() << ")";
+  }
+
+  void
+  printTable(const shared_ptr<const AgentDelegate>& sp_delegate) const
   {
-    while (true) {
-      cout << "Table:\n";
-      for (auto& wp_set : sp_delegate->getTable().getSets()) {
-        const auto& sp_set = wp_set.lock();
-        for (const auto& tile : sp_set->getValidatedTiles()) {
-          cout << "(" << tile.getValue() << ") ";
-        }
-        cout << "\n";
-      }
-      cout << "Player:\n";
-      for (const auto& pair : sp_delegate->getPlayer().getTiles()) {
-        for (int i=0; i<pair.second; ++i) {
-          cout << "(" << pair.first.getValue() << ") ";
-        }
+    cout << "Table:\n";
+    for (auto& wp_set : sp_delegate->getTable().getSets()) {
+      const auto& sp_set = wp_set.lock();
+      for (const auto& tile : sp_set->getValidatedTiles()) {
+        printTile(tile);
       }
       cout << endl;
+    }
+  }
+
+  void
+  printTiles(const shared_ptr<const AgentDelegate>& sp_delegate,
+      const std::vector<Tile>& tiles) const
+  {
+    for (const auto& tile : tiles) {
+      printTile(tile);
+      auto count = sp_delegate->getPlayer().count(tile);
+      if (count > 1) {
+        cout << "x" << count;
+      }
+      cout << " ";
+    }
+    cout << endl;
+  }
+
+public:
+  void response(const shared_ptr<AgentDelegate>& sp_delegate)
+  {
+    while (true) {
+      printTable(sp_delegate);
+      auto tiles = sp_delegate->getPlayer().getKinds();
+      cout << "Player:\n";
+      printTiles(sp_delegate, tiles);
       string input;
       getline(cin, input);
-      switch (CMD_MAP.at(input)) {
-      case PUT:
-        // TODO parse tile and set
-        // sp_delegate->putTile(tile, set);
-        break;
-      case MOVE:
-        // TODO parse tile and sets
-        // sp_delegate->moveTile(tile, from, to);
-        break;
-      case RESTORE:
-        sp_delegate->restore();
-        break;
-      case END:
-        return;
+      istringstream iss(input);
+      string cmd;
+      iss >> cmd;
+      try {
+        switch (CMD_MAP.at(cmd)) {
+        case PUT: {
+          int tileOffset, setOffset;
+          iss >> tileOffset;
+          const auto& tile = tiles[tileOffset];
+          if (iss >> setOffset) {
+            const auto& sp_set = sp_delegate->getTable().getSets()[setOffset].lock();
+            sp_delegate->putTile(tile, sp_set);
+          } else {
+            sp_delegate->putTile(tile);
+          }
+          break;
+        }
+        case MOVE: {
+          int tileOffset;
+          iss >> tileOffset;
+          int fromOffset, toOffset;
+          iss >> fromOffset >> toOffset;
+          const auto& tile = tiles[tileOffset];
+          const auto& sp_fromSet = sp_delegate->getTable().getSets()[fromOffset].lock();
+          const auto& sp_toSet = sp_delegate->getTable().getSets()[toOffset].lock();
+          sp_delegate->moveTile(tile, sp_fromSet, sp_toSet);
+          break;
+        }
+        case RESTORE:
+          sp_delegate->restore();
+          break;
+        case END:
+          return;
+        }
+      } catch (exception& oor) {
+        cout << "Bad command." << endl;
       }
     }
   }

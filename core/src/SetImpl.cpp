@@ -74,7 +74,7 @@ validate(RandomAccessContainer& tiles)
 } // namespace
 
 shared_ptr<Set>
-SetImpl::clone()
+SetImpl::clone() const
 {
   return shared_ptr<Set>{new SetImpl{*this}};
 }

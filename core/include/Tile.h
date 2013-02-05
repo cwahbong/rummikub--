@@ -4,6 +4,7 @@
 #include "CoreFwd.h"
 #include "Util.h"
 
+#include <cctype>
 #include <map>
 #include <string>
 #include <type_traits>
@@ -46,23 +47,28 @@ struct ValueTraits<ValueT, std::string,
     return NameType{};
   }
 
-  static ValueT toValue(NameType n) {
-    if (n == JokerName()) {
+  static ValueT toValue(NameType n, size_t* idx = nullptr) {
+    size_t idx2{0};
+    if (!idx) {
+      idx = &idx2;
+    }
+    while(std::isspace(n[*idx])) ++*idx;
+    if (n.find(JokerName(), *idx) == *idx) { // TODO prefix match
+      *idx += JokerName().size();
       return JokerValue();
     }
-    return _parseValue<ValueT>(n);
+    return _parseValue<ValueT>(n, idx);
   }
 
 private:
   template <typename ValueU>
   static
   typename std::enable_if<std::is_signed<ValueU>::value, ValueU>::type
-  _parseValue(NameType n)
+  _parseValue(NameType n, size_t* p_idx)
   {
-    size_t sz;
     try {
-      auto v = stoll(n, &sz);
-      if (sz != n.size() || isInvalid(v)) {
+      auto v = stoll(n, p_idx);
+      if (isInvalid(v)) {
         return InvalidValue();
       }
       return v;
@@ -74,12 +80,11 @@ private:
   template <typename ValueU>
   static
   typename std::enable_if<std::is_unsigned<ValueU>::value, ValueU>::type
-  _parseValue(NameType n)
+  _parseValue(NameType n, size_t* p_idx)
   {
-    size_t sz;
     try {
-      auto v = stoull(n, &sz);
-      if (sz != n.size() || isInvalid(v)) {
+      auto v = stoull(n, p_idx);
+      if (isInvalid(v)) {
         return InvalidValue();
       }
       return v;

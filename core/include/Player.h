@@ -24,8 +24,9 @@ public:
 
   virtual std::shared_ptr<Player> clone() const = 0;
 
-  virtual void addTile(const Tile& tile) = 0;
-  virtual bool removeTile(const Tile& tile) = 0;
+  virtual void addTile(const Tile& tile, size_t count = 1) = 0;
+  virtual bool removeTile(const Tile& tile, size_t count = 1) = 0;
+  virtual void clearTiles() = 0;
   virtual bool hasTile(const Tile& tile) const = 0;
   virtual size_t count(const Tile& tile) const = 0;
   virtual std::vector<Tile> getKinds() const = 0;
@@ -34,6 +35,9 @@ public:
   virtual std::weak_ptr<Agent> getAgent() = 0;
   virtual void setAgent(const std::shared_ptr<Agent>&) = 0;
 };
+
+void copyTiles(const std::shared_ptr<Player>& to,
+               const std::shared_ptr<const Player>& from);
 
 } // namespace core
 } // namespace rummikub

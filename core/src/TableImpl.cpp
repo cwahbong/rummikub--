@@ -32,9 +32,15 @@ TableImpl::validate() const
 }
 
 void
-TableImpl::addSet(const shared_ptr<Set>& set)
+TableImpl::addSet(const shared_ptr<const Set>& set)
 {
-  m_sets.insert(set);
+  m_sets.insert(set->clone());
+}
+
+void
+TableImpl::clear()
+{
+  m_sets.clear();
 }
 
 weak_ptr<Set>

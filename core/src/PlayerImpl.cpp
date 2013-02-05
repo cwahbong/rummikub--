@@ -16,15 +16,21 @@ PlayerImpl::clone() const
 }
 
 void
-PlayerImpl::addTile(const Tile& tile)
+PlayerImpl::addTile(const Tile& tile, size_t count)
 {
-  m_holder.add(tile);
+  m_holder.add(tile, count);
 }
 
 bool
-PlayerImpl::removeTile(const Tile& tile)
+PlayerImpl::removeTile(const Tile& tile, size_t count)
 {
-  return m_holder.remove(tile);
+  return m_holder.remove(tile, count);
+}
+
+void
+PlayerImpl::clearTiles()
+{
+  return m_holder.clear();
 }
 
 bool

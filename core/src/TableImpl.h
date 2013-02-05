@@ -28,7 +28,8 @@ public:
 
   shared_ptr<Table> clone() const;
 
-  void addSet(const shared_ptr<Set>&);
+  void addSet(const shared_ptr<const Set>&);
+  void clear();
   weak_ptr<Set> setRemoveConst(const shared_ptr<const Set>&);
   vector<weak_ptr<const Set>> getSets() const;
   void clean();

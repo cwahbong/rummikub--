@@ -29,7 +29,7 @@ public:
   SetImpl(SetImpl&&) = default;
   SetImpl& operator=(SetImpl&&) = default;
 
-  shared_ptr<Set> clone();
+  shared_ptr<Set> clone() const;
 
   void insert(const Tile&);
   bool remove(const Tile&);

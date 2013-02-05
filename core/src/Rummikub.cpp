@@ -83,6 +83,8 @@ Rummikub::startGame()
         if (!sp_delegate->validate()) {
           sp_delegate->restore();
           sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+        } else if (false /* Player did not put any tile */) {
+          sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
         }
       } else {
         sp_player->addTile(m_sp_tileManager->getAndRemoveTile());

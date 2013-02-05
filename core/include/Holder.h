@@ -41,6 +41,11 @@ public:
     return true;
   }
 
+  void clear()
+  {
+    m_map.clear();
+  }
+
   bool
   empty() const
   {

@@ -13,26 +13,28 @@ namespace core {
 
 AgentDelegate::AgentDelegate(const std::shared_ptr<Table>& sp_table,
                              const std::shared_ptr<Player>& sp_player)
-  : m_sp_oldTable{sp_table},
-    m_sp_oldPlayer{sp_player},
-    m_sp_table{sp_table->clone()},
-    m_sp_player{sp_player->clone()}
+  : m_sp_oldTable{sp_table->clone()},
+    m_sp_oldPlayer{sp_player->clone()},
+    m_sp_table{sp_table},
+    m_sp_player{sp_player},
+    m_put{0}
 {/* Empty. */}
 
 bool
-AgentDelegate::putTile(Tile tile, const shared_ptr<const Set>& set) const
+AgentDelegate::putTile(Tile tile, const shared_ptr<const Set>& set)
 {
+  if (!m_sp_player->hasTile(tile)) return false;
   shared_ptr<Set> sp_set;
   if (set) {
     sp_set = m_sp_table->setRemoveConst(set).lock();
+    sp_set->insert(tile);
   } else {
     sp_set = Set::newSet();
+    sp_set->insert(tile);
     m_sp_table->addSet(sp_set);
   }
-  const auto& tilesMap = m_sp_player->getTiles();
-  if (!sp_set || tilesMap.find(tile) == tilesMap.end()) return false;
   m_sp_player->removeTile(tile);
-  sp_set->insert(tile);
+  ++m_put;
   return true;
 }
 
@@ -40,7 +42,7 @@ bool
 AgentDelegate::moveTile(
     Tile tile,
     const shared_ptr<const Set>& from,
-    const shared_ptr<const Set>& to) const
+    const shared_ptr<const Set>& to)
 {
   auto sp_f = m_sp_table->setRemoveConst(from).lock();
   auto sp_t = m_sp_table->setRemoveConst(to).lock();
@@ -62,16 +64,29 @@ AgentDelegate::getPlayer() const
   return *m_sp_player;
 }
 
+size_t
+AgentDelegate::countPut() const
+{
+  return m_put;
+}
+
 bool
 AgentDelegate::validate() const
 {
-  // TODO implement
+  for (const auto& wp_set : m_sp_table->getSets()) {
+    if (wp_set.lock()->getType() == Set::NONE) {
+      return false;
+    }
+  }
+  return true;
 }
 
 void
-AgentDelegate::restore() const
+AgentDelegate::restore()
 {
-  // TODO implement
+  copyTiles(m_sp_table, m_sp_oldTable);
+  copyTiles(m_sp_player, m_sp_oldPlayer);
+  m_put = 0;
 }
 
 } // namespace core

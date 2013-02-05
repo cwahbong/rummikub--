@@ -26,7 +26,7 @@ public:
 
   static std::shared_ptr<Set> newSet();
 
-  virtual std::shared_ptr<Set> clone() = 0;
+  virtual std::shared_ptr<Set> clone() const = 0;
 
   virtual void insert(const Tile&) = 0;
   virtual bool remove(const Tile&) = 0;

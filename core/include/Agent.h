@@ -12,7 +12,7 @@ namespace core {
  */
 class Agent {
 public:
-  virtual void response(const std::shared_ptr<const AgentDelegate>&) = 0;
+  virtual void response(const std::shared_ptr<AgentDelegate>&) = 0;
 };
 
 class AgentDelegate {
@@ -21,18 +21,20 @@ private:
   const std::shared_ptr<const Player> m_sp_oldPlayer;
   const std::shared_ptr<Table> m_sp_table;
   const std::shared_ptr<Player> m_sp_player;
+  size_t m_put;
 
 public:
   AgentDelegate(const std::shared_ptr<Table>& sp_table,
                 const std::shared_ptr<Player>& sp_player);
-  bool putTile(Tile, const std::shared_ptr<const Set>& = std::shared_ptr<const Set>{}) const;
+  bool putTile(Tile, const std::shared_ptr<const Set>& = std::shared_ptr<const Set>{});
   bool moveTile(Tile,
                 const std::shared_ptr<const Set>&,
-                const std::shared_ptr<const Set>&) const;
+                const std::shared_ptr<const Set>&);
   const Table& getTable() const;
   const Player& getPlayer() const;
+  size_t countPut() const;
   bool validate() const;
-  void restore() const;
+  void restore();
 };
 
 } // namespace core

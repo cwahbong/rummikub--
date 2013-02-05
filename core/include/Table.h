@@ -23,11 +23,15 @@ public:
 
   virtual std::shared_ptr<Table> clone() const = 0;
 
-  virtual void addSet(const std::shared_ptr<Set>&) = 0;
+  virtual void addSet(const std::shared_ptr<const Set>&) = 0;
+  virtual void clear() = 0;
   virtual std::weak_ptr<Set> setRemoveConst(const std::shared_ptr<const Set>&) = 0;
   virtual std::vector<std::weak_ptr<const Set>> getSets() const = 0;
   virtual void clean() = 0;
 };
+
+void copyTiles(const std::shared_ptr<Table>& to,
+               const std::shared_ptr<const Table>& from);
 
 } // namespace core
 } // namespace rummikub

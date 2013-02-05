@@ -27,8 +27,9 @@ public:
 
   shared_ptr<Player> clone() const;
 
-  void addTile(const Tile& tile);
-  bool removeTile(const Tile& tile);
+  void addTile(const Tile& tile, size_t count = 1);
+  bool removeTile(const Tile& tile, size_t count = 1);
+  void clearTiles();
   bool hasTile(const Tile& tile) const;
   size_t count(const Tile& tile) const;
   bool empty() const;
