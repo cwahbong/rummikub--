@@ -48,6 +48,7 @@ AgentDelegate::moveTile(
   auto sp_t = m_sp_table->setRemoveConst(to).lock();
   if (!sp_f || !sp_t) return false;
   if (!sp_f->remove(tile)) return false;
+  m_sp_table->clean();
   sp_t->insert(tile);
   return true;
 }
