@@ -217,6 +217,19 @@ private:
   ValueT m_value;
 };
 
+
+template <typename ValueT, typename ColorT, typename NameT,
+    typename VTraits, typename CTraits>
+const ValueT BasicTile<ValueT, ColorT, NameT, VTraits, CTraits>::MIN_VALUE;
+
+template <typename ValueT, typename ColorT, typename NameT,
+    typename VTraits, typename CTraits>
+const ValueT BasicTile<ValueT, ColorT, NameT, VTraits, CTraits>::MAX_VALUE;
+
+template <typename ValueT, typename ColorT, typename NameT,
+    typename VTraits, typename CTraits>
+const ValueT BasicTile<ValueT, ColorT, NameT, VTraits, CTraits>::JOKER_VALUE;
+
 extern template class BasicTile<unsigned, Color>;
 typedef BasicTile<unsigned, Color> Tile;
 
