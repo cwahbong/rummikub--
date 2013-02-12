@@ -15,18 +15,25 @@ using std::make_shared;
 using std::shared_ptr;
 using std::strcmp;
 
-int main(int argc, char* argv[])
-{
-#ifdef Q_WS_X11
-  bool useGui = getenv("DISPLAY") != 0;
-#else // Q_WS_X11
+inline
+bool
+isUsingGui(int argc, char* argv[]) {
   bool useGui = true;
+#ifdef Q_WS_X11
+  useGui = getenv("DISPLAY") != 0;
 #endif // Q_WS_X11
   for (int i=0; i<argc; ++i) {
     if (strcmp(argv[i], "--nogui")==0) {
       useGui = false;
     }
   }
+  return useGui;
+}
+
+int
+main(int argc, char* argv[])
+{
+  bool useGui = isUsingGui(argc, argv);
   QApplication app(argc, argv, useGui);
   shared_ptr<MainWindow> sp_window;
   shared_ptr<MainConsole> sp_console;
