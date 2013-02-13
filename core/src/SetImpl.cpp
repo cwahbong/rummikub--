@@ -2,6 +2,7 @@
 
 #include "Tile.h"
 
+#include <iostream>
 #include <algorithm>
 #include <array>
 
@@ -18,34 +19,41 @@ namespace {
 template <typename RandomAccessContainer>
 Set::Type
 validate(RandomAccessContainer& tiles)
-{  if (tiles.size() < 3) {
+{
+  if (tiles.size() < 3) {
     return Set::NONE;
   }
   array<int, 14> valueCount{};
-  array<int, 4> colorCount{};
-  Tile::ValueType minValue{};
-  Tile::ValueType maxValue = valueCount.size();
+  array<int, 5> colorCount{};
+  Tile::ValueType minValue{Tile::MAX_VALUE};
+  Tile::ValueType maxValue{Tile::MIN_VALUE};
   int jokerCount{};
   for (const auto& tile : tiles) {
-    if (tile.getValue() != Tile::JOKER_VALUE) {
+    if (tile.isJoker()) {
+      ++jokerCount;
+    } else {
       ++valueCount[tile.getValue()];
       ++colorCount[tile.getColor()];
       minValue = std::min(minValue, tile.getValue());
       maxValue = std::max(maxValue, tile.getValue());
-    } else if (tile.isJoker()) {
-      ++jokerCount;
     }
   }
   // validate run
+  int colorKind{};
   int zeroChance = jokerCount;
+  for (const auto& color : colorCount) {
+    if (color > 0) {
+      ++colorKind;
+    }
+  }
   for (auto v = minValue; v<=maxValue && zeroChance>=0; ++v) {
-    if (valueCount[v]>1) {
+    if (valueCount[v] > 1) {
       zeroChance = -1;
-    } else if (valueCount[v]==0) {
+    } else if (valueCount[v] == 0) {
       --zeroChance;
     }
   }
-  if (zeroChance>=0) {
+  if (zeroChance >= 0 && colorKind == 1) {
     sort(tiles.begin(), tiles.end(), [](const Tile& lhs, const Tile& rhs) {
         return lhs.getValue() < rhs.getValue();
     });
@@ -54,12 +62,17 @@ validate(RandomAccessContainer& tiles)
   // validate group
   int valueKind{};
   bool threeUp{};
-  for(const auto& count : valueCount) {
+  for (const auto& count : valueCount) {
     if (count) {
       ++valueKind;
     }
-    if (count + jokerCount >= 3) {
+    if (count + jokerCount == 3 || count + jokerCount == 4) {
       threeUp = true;
+    }
+  }
+  for (const auto& count : colorCount) {
+    if (count > 1) {
+      return Set::NONE;
     }
   }
   if (valueKind == 1 && threeUp) {
