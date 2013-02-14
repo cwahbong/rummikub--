@@ -12,7 +12,7 @@
 namespace rummikub {
 namespace core {
 
-enum Color {
+enum Color : int {
   INVALID,
   RED,
   BLUE,
@@ -20,7 +20,7 @@ enum Color {
   BLACK,
 };
 
-template <typename ValueT, typename NameT, typename Enable = void>
+template <typename ValueT, typename NameT, typename Enable>
 struct ValueTraits {
   MUST_SPECIALIZE(ValueTraits);
 };
@@ -95,7 +95,7 @@ private:
 
 };
 
-template <typename ColorT, typename NameT, typename Enable = void>
+template <typename ColorT, typename NameT, typename Enable>
 struct ColorTraits {
   MUST_SPECIALIZE(ColorTraits);
 };
@@ -153,9 +153,9 @@ std::map<Color, NameT> ColorTraits<Color, NameT>::m_nameMap;
 template <typename NameT>
 std::map<NameT, Color> ColorTraits<Color, NameT>::m_colorMap;
 
-template <typename ValueT, typename ColorT, typename NameT = std::string,
-    typename VTraits = ValueTraits<ValueT, NameT>,
-    typename CTraits = ColorTraits<ColorT, NameT>>
+template <typename ValueT, typename ColorT, typename NameT,
+    typename VTraits,
+    typename CTraits>
 class BasicTile {
 public:
   typedef ValueT ValueType;
