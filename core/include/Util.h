@@ -4,6 +4,7 @@
 #define MUST_SPECIALIZE(cls_or_func) static_assert( \
     sizeof(cls_or_func*)<0, "template instance of \"" \
     #cls_or_func "\" must be specialized."\
+    )
 
 #include <functional>
 #include <memory>
