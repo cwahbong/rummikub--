@@ -6,9 +6,10 @@
     #cls_or_func "\" must be specialized."\
     )
 
+#include <algorithm>
 #include <functional>
 #include <memory>
-#include <set>
+#include <vector>
 
 namespace rummikub {
 namespace core {
@@ -18,29 +19,38 @@ template <typename T> using cw_ptr = std::weak_ptr<const T>;
 template <typename T> using  s_ptr = std::shared_ptr<T>;
 template <typename T> using cs_ptr = std::shared_ptr<const T>;
 
-template <typename MessageT>
-class Observable;
+template <typename T>
+class MessageTraits {
+  // using Type = ...;
+  // using MessageType = ...;
+  MUST_SPECIALIZE(MessageTraits);
+};
 
-template <typename MessageT>
-using Observer = std::function<void(const cs_ptr<Observable<MessageT>>&, const cs_ptr<MessageT>&)>;
-
-template <typename MessageT>
+template <typename T, typename MTraits = MessageTraits<T>>
 class Observable {
+  using Callback = std::function<void(
+      const cs_ptr<Observable<T, MTraits>>&,
+      const typename MTraits::MessageType&
+      )>;
+
 private:
-  std::set<s_ptr<Observer<MessageT>>> m_observers{};
+  std::vector<Callback> m_callbacks{};
   bool m_changed{};
 
 protected:
-  void addObserver(const s_ptr<Observer<MessageT>>& s_observer) {
-    m_observers.insert(s_observer);
+  void addCallback(const Callback& callback) {
+    m_callbacks.push_back(callback);
   }
 
-  void removeObserver(const s_ptr<Observer<MessageT>>& s_observer) {
-    m_observers.remove(s_observer);
+  void removeCallback(const Callback& callback) {
+    const auto& removeIt = std::find(m_callbacks.begin(),
+        m_callbacks.end(), callback);
+    std::swap(m_callbacks.end() - 1, removeIt);
+    m_callbacks.pop_back();
   }
 
-  void removeAllObservers() {
-    m_observers.clear();
+  void removeAllCallbacks() {
+    m_callbacks.clear();
   }
 
   void setChanged(bool changed) {
@@ -51,10 +61,10 @@ protected:
     return m_changed;
   }
 
-  void notify(const cs_ptr<MessageT>& cs_message) const {
+  void notify(const typename MTraits::MessageType& cs_message) const {
     if (m_changed) {
-      for (const auto& observer : m_observers) {
-        observer(this, cs_message);
+      for (auto& callback : m_callbacks) {
+        callback(cs_ptr<Observable<T, MTraits>>{this}, cs_message);
       }
     }
   }
