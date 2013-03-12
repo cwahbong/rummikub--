@@ -5,6 +5,7 @@ FIND_PACKAGE(Qt4 REQUIRED)
 # Set source files
 SET(game_QT_FILES_WITHOUT_SUFFIX
   MainWindow
+  TileWidget
 )
 
 SET(game_SOURCES_WITHOUT_SUFFIX
