@@ -15,12 +15,46 @@
 namespace rummikub {
 namespace core {
 
+enum RummiMessage {
+  SET_INSERT,
+  SET_REMOVE,
+  SET_DELETE,
+};
+
+template <>
+struct MessageTraits<Rummikub> {
+  using Type = Rummikub;
+  using MessageType = RummiMessage;
+};
+
+template <>
+struct CallbackTraits<Rummikub> {
+  using MessageType = RummiMessage;
+  template <MessageType> struct CallbackFunction;
+};
+
+template <>
+struct CallbackTraits<Rummikub>::CallbackFunction<SET_INSERT> {
+  using Type = std::function<void(const Tile&)>;
+};
+
+template <>
+struct CallbackTraits<Rummikub>::CallbackFunction<SET_REMOVE> {
+  using Type = std::function<void(const Tile&)>;
+};
+
+template<>
+struct CallbackTraits<Rummikub>::CallbackFunction<SET_DELETE> {
+  using Type = std::function<void()>;
+};
+
 class Rummikub {
 public:
   typedef std::function<void(const std::shared_ptr<const Player>)> TurnCallback;
   typedef std::function<void()> GameCallback;
 
 private:
+  std::shared_ptr<Notifier<Rummikub>> m_sp_notifier;
   std::shared_ptr<TileManager> m_sp_tileManager;
   std::shared_ptr<Table> m_sp_table;
   std::vector<std::shared_ptr<Player>> m_sp_players;
@@ -51,6 +85,7 @@ public:
 
 
   std::vector<std::weak_ptr<Player>> getPlayers();
+  std::shared_ptr<Notifier<Rummikub>> getNotifier() const;
   void addTurnStartCallback(TurnCallback);
   void addTurnEndCallback(TurnCallback);
   void addGameEndCallback(GameCallback);

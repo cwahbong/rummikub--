@@ -2,6 +2,8 @@
 #define RUMMIKUB_CORE__SET_H
 
 #include "CoreFwd.h"
+#include "Component.h"
+#include "Util.h"
 
 #include <memory>
 #include <vector>
@@ -9,31 +11,37 @@
 namespace rummikub {
 namespace core {
 
-class Set {
+
+class Set : Component {
 public:
   enum Type {RUN, GROUP, NONE};
+  enum Message {INSERT, REMOVE, DELETE};
 
 protected:
-  Set() = default;
-
   Set(const Set&) = default;
   Set& operator=(const Set&) = default;
   Set(Set&&) = default;
   Set& operator=(Set&&) = default;
+  void validate() const;
 
 public:
-  virtual ~Set() noexcept = default;
+  Set(Rummikub* rummikub = nullptr);
+  virtual ~Set();
 
   static std::shared_ptr<Set> newSet();
 
-  virtual std::shared_ptr<Set> clone() const = 0;
+  virtual std::shared_ptr<Set> clone() const;
 
-  virtual void insert(const Tile&) = 0;
-  virtual bool remove(const Tile&) = 0;
-  virtual bool empty() const = 0;
+  void insert(const Tile&);
+  bool remove(const Tile&);
+  bool empty() const;
 
-  virtual Type getType() const = 0;
-  virtual std::vector<Tile> getValidatedTiles() const = 0;
+  Type getType() const;
+  std::vector<Tile> getValidatedTiles() const;
+
+private:
+  struct Member;
+  Member* _;
 };
 
 } // namespace core

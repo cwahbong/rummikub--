@@ -21,10 +21,12 @@ typedef BasicTile<unsigned, Color> Tile;
 
 class Agent;
 class AgentDelegate;
+class Component;
 class Player;
 class Set;
 class Table;
 class TileManager;
+class Rummikub;
 
 } // namespace core
 } // namespace rummikub

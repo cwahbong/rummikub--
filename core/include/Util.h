@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <type_traits>
 #include <vector>
 
 namespace rummikub {
@@ -27,45 +28,66 @@ class MessageTraits {
 };
 
 template <typename T, typename MTraits = MessageTraits<T>>
-class Observable {
-  using Callback = std::function<void(
-      const cs_ptr<Observable<T, MTraits>>&,
-      const typename MTraits::MessageType&
-      )>;
+class CallbackTraits {
+  // using MessageType = typename MTraits::MessageType;
+  // using CallbackFunction<MessageType> = ...;
+  MUST_SPECIALIZE(CallbackTraits);
+};
+
+template <typename T,
+    typename MTraits = MessageTraits<T>,
+    typename CTraits = CallbackTraits<T, MTraits>>
+class Notifier;
+
+template <typename T, typename MTraits, typename CTraits>
+class Notifier {
+public:
+  using MessageType = typename MTraits::MessageType;
+  template <MessageType mType>
+  using Callback = typename CTraits::template CallbackFunction<mType>::Type;
+  template <MessageType mType>
+  using CallbackKey = typename std::vector<Callback<mType>>::size_type;
 
 private:
-  std::vector<Callback> m_callbacks{};
-  bool m_changed{};
 
-protected:
-  void addCallback(const Callback& callback) {
-    m_callbacks.push_back(callback);
+  template <MessageType mType>
+  std::vector<Callback<mType>>&
+  _callbacks() const {
+    static std::vector<Callback<mType>> v;
+    return v;
   }
 
-  void removeCallback(const Callback& callback) {
-    const auto& removeIt = std::find(m_callbacks.begin(),
-        m_callbacks.end(), callback);
-    std::swap(m_callbacks.end() - 1, removeIt);
-    m_callbacks.pop_back();
+public:
+  // TODO add to callbackVectors in constructor and destructor
+
+  template <MessageType mType>
+  CallbackKey<mType> addCallback(const Callback<mType>& callback) {
+    auto& vcallbacks = _callbacks<mType>();
+    const auto& empty_it = find(vcallbacks.begin(), vcallbacks.end(), nullptr);
+    if (empty_it == vcallbacks.end()) {
+      vcallbacks.push_back(callback);
+      return vcallbacks.size() - 1;
+    } else {
+      const auto key = empty_it - vcallbacks.begin();
+      *empty_it = callback;
+      return key;
+    }
   }
 
+  template <MessageType mType>
+  void removeCallback(CallbackKey<mType> key) {
+    _callbacks<mType>()[key] = nullptr;
+  }
+
+  template <MessageType mType>
   void removeAllCallbacks() {
-    m_callbacks.clear();
+    _callbacks<mType>().clear();
   }
 
-  void setChanged(bool changed) {
-    m_changed = changed;
-  }
-
-  bool isChanged() const {
-    return m_changed;
-  }
-
-  void notify(const typename MTraits::MessageType& cs_message) const {
-    if (m_changed) {
-      for (auto& callback : m_callbacks) {
-        callback(cs_ptr<Observable<T, MTraits>>{this}, cs_message);
-      }
+  template <MessageType mType, typename... CallbackArgs>
+  void notify(CallbackArgs... args) const { // TODO add const to this function
+    for (auto& callback : _callbacks<mType>()) {
+      callback(args...);
     }
   }
 };

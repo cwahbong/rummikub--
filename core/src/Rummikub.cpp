@@ -45,6 +45,12 @@ Rummikub::getPlayers()
   return vector<weak_ptr<Player>>{m_sp_players.begin(), m_sp_players.end()};
 }
 
+shared_ptr<Notifier<Rummikub>>
+Rummikub::getNotifier() const
+{
+  return m_sp_notifier;
+}
+
 void
 Rummikub::addTurnStartCallback(TurnCallback c)
 {
