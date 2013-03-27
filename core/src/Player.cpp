@@ -1,14 +1,83 @@
 #include "Player.h"
-#include "PlayerImpl.h"
+
+#include "Tile.h"
+
+#include <vector>
 
 using std::shared_ptr;
+using std::vector;
 
 namespace rummikub {
 namespace core {
 
+struct Player::Member {
+  shared_ptr<Agent> sp_agent{};
+  Holder<Tile> holder{};
+};
+
 shared_ptr<Player>
 Player::newPlayer() {
-  return shared_ptr<Player>{new PlayerImpl{}};
+  return shared_ptr<Player>{new Player{}};
+}
+
+shared_ptr<Player>
+Player::clone() const
+{
+  return shared_ptr<Player>{new Player{*this}};
+}
+
+void
+Player::addTile(const Tile& tile, size_t count)
+{
+  _->holder.add(tile, count);
+}
+
+bool
+Player::removeTile(const Tile& tile, size_t count)
+{
+  return _->holder.remove(tile, count);
+}
+
+void
+Player::clearTiles()
+{
+  return _->holder.clear();
+}
+
+bool
+Player::hasTile(const Tile& tile) const
+{
+  return _->holder.has(tile);
+}
+
+size_t
+Player::count(const Tile& tile) const
+{
+  return _->holder.count(tile);
+}
+
+bool
+Player::empty() const
+{
+  return _->holder.empty();
+}
+
+vector<Tile>
+Player::getKinds() const
+{
+  return _->holder.kinds();
+}
+
+std::weak_ptr<Agent>
+Player::getAgent()
+{
+  return _->sp_agent;
+}
+
+void
+Player::setAgent(const shared_ptr<Agent>& sp_agent)
+{
+  _->sp_agent = sp_agent;
 }
 
 void
