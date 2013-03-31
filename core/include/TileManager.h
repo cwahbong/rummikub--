@@ -3,8 +3,6 @@
 
 #include "CoreFwd.h"
 
-#include <memory>
-
 namespace rummikub {
 namespace core {
 
