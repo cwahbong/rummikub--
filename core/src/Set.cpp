@@ -106,14 +106,12 @@ struct Set::Member
   }
 };
 
-Set::Set(Rummikub* rummikub)
-  : Component{rummikub},
-    _{new Member{{}, false, NONE}}
+Set::Set()
+  : _{new Member{{}, false, NONE}}
 {/* Empty. */}
 
 Set::Set(const Set& set)
-  : Component{set.getRummikub()},
-    _{new Member(*set._)}
+  : _{new Member(*set._)}
 {/* Empty. */}
 
 Set::~Set()

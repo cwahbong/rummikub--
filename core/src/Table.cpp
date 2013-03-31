@@ -21,13 +21,12 @@ Table::newTable()
   return shared_ptr<Table>{new Table{}};
 }
 
-Table::Table(Rummikub* rummikub)
-  : Component{rummikub},
-    _{new Member{}}
+Table::Table()
+  : _{new Member{}}
 {}
 
 Table::Table(const Table& table)
-  : Component{table.getRummikub()}
+  : _{new Member{}}
 {
   for (const auto& sp_set : table._->sets) {
     _->sets.insert(std::make_shared<Set>(*sp_set));

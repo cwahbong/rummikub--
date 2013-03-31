@@ -2,18 +2,15 @@
 #define RUMMIKUB_CORE__TABLE_H
 
 #include "CoreFwd.h"
+#include "StdMemory.h"
 
-#include "Component.h"
-#include "Util.h"
-
-#include <memory>
 #include <set>
 #include <vector>
 
 namespace rummikub {
 namespace core {
 
-class Table : Component {
+class Table {
 private:
   bool validate() const;
 
@@ -21,7 +18,7 @@ protected:
   Table& operator=(const Table&) = default;
 
 public:
-  Table(Rummikub* rummikub = nullptr);
+  Table();
   Table(const Table&);
 
   static std::shared_ptr<Table> newTable();

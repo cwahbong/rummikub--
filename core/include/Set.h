@@ -2,7 +2,6 @@
 #define RUMMIKUB_CORE__SET_H
 
 #include "CoreFwd.h"
-#include "Component.h"
 #include "StdMemory.h"
 
 #include <vector>
@@ -10,7 +9,7 @@
 namespace rummikub {
 namespace core {
 
-class Set : Component {
+class Set {
 public:
   enum Type {RUN, GROUP, NONE};
   using TileCallback = std::function<void(const Tile&)>;
@@ -21,7 +20,7 @@ protected:
   void validate() const;
 
 public:
-  Set(Rummikub* rummikub = nullptr);
+  Set();
   virtual ~Set();
 
   Set(const Set&);
