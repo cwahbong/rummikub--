@@ -8,17 +8,13 @@
 
 #include <algorithm>
 #include <functional>
-#include <memory>
 #include <type_traits>
 #include <vector>
 
+#include <iostream>
+
 namespace rummikub {
 namespace core {
-
-template <typename T> using  w_ptr = std::weak_ptr<T>;
-template <typename T> using cw_ptr = std::weak_ptr<const T>;
-template <typename T> using  s_ptr = std::shared_ptr<T>;
-template <typename T> using cs_ptr = std::shared_ptr<const T>;
 
 template <typename T>
 class MessageTraits {
@@ -85,7 +81,7 @@ public:
   }
 
   template <MessageType mType, typename... CallbackArgs>
-  void notify(CallbackArgs... args) const { // TODO add const to this function
+  void notify(CallbackArgs... args) const {
     for (auto& callback : _callbacks<mType>()) {
       callback(args...);
     }
