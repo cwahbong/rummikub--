@@ -4,10 +4,10 @@
 #include "Rummikub.h"
 
 #include <array>
-#include <vector>
+#include <set>
 
 using std::array;
-using std::shared_ptr;
+using std::set;
 using std::vector;
 
 namespace rummikub {
@@ -90,6 +90,20 @@ struct Set::Member
   mutable vector<Tile> tiles;
   mutable bool validated;
   mutable Type type;
+  set<s_ptr<TileCallback>> insertTileCallbacks;
+  set<s_ptr<TileCallback>> removeTileCallbacks;
+
+  void insertTileCall(const Tile& tile) {
+    for (const auto& sp_callback : insertTileCallbacks) {
+      (*sp_callback)(tile);
+    }
+  }
+
+  void removeTileCall(const Tile& tile) {
+    for (const auto& sp_callback : removeTileCallbacks) {
+      (*sp_callback)(tile);
+    }
+  }
 };
 
 Set::Set(Rummikub* rummikub)
@@ -119,7 +133,7 @@ Set::insert(const Tile& tile)
 {
   _->validated = false;
   _->tiles.push_back(tile);
-  // getRummikub()->getNotifier()->notify<SET_INSERT>(tile);
+  _->insertTileCall(tile);
 }
 
 bool
@@ -129,7 +143,7 @@ Set::remove(const Tile& tile)
   if (it != _->tiles.end()) {
     _->tiles.erase(it);
     _->validated = false;
-    // getRummikub()->getNotifier()->notify<SET_REMOVE>(tile);
+    _->removeTileCall(tile);
     return true;
   }
   return false;
@@ -157,6 +171,18 @@ Set::getValidatedTiles() const
     validate();
   }
   return vector<Tile>{_->tiles.begin(), _->tiles.end()};
+}
+
+void
+Set::addInsertTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->insertTileCallbacks.insert(callback);
+}
+
+void
+Set::addRemoveTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->removeTileCallbacks.insert(callback);
 }
 
 } // namespace core

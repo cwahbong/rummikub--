@@ -3,6 +3,7 @@
 
 #include "CoreFwd.h"
 #include "Component.h"
+#include "StdMemory.h"
 
 #include <vector>
 
@@ -12,6 +13,7 @@ namespace core {
 class Set : Component {
 public:
   enum Type {RUN, GROUP, NONE};
+  using TileCallback = std::function<void(const Tile&)>;
 
 protected:
   Set(Set&&) = default;
@@ -31,6 +33,9 @@ public:
 
   Type getType() const;
   std::vector<Tile> getValidatedTiles() const;
+
+  void addInsertTileCallback(const s_ptr<TileCallback>&);
+  void addRemoveTileCallback(const s_ptr<TileCallback>&);
 
 private:
   struct Member;
