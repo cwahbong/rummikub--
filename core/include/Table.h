@@ -4,7 +4,6 @@
 #include "CoreFwd.h"
 #include "StdMemory.h"
 
-#include <set>
 #include <vector>
 
 namespace rummikub {
