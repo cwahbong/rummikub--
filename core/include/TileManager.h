@@ -13,15 +13,18 @@ private:
   TileManager(const TileManager&) = delete;
   TileManager& operator=(const TileManager&) = delete;
 
-protected:
-  TileManager() = default;
-
 public:
-  static std::shared_ptr<TileManager> newShuffledTiles();
+  TileManager();
+  virtual ~TileManager();
 
-  virtual ~TileManager() = default;
-  virtual Tile getAndRemoveTile() = 0;
-  virtual bool empty() = 0;
+  Tile getAndRemoveTile();
+  bool empty() const;
+
+  void shuffle();
+
+private:
+  struct Member;
+  Member* _;
 };
 
 } // namespace core
