@@ -22,7 +22,7 @@ Component::~Component()
 }
 
 Rummikub*
-Component::getRummikub()
+Component::getRummikub() const
 {
   return _->rummikub;
 }

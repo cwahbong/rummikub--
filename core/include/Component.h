@@ -6,12 +6,15 @@
 namespace rummikub {
 namespace core {
 
+/**
+    Each component belongs to at most one Rummikub.
+ */
 class Component {
 public:
   Component(Rummikub* rummikub);
   virtual ~Component();
 
-  Rummikub* getRummikub();
+  Rummikub* getRummikub() const;
 
 private:
   struct Member;
