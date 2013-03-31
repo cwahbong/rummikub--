@@ -1,13 +1,100 @@
 #include "Table.h"
-#include "TableImpl.h"
+
+#include "Set.h"
+
+using std::const_pointer_cast;
+using std::set;
+using std::shared_ptr;
+using std::vector;
+using std::weak_ptr;
 
 namespace rummikub {
 namespace core {
 
+struct Table::Member {
+  set<shared_ptr<Set>> sets{};
+};
+
 shared_ptr<Table>
 Table::newTable()
 {
-  return shared_ptr<Table>{new TableImpl{}};
+  return shared_ptr<Table>{new Table{}};
+}
+
+Table::Table(Rummikub* rummikub)
+  : Component{rummikub},
+    _{new Member{}}
+{}
+
+Table::Table(const Table& table)
+  : Component{table.getRummikub()}
+{
+  for (const auto& sp_set : table._->sets) {
+    _->sets.insert(std::make_shared<Set>(*sp_set));
+  }
+}
+
+Table::~Table()
+{
+  delete _;
+}
+
+shared_ptr<Table>
+Table::clone() const
+{
+  return shared_ptr<Table>{new Table{*this}};
+}
+
+bool
+Table::validate() const
+{
+  for (const auto& sp_set : _->sets) {
+    if (sp_set->getType() == Set::NONE) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void
+Table::addSet(const shared_ptr<const Set>& set)
+{
+  _->sets.insert(std::make_shared<Set>(*set));
+}
+
+void
+Table::clear()
+{
+  _->sets.clear();
+}
+
+weak_ptr<Set>
+Table::setRemoveConst(const shared_ptr<const Set>& set)
+{
+  auto it = _->sets.find(const_pointer_cast<Set>(set));
+  if (it != _->sets.end()) {
+    return weak_ptr<Set>{*it};
+  }
+  return weak_ptr<Set>{};
+}
+
+vector<weak_ptr<const Set>>
+Table::getSets() const
+{
+  return vector<weak_ptr<const Set>>{_->sets.begin(), _->sets.end()};
+}
+
+void
+Table::clean()
+{
+  for (auto it = _->sets.cbegin(); it != _->sets.cend(); ) {
+    if ((*it)->empty()) {
+      _->sets.erase(it++);
+    }
+    else {
+      ++it;
+    }
+  }
 }
 
 void
