@@ -2,6 +2,8 @@
 
 #include "Set.h"
 
+#include <set>
+
 using std::const_pointer_cast;
 using std::set;
 using std::shared_ptr;

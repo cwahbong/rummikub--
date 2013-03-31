@@ -1,7 +1,6 @@
 #include "Set.h"
 
 #include "Tile.h"
-#include "Rummikub.h"
 
 #include <array>
 #include <set>
