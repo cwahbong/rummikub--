@@ -3,23 +3,17 @@
 
 #include "CoreFwd.h"
 #include "Component.h"
-#include "Util.h"
 
-#include <memory>
 #include <vector>
 
 namespace rummikub {
 namespace core {
 
-
 class Set : Component {
 public:
   enum Type {RUN, GROUP, NONE};
-  enum Message {INSERT, REMOVE, DELETE};
 
 protected:
-  Set(const Set&) = default;
-  Set& operator=(const Set&) = default;
   Set(Set&&) = default;
   Set& operator=(Set&&) = default;
   void validate() const;
@@ -28,9 +22,8 @@ public:
   Set(Rummikub* rummikub = nullptr);
   virtual ~Set();
 
-  static std::shared_ptr<Set> newSet();
-
-  virtual std::shared_ptr<Set> clone() const;
+  Set(const Set&);
+  Set& operator=(const Set&) = delete;
 
   void insert(const Tile&);
   bool remove(const Tile&);

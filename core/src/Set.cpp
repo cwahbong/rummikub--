@@ -92,21 +92,14 @@ struct Set::Member
   mutable Type type;
 };
 
-shared_ptr<Set>
-Set::newSet()
-{
-  return shared_ptr<Set>{new Set{}};
-}
-
-shared_ptr<Set>
-Set::clone() const
-{
-  return shared_ptr<Set>{new Set{*this}};
-}
-
 Set::Set(Rummikub* rummikub)
   : Component{rummikub},
     _{new Member{{}, false, NONE}}
+{/* Empty. */}
+
+Set::Set(const Set& set)
+  : Component{set.getRummikub()},
+    _{new Member(*set._)}
 {/* Empty. */}
 
 Set::~Set()

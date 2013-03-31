@@ -29,7 +29,7 @@ AgentDelegate::putTile(Tile tile, const shared_ptr<const Set>& set)
     sp_set = m_sp_table->setRemoveConst(set).lock();
     sp_set->insert(tile);
   } else {
-    sp_set = Set::newSet();
+    sp_set = std::make_shared<Set>();
     sp_set->insert(tile);
     m_sp_table->addSet(sp_set);
   }
