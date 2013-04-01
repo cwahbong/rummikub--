@@ -10,8 +10,10 @@ namespace rummikub {
 namespace core {
 
 class Table {
+public:
+  using SetCallback = std::function<void(const s_ptr<Set>&)>;
+
 private:
-  bool validate() const;
 
 protected:
   Table& operator=(const Table&) = default;
@@ -31,6 +33,9 @@ public:
   std::weak_ptr<Set> setRemoveConst(const std::shared_ptr<const Set>&);
   std::vector<std::weak_ptr<const Set>> getSets() const;
   void clean();
+
+  void addInsertSetCallback(const s_ptr<SetCallback>&);
+  void addRemoveSetCallback(const s_ptr<SetCallback>&);
 
 private:
   struct Member;

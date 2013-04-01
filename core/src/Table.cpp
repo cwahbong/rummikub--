@@ -15,6 +15,17 @@ namespace core {
 
 struct Table::Member {
   set<shared_ptr<Set>> sets{};
+  set<s_ptr<SetCallback>> insertSetCallbacks;
+  set<s_ptr<SetCallback>> removeSetCallbacks;
+
+  bool validate() const {
+    for (const auto& sp_set : sets) {
+      if (sp_set->getType() == Set::NONE) {
+        return false;
+      }
+    }
+    return true;
+  }
 };
 
 shared_ptr<Table>
@@ -44,17 +55,6 @@ shared_ptr<Table>
 Table::clone() const
 {
   return shared_ptr<Table>{new Table{*this}};
-}
-
-bool
-Table::validate() const
-{
-  for (const auto& sp_set : _->sets) {
-    if (sp_set->getType() == Set::NONE) {
-      return false;
-    }
-  }
-  return true;
 }
 
 void
@@ -96,6 +96,18 @@ Table::clean()
       ++it;
     }
   }
+}
+
+void
+Table::addInsertSetCallback(const s_ptr<SetCallback>& callback)
+{
+  _->insertSetCallbacks.insert(callback);
+}
+
+void
+Table::addRemoveSetCallback(const s_ptr<SetCallback>& callback)
+{
+  _->removeSetCallbacks.insert(callback);
 }
 
 void
