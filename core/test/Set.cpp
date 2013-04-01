@@ -3,11 +3,13 @@
 #include "Set.h"
 #include "Tile.h"
 
+using std::make_shared;
+
 namespace rummikub {
 namespace core {
 
 TEST(SetTest, ValidateRun) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{RED, 6});
   sp_set->insert(Tile{RED, 7});
@@ -15,7 +17,7 @@ TEST(SetTest, ValidateRun) {
 }
 
 TEST(SetTest, ValidateRunWithJokers) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{RED, 6});
   sp_set->insert(Tile::joker(BLACK));
@@ -27,7 +29,7 @@ TEST(SetTest, ValidateRunWithJokers) {
 }
 
 TEST(SetTest, ValidateGroup) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{BLACK, 5});
   sp_set->insert(Tile{YELLOW, 5});
@@ -35,7 +37,7 @@ TEST(SetTest, ValidateGroup) {
 }
 
 TEST(SetTest, ValidateGroupWithJokers) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{BLACK, 5});
   sp_set->insert(Tile::joker(BLACK));
@@ -44,7 +46,7 @@ TEST(SetTest, ValidateGroupWithJokers) {
 }
 
 TEST(SetTest, ValidateNoneRun) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{RED, 6});
   sp_set->insert(Tile{BLACK, 7});
@@ -52,7 +54,7 @@ TEST(SetTest, ValidateNoneRun) {
 }
 
 TEST(SetTest, ValidateNoneGroup) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{BLACK, 5});
@@ -61,7 +63,7 @@ TEST(SetTest, ValidateNoneGroup) {
 }
 
 TEST(SetTest, ValidateNoneGroupWithJokers) {
-  const auto& sp_set = Set::newSet();
+  const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{BLACK, 5});
   sp_set->insert(Tile{YELLOW, 5});
