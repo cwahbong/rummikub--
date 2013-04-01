@@ -16,13 +16,6 @@ public:
 };
 
 class AgentDelegate {
-private:
-  const std::shared_ptr<const Table> m_sp_oldTable;
-  const std::shared_ptr<const Player> m_sp_oldPlayer;
-  const std::shared_ptr<Table> m_sp_table;
-  const std::shared_ptr<Player> m_sp_player;
-  size_t m_put;
-
 public:
   AgentDelegate(const std::shared_ptr<Table>& sp_table,
                 const std::shared_ptr<Player>& sp_player);
@@ -35,6 +28,10 @@ public:
   size_t countPut() const;
   bool validate() const;
   void restore();
+
+private:
+  struct Member;
+  Member* _;
 };
 
 } // namespace core
