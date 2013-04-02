@@ -3,7 +3,7 @@
 
 #include "CoreFwd.h"
 
-#include <memory>
+#include "StdMemory.h"
 
 namespace rummikub {
 namespace core {
@@ -12,19 +12,17 @@ namespace core {
  */
 class Agent {
 public:
-  virtual void response(const std::shared_ptr<AgentDelegate>&) = 0;
+  virtual void response(const s_ptr<AgentDelegate>&) = 0;
 };
 
 class AgentDelegate {
 public:
-  AgentDelegate(const std::shared_ptr<Table>& sp_table,
-                const std::shared_ptr<Player>& sp_player);
-  bool putTile(Tile, const std::shared_ptr<const Set>& = std::shared_ptr<const Set>{});
-  bool moveTile(Tile,
-                const std::shared_ptr<const Set>&,
-                const std::shared_ptr<const Set>&);
-  const Table& getTable() const;
-  const Player& getPlayer() const;
+  AgentDelegate(const s_ptr<Table>&,
+                const s_ptr<Player>&);
+  bool putTile(Tile, const cs_ptr<Set>& = cs_ptr<Set>{});
+  bool moveTile(Tile, const cs_ptr<Set>&, const cs_ptr<Set>&);
+  const cs_ptr<Table> getTable() const;
+  const cs_ptr<Player> getPlayer() const;
   size_t countPut() const;
   bool validate() const;
   void restore();

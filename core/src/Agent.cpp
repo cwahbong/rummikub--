@@ -5,22 +5,19 @@
 #include "Table.h"
 #include "Tile.h"
 
-using std::shared_ptr;
-using std::weak_ptr;
-
 namespace rummikub {
 namespace core {
 
 struct AgentDelegate::Member {
-  const std::shared_ptr<const Table> sp_oldTable;
-  const std::shared_ptr<const Player> sp_oldPlayer;
-  const std::shared_ptr<Table> sp_table;
-  const std::shared_ptr<Player> sp_player;
+  const cs_ptr<Table> csp_oldTable;
+  const cs_ptr<Player> csp_oldPlayer;
+  const s_ptr<Table> sp_table;
+  const s_ptr<Player> sp_player;
   size_t put;
 };
 
-AgentDelegate::AgentDelegate(const std::shared_ptr<Table>& sp_table,
-                             const std::shared_ptr<Player>& sp_player)
+AgentDelegate::AgentDelegate(const s_ptr<Table>& sp_table,
+                             const s_ptr<Player>& sp_player)
   : _{new Member{
     sp_table->clone(),
     sp_player->clone(),
@@ -31,10 +28,10 @@ AgentDelegate::AgentDelegate(const std::shared_ptr<Table>& sp_table,
 {/* Empty. */}
 
 bool
-AgentDelegate::putTile(Tile tile, const shared_ptr<const Set>& set)
+AgentDelegate::putTile(Tile tile, const cs_ptr<Set>& set)
 {
   if (!_->sp_player->hasTile(tile)) return false;
-  shared_ptr<Set> sp_set;
+  s_ptr<Set> sp_set;
   if (set) {
     sp_set = _->sp_table->setRemoveConst(set).lock();
     sp_set->insert(tile);
@@ -51,8 +48,8 @@ AgentDelegate::putTile(Tile tile, const shared_ptr<const Set>& set)
 bool
 AgentDelegate::moveTile(
     Tile tile,
-    const shared_ptr<const Set>& from,
-    const shared_ptr<const Set>& to)
+    const cs_ptr<Set>& from,
+    const cs_ptr<Set>& to)
 {
   auto sp_f = _->sp_table->setRemoveConst(from).lock();
   auto sp_t = _->sp_table->setRemoveConst(to).lock();
@@ -63,16 +60,16 @@ AgentDelegate::moveTile(
   return true;
 }
 
-const Table&
+const cs_ptr<Table>
 AgentDelegate::getTable() const
 {
-  return *_->sp_table;
+  return _->sp_table;
 }
 
-const Player&
+const cs_ptr<Player>
 AgentDelegate::getPlayer() const
 {
-  return *_->sp_player;
+  return _->sp_player;
 }
 
 size_t
@@ -95,8 +92,8 @@ AgentDelegate::validate() const
 void
 AgentDelegate::restore()
 {
-  copyTiles(_->sp_table, _->sp_oldTable);
-  copyTiles(_->sp_player, _->sp_oldPlayer);
+  copyTiles(_->sp_table, _->csp_oldTable);
+  copyTiles(_->sp_player, _->csp_oldPlayer);
   _->put = 0;
 }
 
