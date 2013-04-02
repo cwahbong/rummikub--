@@ -36,6 +36,9 @@ public:
   void addInsertTileCallback(const s_ptr<TileCallback>&);
   void addRemoveTileCallback(const s_ptr<TileCallback>&);
 
+  void delInsertTileCallback(const s_ptr<TileCallback>&);
+  void delRemoveTileCallback(const s_ptr<TileCallback>&);
+
 private:
   struct Member;
   Member* _;

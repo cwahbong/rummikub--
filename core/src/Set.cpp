@@ -182,6 +182,18 @@ Set::addRemoveTileCallback(const s_ptr<TileCallback>& callback)
   _->removeTileCallbacks.insert(callback);
 }
 
+void
+Set::delInsertTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->insertTileCallbacks.erase(callback);
+}
+
+void
+Set::delRemoveTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->removeTileCallbacks.erase(callback);
+}
+
 } // namespace core
 } // namespace rummikub
 
