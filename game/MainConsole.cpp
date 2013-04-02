@@ -53,7 +53,7 @@ private:
   printTable(const shared_ptr<const AgentDelegate>& sp_delegate) const
   {
     cout << "Table:\n";
-    for (auto& wp_set : sp_delegate->getTable().getSets()) {
+    for (auto& wp_set : sp_delegate->getTable()->getSets()) {
       const auto& sp_set = wp_set.lock();
       for (const auto& tile : sp_set->getValidatedTiles()) {
         printTile(tile);
@@ -68,7 +68,7 @@ private:
   {
     for (const auto& tile : tiles) {
       printTile(tile);
-      auto count = sp_delegate->getPlayer().count(tile);
+      auto count = sp_delegate->getPlayer()->count(tile);
       if (count > 1) {
         cout << "x" << count;
       }
@@ -82,7 +82,7 @@ public:
   {
     while (true) {
       printTable(sp_delegate);
-      auto tiles = sp_delegate->getPlayer().getKinds();
+      auto tiles = sp_delegate->getPlayer()->getKinds();
       cout << "Player:\n";
       printTiles(sp_delegate, tiles);
       string input;
@@ -97,7 +97,7 @@ public:
           iss >> tileOffset;
           const auto& tile = tiles[tileOffset];
           if (iss >> setOffset) {
-            const auto& sp_set = sp_delegate->getTable().getSets()[setOffset].lock();
+            const auto& sp_set = sp_delegate->getTable()->getSets()[setOffset].lock();
             sp_delegate->putTile(tile, sp_set);
           } else {
             sp_delegate->putTile(tile);
@@ -109,9 +109,9 @@ public:
           iss >> tileOffset;
           int fromOffset, toOffset;
           iss >> fromOffset >> toOffset;
-          const auto& tile = tiles[tileOffset];
-          const auto& sp_fromSet = sp_delegate->getTable().getSets()[fromOffset].lock();
-          const auto& sp_toSet = sp_delegate->getTable().getSets()[toOffset].lock();
+          const auto& sp_fromSet = sp_delegate->getTable()->getSets()[fromOffset].lock();
+          auto tile = sp_fromSet->getValidatedTiles()[tileOffset];
+          const auto& sp_toSet = sp_delegate->getTable()->getSets()[toOffset].lock();
           sp_delegate->moveTile(tile, sp_fromSet, sp_toSet);
           break;
         }
