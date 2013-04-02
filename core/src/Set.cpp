@@ -2,11 +2,16 @@
 
 #include "Tile.h"
 
+#include <algorithm>
 #include <array>
 #include <set>
 
 using std::array;
+using std::find;
+using std::max;
+using std::min;
 using std::set;
+using std::sort;
 using std::vector;
 
 namespace rummikub {
@@ -32,8 +37,8 @@ validateTiles(RandomAccessContainer& tiles)
     } else {
       ++valueCount[tile.getValue()];
       ++colorCount[tile.getColor()];
-      minValue = std::min(minValue, tile.getValue());
-      maxValue = std::max(maxValue, tile.getValue());
+      minValue = min(minValue, tile.getValue());
+      maxValue = max(maxValue, tile.getValue());
     }
   }
   // validate run
