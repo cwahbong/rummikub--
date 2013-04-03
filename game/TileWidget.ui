@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>TileWidget</class>
  <widget class="QWidget" name="TileWidget">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,12 +9,6 @@
     <width>32</width>
     <height>48</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -39,29 +30,16 @@
     <bold>false</bold>
    </font>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <property name="spacing">
     <number>-1</number>
+   </property>
+   <property name="sizeConstraint">
+    <enum>QLayout::SetNoConstraint</enum>
    </property>
    <property name="margin">
     <number>2</number>
    </property>
-   <item>
-    <spacer name="m_upperSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item>
     <widget class="QLabel" name="m_content">
      <property name="text">
@@ -75,22 +53,8 @@
      </property>
     </widget>
    </item>
-   <item>
-    <spacer name="m_lowerSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
   </layout>
  </widget>
  <resources/>
  <connections/>
 </ui>
-

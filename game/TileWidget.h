@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "CoreFwd.h"
+#include "Tile.h"
 
 namespace Ui {
 class TileWidget;
@@ -22,12 +23,14 @@ public:
   ~TileWidget();
 
   void setTile(const core::Tile& tile);
+  core::Tile getTile() const;
 
 protected:
   virtual void paintEvent(QPaintEvent* event);
 
 private:
   Ui::TileWidget *ui;
+  core::Tile m_tile{core::INVALID, 14};
 };
 
 } // namespace game

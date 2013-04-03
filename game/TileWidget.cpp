@@ -61,6 +61,13 @@ TileWidget::setTile(const Tile& tile)
 {
   ui->m_content->setStyleSheet(getColorStyleSheet(tile.getColor()));
   ui->m_content->setText(tile.getValueName().c_str());
+  m_tile = tile;
+}
+
+Tile
+TileWidget::getTile() const
+{
+  return m_tile;
 }
 
 } // namespace game
