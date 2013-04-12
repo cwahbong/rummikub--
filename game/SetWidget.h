@@ -16,15 +16,22 @@ namespace game {
 class SetWidget : public QWidget
 {
   Q_OBJECT
+  using Set = core::Set;
+  using Tile = core::Tile;
+
 public:
   explicit SetWidget(QWidget *parent = 0);
   ~SetWidget();
-  void bindSet(const std::shared_ptr<core::Set>&);
+  void bindSet(const std::shared_ptr<Set>&);
   void unbindSet();
 
 signals:
+  void tileInserted(const Tile& tile);
+  void tileRemoved(const Tile& tile);
 
-public slots:
+private slots:
+  void insertTile(const Tile& tile);
+  void removeTile(const Tile& tile);
 
 private:
   Ui::SetWidget *ui;
