@@ -16,18 +16,6 @@ using rummikub::core::Tile;
 namespace rummikub {
 namespace game {
 
-namespace {
-
-void
-setWidgetAddTile(SetWidget* sp_setWidget, const Tile& tile)
-{
-  auto* p_tile = new TileWidget();
-  p_tile->setTile(tile);
-  sp_setWidget->layout()->addWidget(p_tile);
-}
-
-} // namespace
-
 SetWidget::SetWidget(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::SetWidget)
@@ -50,7 +38,7 @@ SetWidget::bindSet(const s_ptr<Set>& sp_set)
 {
   unbindSet();
   for (const auto& tile : sp_set->getValidatedTiles()) {
-     setWidgetAddTile(this, tile);
+    insertTile(tile);
   }
   m_sp_set = sp_set;
   m_sp_insertTileCallback = make_shared<Set::TileCallback>(
@@ -83,7 +71,9 @@ SetWidget::unbindSet()
 void
 SetWidget::insertTile(const Tile& tile)
 {
-  setWidgetAddTile(this, tile);
+  auto* p_tile = new TileWidget();
+  p_tile->setTile(tile);
+  layout()->addWidget(p_tile);
 }
 
 void
