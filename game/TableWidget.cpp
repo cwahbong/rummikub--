@@ -49,8 +49,11 @@ TableWidget::bindTable(const s_ptr<Table>& sp_table)
 void
 TableWidget::unbindTable()
 {
-  m_sp_table->delInsertSetCallback(m_insertSetCallback);
-  m_sp_table->delRemoveSetCallback(m_removeSetCallback);
+  if (m_sp_table) {
+    m_sp_table->delInsertSetCallback(m_insertSetCallback);
+    m_sp_table->delRemoveSetCallback(m_removeSetCallback);
+    m_sp_table = nullptr;
+  }
 }
 
 void
