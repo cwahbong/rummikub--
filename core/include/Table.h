@@ -37,6 +37,9 @@ public:
   void addInsertSetCallback(const s_ptr<SetCallback>&);
   void addRemoveSetCallback(const s_ptr<SetCallback>&);
 
+  void delInsertSetCallback(const s_ptr<SetCallback>&);
+  void delRemoveSetCallback(const s_ptr<SetCallback>&);
+
 private:
   struct Member;
   Member* _;

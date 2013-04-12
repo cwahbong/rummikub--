@@ -111,6 +111,18 @@ Table::addRemoveSetCallback(const s_ptr<SetCallback>& callback)
 }
 
 void
+Table::delInsertSetCallback(const s_ptr<SetCallback>& callback)
+{
+  _->insertSetCallbacks.erase(callback);
+}
+
+void
+Table::delRemoveSetCallback(const s_ptr<SetCallback>& callback)
+{
+  _->removeSetCallbacks.erase(callback);
+}
+
+void
 copyTiles(const std::shared_ptr<Table>& to,
           const std::shared_ptr<const Table>& from)
 {
