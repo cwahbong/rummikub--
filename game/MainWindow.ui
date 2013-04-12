@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="GameWidget" name="m_gameWidget" native="true"/>
+     <widget class="rummikub::game::GameWidget" name="m_gameWidget" native="true"/>
     </item>
    </layout>
   </widget>
@@ -34,7 +34,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GameWidget</class>
+   <class>rummikub::game::GameWidget</class>
    <extends>QWidget</extends>
    <header>GameWidget.h</header>
    <container>1</container>

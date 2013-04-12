@@ -1,11 +1,14 @@
-#ifndef GAMEWIDGET_H
-#define GAMEWIDGET_H
+#ifndef RUMMIKUB_GAME__GAMEWIDGET_H
+#define RUMMIKUB_GAME__GAMEWIDGET_H
 
 #include <QWidget>
 
 namespace Ui {
 class GameWidget;
-}
+} // namespace Ui
+
+namespace rummikub {
+namespace game {
 
 class GameWidget : public QWidget
 {
@@ -19,4 +22,8 @@ private:
     Ui::GameWidget *ui;
 };
 
-#endif // GAMEWIDGET_H
+} // namespace game
+} // namespace rummikub
+
+#endif // RUMMIKUB_GAME__GAMEWIDGET_H
+

@@ -14,7 +14,6 @@ SET(game_QT_FILES_WITHOUT_SUFFIX
 
 SET(game_SOURCES_WITHOUT_SUFFIX
   MainConsole
-  Models
 )
 
 SET(game_SOURCES
