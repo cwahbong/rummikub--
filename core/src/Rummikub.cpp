@@ -52,7 +52,6 @@ Rummikub::Rummikub(const vector<s_ptr<Agent>>& agents)
   _->sp_tileManager->shuffle();
   for (const auto& sp_agent : agents) {
     const auto& sp_player = Player::newPlayer();
-    *sp_agent; // XXX
     sp_player->setAgent(sp_agent);
     _->sp_players.push_back(sp_player);
   }
