@@ -12,8 +12,6 @@ namespace core {
 
 class Player {
 protected:
-  Player() = default;
-
   Player(const Player&) = default;
   Player& operator=(const Player&) = default;
   Player(Player&&) = default;
@@ -23,6 +21,8 @@ public:
   static std::shared_ptr<Player> newPlayer();
 
   virtual std::shared_ptr<Player> clone() const;
+
+  Player();
 
   void addTile(const Tile& tile, size_t count = 1);
   bool removeTile(const Tile& tile, size_t count = 1);

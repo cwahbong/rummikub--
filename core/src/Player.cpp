@@ -26,6 +26,10 @@ Player::clone() const
   return shared_ptr<Player>{new Player{*this}};
 }
 
+Player::Player()
+  : _{new Member{}}
+{/* Empty. */}
+
 void
 Player::addTile(const Tile& tile, size_t count)
 {
