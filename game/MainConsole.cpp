@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Rummikub.h"
 #include "Set.h"
+#include "Table.h"
 #include "Tile.h"
 
 #include <algorithm>
@@ -15,6 +16,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <string>
+#include <vector>
 
 using std::array;
 using std::cout;
@@ -23,10 +25,12 @@ using std::endl;
 using std::exception;
 using std::getline;
 using std::istringstream;
+using std::make_shared;
 using std::map;
 using std::ostream;
 using std::shared_ptr;
 using std::string;
+using std::vector;
 
 using rummikub::core::Agent;
 using rummikub::core::AgentDelegate;
@@ -138,16 +142,29 @@ const map<string, ConsoleAgent::CmdType> ConsoleAgent::CMD_MAP = {
 void
 MainConsole::start()
 {
-  array<shared_ptr<Agent>, 2> sp_agents;
-  sp_agents.fill(shared_ptr<Agent>{new ConsoleAgent{}});
-  Rummikub rummikub{sp_agents.begin(), sp_agents.end()};
-  rummikub.addTurnStartCallback([](const shared_ptr<const Player>&){
-    cout << "turn start\n";
-  });
-  rummikub.addTurnEndCallback([](const shared_ptr<const Player>&){
-    cout << "turn end\n";
-  });
-  rummikub.addGameEndCallback([](){cout << "game end.\n";});
+  array<shared_ptr<Agent>, 1> sp_agents;
+  sp_agents.fill(make_shared<ConsoleAgent>());
+  if (!sp_agents[0]) {
+    std::cerr << "EEEEE\n";
+  } else {
+    std::cerr << "OOOOO\n";
+  }
+  Rummikub rummikub{vector<shared_ptr<Agent>>{sp_agents.begin(), sp_agents.end()}};
+  rummikub.addTurnStartCallback(make_shared<Rummikub::TurnCallback>(
+    [](const shared_ptr<const Player>&) {
+      cout << "turn start\n";
+    }
+  ));
+  rummikub.addTurnEndCallback(make_shared<Rummikub::TurnCallback>(
+    [](const shared_ptr<const Player>&) {
+      cout << "turn end\n";
+    }
+  ));
+  rummikub.addGameEndCallback(make_shared<Rummikub::GameCallback>(
+    []() {
+      cout << "game end.\n";
+    }
+  ));
   rummikub.startGame();
   emit end();
 }

@@ -1,103 +1,144 @@
 #include "Rummikub.h"
 
 #include "Agent.h"
-#include "Player.h"
 #include "Table.h"
 #include "Tile.h"
+#include "TileManager.h"
 
-#include <iostream>
+#include <set>
 
 using std::make_shared;
-using std::shared_ptr;
+using std::set;
 using std::vector;
-using std::weak_ptr;
 
 namespace rummikub {
 namespace core {
 
-void
-Rummikub::turnStart(const shared_ptr<const Player>& sp_player)
+struct Rummikub::Member {
+  s_ptr<TileManager> sp_tileManager;
+  s_ptr<Table> sp_table;
+  vector<s_ptr<Player>> sp_players;
+  set<s_ptr<TurnCallback>> turnStartCallbacks;
+  set<s_ptr<TurnCallback>> turnEndCallbacks;
+  set<s_ptr<GameCallback>> gameEndCallbacks;
+
+  void
+  turnStart(const cs_ptr<Player>& sp_player)
+  {
+    for (const auto& sp_callback : turnStartCallbacks) {
+      (*sp_callback)(sp_player);
+    }
+  }
+
+  void
+  turnEnd(const cs_ptr<Player>& sp_player)
+  {
+    for (const auto& sp_callback : turnEndCallbacks) {
+      (*sp_callback)(sp_player);
+    }
+  }
+
+  void gameEnd()
+  {
+    for (const auto& sp_callback : gameEndCallbacks) {
+      (*sp_callback)();
+    }
+  }
+};
+
+Rummikub::Rummikub(const vector<s_ptr<Agent>>& agents)
+  : _{new Member{make_shared<TileManager>(), Table::newTable()}}
 {
-  for (const auto& callback : m_turnStartCallbacks) {
-    callback(sp_player);
+  _->sp_tileManager->shuffle();
+  for (const auto& sp_agent : agents) {
+    const auto& sp_player = Player::newPlayer();
+    *sp_agent; // XXX
+    sp_player->setAgent(sp_agent);
+    _->sp_players.push_back(sp_player);
   }
 }
 
-void
-Rummikub::turnEnd(const shared_ptr<const Player>& sp_player)
-{
-  for (const auto& callback : m_turnEndCallbacks) {
-    callback(sp_player);
-  }
-}
 
-void
-Rummikub::gameEnd()
-{
-  for (const auto& callback : m_gameEndCallbacks) {
-    callback();
-  }
-}
-
-vector<weak_ptr<Player>>
+vector<w_ptr<Player>>
 Rummikub::getPlayers()
 {
-  return vector<weak_ptr<Player>>{m_sp_players.begin(), m_sp_players.end()};
-}
-
-shared_ptr<Notifier<Rummikub>>
-Rummikub::getNotifier() const
-{
-  return m_sp_notifier;
+  return vector<w_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
 }
 
 void
-Rummikub::addTurnStartCallback(TurnCallback c)
+Rummikub::addTurnStartCallback(const s_ptr<TurnCallback>& callback)
 {
-  m_turnStartCallbacks.push_back(c);
+  _->turnStartCallbacks.insert(callback);
 }
 
 void
-Rummikub::addTurnEndCallback(TurnCallback c)
+Rummikub::addTurnEndCallback(const s_ptr<TurnCallback>& callback)
 {
-  m_turnEndCallbacks.push_back(c);
+  _->turnEndCallbacks.insert(callback);
 }
 
 void
-Rummikub::addGameEndCallback(GameCallback c)
+Rummikub::addGameEndCallback(const s_ptr<GameCallback>& callback)
 {
-  m_gameEndCallbacks.push_back(c);
+  _->gameEndCallbacks.insert(callback);
 }
+
+void
+Rummikub::delTurnStartCallback(const s_ptr<TurnCallback>& callback)
+{
+  _->turnStartCallbacks.erase(callback);
+}
+
+void
+Rummikub::delTurnEndCallback(const s_ptr<TurnCallback>& callback)
+{
+  _->turnEndCallbacks.erase(callback);
+}
+
+void
+Rummikub::delGameEndCallback(const s_ptr<GameCallback>& callback)
+{
+  _->gameEndCallbacks.erase(callback);
+}
+
+// Message Types:
+/*
+    1. Game start
+    2. Turn start (player)
+    3. Turn end (player)
+    4. Game end
+ */
 
 void
 Rummikub::startGame()
 {
   // get initial tiles.
-  for (auto sp_player : m_sp_players) {
+  for (auto sp_player : _->sp_players) {
     for (unsigned i=0; i<14; ++i) {
-      sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+      sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
     }
   }
+  // TODO notify the callbacks that the game is started.
   // start turns loop
   while (true) {
-    for (auto sp_player : m_sp_players) {
-      turnStart(sp_player);
+    for (auto sp_player : _->sp_players) {
+      _->turnStart(sp_player);
       const auto& sp_agent = sp_player->getAgent().lock();
       if (sp_agent) {
-        auto sp_delegate = make_shared<AgentDelegate>(m_sp_table, sp_player);
+        auto sp_delegate = make_shared<AgentDelegate>(_->sp_table, sp_player);
         sp_agent->response(sp_delegate);
         if (!sp_delegate->validate()) {
           sp_delegate->restore();
-          sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+          sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
         } else if (sp_delegate->countPut() == 0) {
-          sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+          sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
         }
       } else {
-        sp_player->addTile(m_sp_tileManager->getAndRemoveTile());
+        sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
       }
-      turnEnd(sp_player);
-      if (sp_player->empty() || m_sp_tileManager->empty()) {
-        gameEnd();
+      _->turnEnd(sp_player);
+      if (sp_player->empty() || _->sp_tileManager->empty()) {
+        _->gameEnd();
         return;
       }
     }
