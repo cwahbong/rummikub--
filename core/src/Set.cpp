@@ -97,13 +97,17 @@ struct Set::Member
   set<s_ptr<TileCallback>> insertTileCallbacks;
   set<s_ptr<TileCallback>> removeTileCallbacks;
 
-  void insertTileCall(const Tile& tile) {
+  void
+  insertTileCall(const Tile& tile)
+  {
     for (const auto& sp_callback : insertTileCallbacks) {
       (*sp_callback)(tile);
     }
   }
 
-  void removeTileCall(const Tile& tile) {
+  void
+  removeTileCall(const Tile& tile)
+  {
     for (const auto& sp_callback : removeTileCallbacks) {
       (*sp_callback)(tile);
     }
