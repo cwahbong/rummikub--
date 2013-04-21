@@ -23,6 +23,7 @@ public:
   virtual std::shared_ptr<Player> clone() const;
 
   Player();
+  ~Player();
 
   void addTile(const Tile& tile, size_t count = 1);
   bool removeTile(const Tile& tile, size_t count = 1);

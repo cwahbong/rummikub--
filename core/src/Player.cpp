@@ -30,6 +30,11 @@ Player::Player()
   : _{new Member{}}
 {/* Empty. */}
 
+Player::~Player()
+{
+  delete _;
+}
+
 void
 Player::addTile(const Tile& tile, size_t count)
 {

@@ -20,6 +20,7 @@ public:
 
 public:
   Rummikub(const std::vector<s_ptr<Agent>>&);
+  ~Rummikub();
 
   std::vector<w_ptr<Player>> getPlayers();
 

@@ -57,6 +57,10 @@ Rummikub::Rummikub(const vector<s_ptr<Agent>>& agents)
   }
 }
 
+Rummikub::~Rummikub()
+{
+  delete _;
+}
 
 vector<w_ptr<Player>>
 Rummikub::getPlayers()
