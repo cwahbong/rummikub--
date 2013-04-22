@@ -3,7 +3,7 @@
 
 #include "CoreFwd.h"
 #include "StdMemory.h"
-#include "Table.h"
+#include "model/Table.h"
 
 #include <QWidget>
 

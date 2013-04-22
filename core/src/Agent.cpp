@@ -1,9 +1,9 @@
 #include "Agent.h"
 
-#include "Player.h"
-#include "Set.h"
-#include "Table.h"
-#include "Tile.h"
+#include "model/Player.h"
+#include "model/Set.h"
+#include "model/Table.h"
+#include "model/Tile.h"
 
 namespace rummikub {
 namespace core {

@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "CoreFwd.h"
-#include "Tile.h"
+#include "model/Tile.h"
 
 namespace Ui {
 class TileWidget;

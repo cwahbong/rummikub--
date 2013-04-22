@@ -1,6 +1,6 @@
-#include "Set.h"
+#include "model/Set.h"
 
-#include "Tile.h"
+#include "model/Tile.h"
 
 #include <algorithm>
 #include <array>

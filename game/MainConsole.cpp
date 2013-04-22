@@ -2,11 +2,11 @@
 
 #include "CoreFwd.h"
 #include "Agent.h"
-#include "Player.h"
-#include "Rummikub.h"
-#include "Set.h"
-#include "Table.h"
-#include "Tile.h"
+#include "model/Player.h"
+#include "model/Rummikub.h"
+#include "model/Set.h"
+#include "model/Table.h"
+#include "model/Tile.h"
 
 #include <algorithm>
 #include <array>

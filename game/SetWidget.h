@@ -1,8 +1,8 @@
 #ifndef RUMMIKUB_GAME__SETWIDGET_H
 #define RUMMIKUB_GAME__SETWIDGET_H
 
-#include "Set.h"
 #include "StdMemory.h"
+#include "model/Set.h"
 
 #include <QWidget>
 

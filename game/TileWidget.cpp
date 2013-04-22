@@ -4,8 +4,6 @@
 #include <QPainter>
 #include <QPen>
 
-#include "Tile.h"
-
 using ::rummikub::core::Color;
 using ::rummikub::core::Tile;
 

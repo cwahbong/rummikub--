@@ -1,8 +1,8 @@
-#include "Rummikub.h"
+#include "model/Rummikub.h"
 
+#include "model/Table.h"
+#include "model/Tile.h"
 #include "Agent.h"
-#include "Table.h"
-#include "Tile.h"
 #include "TileManager.h"
 
 #include <set>

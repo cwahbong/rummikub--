@@ -1,6 +1,6 @@
-#include "Table.h"
+#include "model/Table.h"
 
-#include "Set.h"
+#include "model/Set.h"
 
 #include <set>
 

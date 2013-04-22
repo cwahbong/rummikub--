@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "Tile.h"
+#include "model/Tile.h"
 
 using std::random_shuffle;
 using std::vector;

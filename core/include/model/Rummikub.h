@@ -15,14 +15,14 @@ namespace core {
 
 class Rummikub {
 public:
-  typedef std::function<void(const cs_ptr<Player>)> TurnCallback;
+  typedef std::function<void(const cs_ptr<Player>&)> TurnCallback;
   typedef std::function<void()> GameCallback;
 
 public:
   Rummikub(const std::vector<s_ptr<Agent>>&);
-  ~Rummikub();
+  virtual ~Rummikub();
 
-  std::vector<w_ptr<Player>> getPlayers();
+  // std::vector<w_ptr<Player>> getPlayers();
 
   void addTurnStartCallback(const s_ptr<TurnCallback>&);
   void addTurnEndCallback(const s_ptr<TurnCallback>&);
@@ -33,6 +33,12 @@ public:
   void delGameEndCallback(const s_ptr<GameCallback>&);
 
   void startGame();
+
+  s_ptr<Table> getTable();
+  cs_ptr<Table> getTable() const;
+
+  std::vector<s_ptr<Player>> getPlayers();
+  std::vector<cs_ptr<Player>> getPlayers() const;
 
 private:
   struct Member;

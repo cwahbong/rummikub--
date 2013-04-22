@@ -3,8 +3,8 @@
 
 #include "TileWidget.h"
 
-#include "Rummikub.h"
-#include "Tile.h"
+#include "model/Rummikub.h"
+#include "model/Tile.h"
 
 #include <QLayout>
 

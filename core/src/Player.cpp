@@ -1,6 +1,6 @@
-#include "Player.h"
+#include "model/Player.h"
 
-#include "Tile.h"
+#include "model/Tile.h"
 
 #include <vector>
 
