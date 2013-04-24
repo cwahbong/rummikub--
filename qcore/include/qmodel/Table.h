@@ -5,7 +5,7 @@
 #include "StdMemory.h"
 #include "model/Table.h"
 
-// #include "qmodel/Set.h"
+#include "qmodel/Set.h"
 
 #include <QObject>
 
@@ -17,15 +17,15 @@ class Table : public QObject {
 
 public:
   explicit Table(core::Table* table, QObject *parent = 0);
+  ~Table();
     
 signals:
-  // void setAdded(const cs_ptr<Set>&);
-  // void setRemoved(const cs_ptr<Set>&);
+  void setInserted(const cs_ptr<Set>&);
+  void setRemoved(const cs_ptr<Set>&);
 
 private:
-  const s_ptr<core::Table> m_table;
-  s_ptr<core::Table::SetCallback> m_insertSetCallback;
-  s_ptr<core::Table::SetCallback> m_removeSetCallback;
+  struct Member;
+  const u_ptr<Member> _;
 };
 
 } // namespace qmodel

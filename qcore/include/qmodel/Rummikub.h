@@ -30,11 +30,8 @@ signals:
   void turnEnded(const cs_ptr<Player>&);
 
 private:
-  const s_ptr<core::Rummikub> m_rummikub;
-  cs_ptr<Table> m_table;
-  s_ptr<core::Rummikub::TurnCallback> m_sp_turnStartCallback;
-  s_ptr<core::Rummikub::TurnCallback> m_sp_turnEndCallback;
-  std::map<cs_ptr<core::Player>, cs_ptr<Player>> m_playerMap;
+  struct Member;
+  const u_ptr<Member> _;
 };
 
 } // namespace qmodel
