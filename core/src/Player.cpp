@@ -1,29 +1,48 @@
 #include "model/Player.h"
 
+#include "Holder.h"
 #include "model/Tile.h"
 
-#include <vector>
+#include <set>
 
-using std::shared_ptr;
+using std::set;
 using std::vector;
 
 namespace rummikub {
 namespace core {
 
 struct Player::Member {
-  shared_ptr<Agent> sp_agent{};
+  s_ptr<Agent> sp_agent{};
   Holder<Tile> holder{};
+  set<s_ptr<TileCallback>> insertTileCallbacks;
+  set<s_ptr<TileCallback>> removeTileCallbacks;
+
+  void
+  insertTileCall(const Tile& tile)
+  {
+    for (const auto& sp_callback : insertTileCallbacks) {
+      (*sp_callback)(tile);
+    }
+  }
+
+  void
+  removeTileCall(const Tile& tile)
+  {
+    for (const auto& sp_callback : removeTileCallbacks) {
+      (*sp_callback)(tile);
+    }
+  }
 };
 
-shared_ptr<Player>
+s_ptr<Player>
 Player::newPlayer() {
-  return shared_ptr<Player>{new Player{}};
+  return s_ptr<Player>{new Player{}};
 }
 
-shared_ptr<Player>
+s_ptr<Player>
 Player::clone() const
 {
-  return shared_ptr<Player>{new Player{*this}};
+  return s_ptr<Player>{new Player{*this}};
 }
 
 Player::Player()
@@ -39,18 +58,23 @@ void
 Player::addTile(const Tile& tile, size_t count)
 {
   _->holder.add(tile, count);
+  _->insertTileCall(tile);
 }
 
 bool
 Player::removeTile(const Tile& tile, size_t count)
 {
-  return _->holder.remove(tile, count);
+  bool result = _->holder.remove(tile, count);
+  if (result) {
+    _->removeTileCall(tile);
+  }
+  return result;
 }
 
 void
 Player::clearTiles()
 {
-  return _->holder.clear();
+  _->holder.clear();
 }
 
 bool
@@ -84,9 +108,32 @@ Player::getAgent()
 }
 
 void
-Player::setAgent(const shared_ptr<Agent>& sp_agent)
+Player::setAgent(const s_ptr<Agent>& sp_agent)
 {
   _->sp_agent = sp_agent;
+}
+void
+Player::addInsertTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->insertTileCallbacks.insert(callback);
+}
+
+void
+Player::addRemoveTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->removeTileCallbacks.insert(callback);
+}
+
+void
+Player::delInsertTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->insertTileCallbacks.erase(callback);
+}
+
+void
+Player::delRemoveTileCallback(const s_ptr<TileCallback>& callback)
+{
+  _->removeTileCallbacks.erase(callback);
 }
 
 void

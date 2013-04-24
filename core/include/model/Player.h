@@ -2,15 +2,17 @@
 #define RUMMIKUB_CORE__PLAYER_H
 
 #include "CoreFwd.h"
-#include "Holder.h"
+#include "StdMemory.h"
 
-#include <memory>
-#include <map>
+#include <vector>
 
 namespace rummikub {
 namespace core {
 
 class Player {
+public:
+  using TileCallback = std::function<void(const Tile&)>;
+
 protected:
   Player(const Player&) = default;
   Player& operator=(const Player&) = default;
@@ -18,9 +20,9 @@ protected:
   Player& operator=(Player&&) = default;
 
 public:
-  static std::shared_ptr<Player> newPlayer();
+  static s_ptr<Player> newPlayer();
 
-  virtual std::shared_ptr<Player> clone() const;
+  virtual s_ptr<Player> clone() const;
 
   Player();
   ~Player();
@@ -35,6 +37,12 @@ public:
 
   std::weak_ptr<Agent> getAgent();
   void setAgent(const std::shared_ptr<Agent>&);
+
+  void addInsertTileCallback(const s_ptr<TileCallback>&);
+  void addRemoveTileCallback(const s_ptr<TileCallback>&);
+
+  void delInsertTileCallback(const s_ptr<TileCallback>&);
+  void delRemoveTileCallback(const s_ptr<TileCallback>&);
 
 private:
   struct Member;
