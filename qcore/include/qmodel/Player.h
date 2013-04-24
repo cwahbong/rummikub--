@@ -2,7 +2,6 @@
 #define RUMMIKUB_QCORE__PLAYER_H
 
 #include "CoreFwd.h"
-#include "Player.h"
 #include "StdMemory.h"
 
 #include <QObject>
@@ -12,14 +11,19 @@ namespace qmodel {
 
 class Player : public QObject {
   Q_OBJECT
+  using Tile = core::Tile;
 
 public:
   explicit Player(core::Player* player, QObject *parent = 0);
+  ~Player();
 
 signals:
+  void tileInserted(const Tile&);
+  void tileRemoved(const Tile&);
 
 private:
-  const s_ptr<core::Player> m_player;
+  struct Member;
+  u_ptr<Member> _;
 };
 
 } // namespace qmodel
