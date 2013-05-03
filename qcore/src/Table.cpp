@@ -14,18 +14,18 @@ struct Table::Member {
   const s_ptr<core::Table::SetCallback> sp_removeSetCallback;
 };
 
-Table::Table(core::Table* table, QObject *parent)
+Table::Table(const s_ptr<core::Table>& sp_table, QObject *parent)
   : QObject{parent},
     _{new Member{
-      s_ptr<core::Table>{table},
+      sp_table,
       make_shared<core::Table::SetCallback>(
         [this](const s_ptr<core::Set>& sp_set) {
-          emit setInserted(make_shared<const Set>(sp_set.get()));
+          emit setInserted(make_shared<const Set>(sp_set));
         }
       ),
       make_shared<core::Table::SetCallback>(
         [this](const s_ptr<core::Set>& sp_set) {
-          emit setRemoved(make_shared<const Set>(sp_set.get()));
+          emit setRemoved(make_shared<const Set>(sp_set));
         }
       )
     }}

@@ -19,7 +19,7 @@ class Rummikub : public QObject {
   Q_OBJECT
 
 public:
-  explicit Rummikub(core::Rummikub* rummikub, QObject *parent = 0);
+  explicit Rummikub(const s_ptr<core::Rummikub>&, QObject *parent = 0);
   ~Rummikub();
     
 signals:

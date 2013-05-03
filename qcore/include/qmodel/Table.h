@@ -16,7 +16,7 @@ class Table : public QObject {
   Q_OBJECT
 
 public:
-  explicit Table(core::Table* table, QObject *parent = 0);
+  explicit Table(const s_ptr<core::Table>&, QObject *parent = 0);
   ~Table();
     
 signals:

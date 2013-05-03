@@ -15,10 +15,10 @@ struct Player::Member {
   const s_ptr<core::Player::TileCallback> sp_removeTileCallback;
 };
 
-Player::Player(core::Player* player, QObject *parent)
+Player::Player(const s_ptr<core::Player>& sp_player, QObject *parent)
   : QObject{parent},
     _{new Member{
-      s_ptr<core::Player>{player},
+      sp_player,
       make_shared<core::Player::TileCallback>(
         [this](const Tile& tile) {
           emit tileInserted(tile);

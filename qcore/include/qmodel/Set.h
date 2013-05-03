@@ -1,10 +1,11 @@
 #ifndef RUMMIKUB_QCORE__SET_H
 #define RUMMIKUB_QCORE__SET_H
 
+#include "Fwd.h"
+
 #include "CoreFwd.h"
 #include "StdMemory.h"
 #include "model/Set.h"
-#include "model/Tile.h"
 
 #include <QObject>
 
@@ -13,10 +14,9 @@ namespace qmodel {
 
 class Set : public QObject {
   Q_OBJECT
-  using Tile = core::Tile;
 
 public:
-  explicit Set(core::Set* set, QObject *parent = 0);
+  explicit Set(const s_ptr<core::Set>&, QObject *parent = 0);
   ~Set();
 
   std::vector<core::Tile> getValidatedTiles() const;

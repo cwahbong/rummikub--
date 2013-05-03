@@ -18,11 +18,11 @@ struct Rummikub::Member {
   std::map<cs_ptr<core::Player>, cs_ptr<Player>> playerMap;
 };
 
-Rummikub::Rummikub(core::Rummikub* rummikub, QObject *parent)
+Rummikub::Rummikub(const s_ptr<core::Rummikub>& sp_rummikub, QObject *parent)
   : QObject{parent},
     _{new Member{
-      s_ptr<core::Rummikub>{rummikub},
-      make_shared<Table>(rummikub->getTable().get()),
+      sp_rummikub,
+      make_shared<Table>(sp_rummikub->getTable()),
       make_shared<core::Rummikub::TurnCallback>(
         [this](const cs_ptr<core::Player>& sp_player) {
           emit turnStarted(_->playerMap[sp_player]);
@@ -35,8 +35,8 @@ Rummikub::Rummikub(core::Rummikub* rummikub, QObject *parent)
       )
     }}
 {
-  for (const auto& sp_player : rummikub->getPlayers()) {
-    _->playerMap[sp_player] = make_shared<Player>(sp_player.get());
+  for (const auto& sp_player : sp_rummikub->getPlayers()) {
+    _->playerMap[sp_player] = make_shared<Player>(sp_player);
   }
   _->sp_rummikub->addTurnStartCallback(_->sp_turnStartCallback);
   _->sp_rummikub->addTurnEndCallback(_->sp_turnEndCallback);
