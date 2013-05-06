@@ -5,10 +5,12 @@
 #include "Agent.h"
 #include "TileManager.h"
 
+#include <map>
 #include <set>
 
 using std::const_pointer_cast;
 using std::make_shared;
+using std::map;
 using std::static_pointer_cast;
 using std::set;
 using std::vector;
@@ -19,17 +21,34 @@ namespace core {
 struct Rummikub::Member {
   s_ptr<TileManager> sp_tileManager;
   s_ptr<Table> sp_table;
-  vector<s_ptr<Player>> sp_players;
+  vector<s_ptr<Agent>> sp_agents;
+  map<s_ptr<Agent>, s_ptr<Player>> playerMap;
   set<s_ptr<TurnCallback>> turnStartCallbacks;
   set<s_ptr<TurnCallback>> turnEndCallbacks;
   set<s_ptr<GameCallback>> gameEndCallbacks;
 
-  void initPlayers()
+  void
+  initPlayers()
   {
-    for (auto sp_player : sp_players) {
+    for (const auto& sp_agent : sp_agents) {
+      const auto& sp_player = playerMap[sp_agent];
       for (unsigned i=0; i<14; ++i) {
         sp_player->addTile(sp_tileManager->getAndRemoveTile());
       }
+    }
+  }
+
+  void
+  turn(const s_ptr<Agent>& sp_agent)
+  {
+    const auto& sp_player = playerMap[sp_agent];
+    auto sp_delegate = make_shared<AgentDelegate>(sp_table, sp_player);
+    sp_agent->response(sp_delegate);
+    if (!sp_delegate->validate()) {
+      sp_delegate->restore();
+      sp_player->addTile(sp_tileManager->getAndRemoveTile());
+    } else if (sp_delegate->countPut() == 0) {
+      sp_player->addTile(sp_tileManager->getAndRemoveTile());
     }
   }
 
@@ -49,7 +68,8 @@ struct Rummikub::Member {
     }
   }
 
-  void gameEnd()
+  void
+  gameEnd()
   {
     for (const auto& sp_callback : gameEndCallbacks) {
       (*sp_callback)();
@@ -63,8 +83,8 @@ Rummikub::Rummikub(const vector<s_ptr<Agent>>& agents)
   _->sp_tileManager->shuffle();
   for (const auto& sp_agent : agents) {
     const auto& sp_player = Player::newPlayer();
-    sp_player->setAgent(sp_agent);
-    _->sp_players.push_back(sp_player);
+    _->sp_agents.push_back(sp_agent);
+    _->playerMap[sp_agent] = sp_player;
   }
 }
 
@@ -124,13 +144,14 @@ Rummikub::getTable() const
 vector<s_ptr<Player>>
 Rummikub::getPlayers()
 {
-  return vector<s_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
+  // XXX using playerMap instead
+  // return vector<s_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
 }
 
 vector<cs_ptr<Player>>
 Rummikub::getPlayers() const
 {
-  return vector<cs_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
+  //return vector<cs_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
 }
 
 // Message Types:
@@ -148,26 +169,15 @@ Rummikub::startGame()
   // TODO notify the callbacks that the game is started.
   // start turns loop
   while (true) {
-    for (auto sp_player : _->sp_players) {
+    for (auto sp_agent : _->sp_agents) {
+      auto sp_player = _->playerMap[sp_agent];
       _->turnStart(sp_player);
-      const auto& sp_agent = sp_player->getAgent().lock();
-      if (sp_agent) {
-        auto sp_delegate = make_shared<AgentDelegate>(_->sp_table, sp_player);
-        sp_agent->response(sp_delegate);
-        if (!sp_delegate->validate()) {
-          sp_delegate->restore();
-          sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
-        } else if (sp_delegate->countPut() == 0) {
-          sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
-        }
-      } else {
-        sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
-      }
-      _->turnEnd(sp_player);
+      _->turn(sp_agent);
       if (sp_player->empty() || _->sp_tileManager->empty()) {
         _->gameEnd();
         return;
       }
+      _->turnEnd(sp_player);
     }
   }
 }
