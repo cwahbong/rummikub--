@@ -7,7 +7,9 @@
 
 #include <set>
 
+using std::const_pointer_cast;
 using std::make_shared;
+using std::static_pointer_cast;
 using std::set;
 using std::vector;
 
@@ -21,6 +23,15 @@ struct Rummikub::Member {
   set<s_ptr<TurnCallback>> turnStartCallbacks;
   set<s_ptr<TurnCallback>> turnEndCallbacks;
   set<s_ptr<GameCallback>> gameEndCallbacks;
+
+  void initPlayers()
+  {
+    for (auto sp_player : sp_players) {
+      for (unsigned i=0; i<14; ++i) {
+        sp_player->addTile(sp_tileManager->getAndRemoveTile());
+      }
+    }
+  }
 
   void
   turnStart(const cs_ptr<Player>& sp_player)
@@ -62,12 +73,6 @@ Rummikub::~Rummikub()
   delete _;
 }
 
-vector<w_ptr<Player>>
-Rummikub::getPlayers()
-{
-  return vector<w_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
-}
-
 void
 Rummikub::addTurnStartCallback(const s_ptr<TurnCallback>& callback)
 {
@@ -104,6 +109,30 @@ Rummikub::delGameEndCallback(const s_ptr<GameCallback>& callback)
   _->gameEndCallbacks.erase(callback);
 }
 
+s_ptr<Table>
+Rummikub::getTable()
+{
+  return const_pointer_cast<Table>(static_cast<const Rummikub*>(this)->getTable());
+}
+
+cs_ptr<Table>
+Rummikub::getTable() const
+{
+  return _->sp_table;
+}
+
+vector<s_ptr<Player>>
+Rummikub::getPlayers()
+{
+  return vector<s_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
+}
+
+vector<cs_ptr<Player>>
+Rummikub::getPlayers() const
+{
+  return vector<cs_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
+}
+
 // Message Types:
 /*
     1. Game start
@@ -115,12 +144,7 @@ Rummikub::delGameEndCallback(const s_ptr<GameCallback>& callback)
 void
 Rummikub::startGame()
 {
-  // get initial tiles.
-  for (auto sp_player : _->sp_players) {
-    for (unsigned i=0; i<14; ++i) {
-      sp_player->addTile(_->sp_tileManager->getAndRemoveTile());
-    }
-  }
+  _->initPlayers();
   // TODO notify the callbacks that the game is started.
   // start turns loop
   while (true) {
