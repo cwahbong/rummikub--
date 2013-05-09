@@ -27,6 +27,9 @@ AgentDelegate::AgentDelegate(const s_ptr<Table>& sp_table,
   }}
 {/* Empty. */}
 
+AgentDelegate::~AgentDelegate()
+{/* Empty. */}
+
 bool
 AgentDelegate::putTile(Tile tile, const cs_ptr<Set>& set)
 {

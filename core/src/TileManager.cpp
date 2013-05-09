@@ -32,12 +32,10 @@ TileManager::TileManager()
 }
 
 TileManager::~TileManager()
-{
-  delete _;
-}
+{/* Empty. */}
 
 Tile
-TileManager::getAndRemoveTile()
+TileManager::drawTile()
 {
   auto result = _->tiles.back();
   _->tiles.pop_back();

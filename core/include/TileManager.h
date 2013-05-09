@@ -2,6 +2,7 @@
 #define RUMMIKUB_CORE__TILE_MANAGER_H
 
 #include "CoreFwd.h"
+#include "StdMemory.h"
 
 namespace rummikub {
 namespace core {
@@ -15,14 +16,14 @@ public:
   TileManager();
   virtual ~TileManager();
 
-  Tile getAndRemoveTile();
+  Tile drawTile();
   bool empty() const;
 
   void shuffle();
 
 private:
   struct Member;
-  Member* _;
+  u_ptr<Member> _;
 };
 
 } // namespace core

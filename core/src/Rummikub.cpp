@@ -33,7 +33,7 @@ struct Rummikub::Member {
     for (const auto& sp_agent : sp_agents) {
       const auto& sp_player = playerMap[sp_agent];
       for (unsigned i=0; i<14; ++i) {
-        sp_player->addTile(sp_tileManager->getAndRemoveTile());
+        sp_player->addTile(sp_tileManager->drawTile());
       }
     }
   }
@@ -46,9 +46,9 @@ struct Rummikub::Member {
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
-      sp_player->addTile(sp_tileManager->getAndRemoveTile());
+      sp_player->addTile(sp_tileManager->drawTile());
     } else if (sp_delegate->countPut() == 0) {
-      sp_player->addTile(sp_tileManager->getAndRemoveTile());
+      sp_player->addTile(sp_tileManager->drawTile());
     }
   }
 
