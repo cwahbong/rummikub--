@@ -37,7 +37,7 @@ TileManager::~TileManager()
 }
 
 Tile
-TileManager::getAndRemoveTile()
+TileManager::drawTile()
 {
   auto result = _->tiles.back();
   _->tiles.pop_back();

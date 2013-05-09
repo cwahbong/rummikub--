@@ -15,7 +15,7 @@ public:
   TileManager();
   virtual ~TileManager();
 
-  Tile getAndRemoveTile();
+  Tile drawTile();
   bool empty() const;
 
   void shuffle();
