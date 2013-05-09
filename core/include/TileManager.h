@@ -2,6 +2,7 @@
 #define RUMMIKUB_CORE__TILE_MANAGER_H
 
 #include "CoreFwd.h"
+#include "StdMemory.h"
 
 namespace rummikub {
 namespace core {
@@ -22,7 +23,7 @@ public:
 
 private:
   struct Member;
-  Member* _;
+  u_ptr<Member> _;
 };
 
 } // namespace core

@@ -32,9 +32,7 @@ TileManager::TileManager()
 }
 
 TileManager::~TileManager()
-{
-  delete _;
-}
+{/* Empty. */}
 
 Tile
 TileManager::drawTile()
