@@ -2,7 +2,10 @@
 #define RUMMIKUB_GAME__SETWIDGET_H
 
 #include "StdMemory.h"
-#include "model/Set.h"
+
+#include "CoreFwd.h"
+
+#include "qmodel/Fwd.h"
 
 #include <QWidget>
 
@@ -16,18 +19,14 @@ namespace game {
 class SetWidget : public QWidget
 {
   Q_OBJECT
-  using Set = core::Set;
+  using Set = qmodel::Set;
   using Tile = core::Tile;
 
 public:
   explicit SetWidget(QWidget *parent = 0);
   ~SetWidget();
-  void bindSet(const std::shared_ptr<Set>&);
+  void bindSet(const s_ptr<Set>&);
   void unbindSet();
-
-signals:
-  void tileInserted(const Tile& tile);
-  void tileRemoved(const Tile& tile);
 
 private slots:
   void insertTile(const Tile& tile);
@@ -35,9 +34,7 @@ private slots:
 
 private:
   Ui::SetWidget *ui;
-  s_ptr<core::Set> m_sp_set;
-  s_ptr<core::Set::TileCallback> m_sp_insertTileCallback;
-  s_ptr<core::Set::TileCallback> m_sp_removeTileCallback;
+  s_ptr<Set> m_sp_set;
 };
 
 } // namespace game

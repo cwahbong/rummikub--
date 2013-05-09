@@ -3,15 +3,13 @@
 
 #include "TileWidget.h"
 
-#include "model/Rummikub.h"
+#include "qmodel/Set.h"
+
 #include "model/Tile.h"
 
 #include <QLayout>
 
 using std::make_shared;
-
-using rummikub::core::Set;
-using rummikub::core::Tile;
 
 namespace rummikub {
 namespace game {
@@ -21,10 +19,6 @@ SetWidget::SetWidget(QWidget *parent)
     ui(new Ui::SetWidget)
 {
   ui->setupUi(this);
-  QObject::connect(this, SIGNAL(tileInserted(const Tile&)),
-                   this, SLOT(insertTile(const Tile&)));
-  QObject::connect(this, SIGNAL(tileRemoved(const Tile&)),
-                   this, SLOT(removeTile(const Tile&)));
 }
 
 SetWidget::~SetWidget()
@@ -37,34 +31,38 @@ void
 SetWidget::bindSet(const s_ptr<Set>& sp_set)
 {
   unbindSet();
+  // TODO lock the sp_set
+  m_sp_set = sp_set;
   for (const auto& tile : sp_set->getValidatedTiles()) {
     insertTile(tile);
   }
-  m_sp_set = sp_set;
-  m_sp_insertTileCallback = make_shared<Set::TileCallback>(
-    [this](const Tile& tile) {
-      emit tileInserted(tile);
-    }
+  QObject::connect(
+    sp_set.get(), SIGNAL(tileInserted(const Tile&)),
+    this, SLOT(insertTile(const Tile&))
   );
-  sp_set->addInsertTileCallback(m_sp_insertTileCallback);
-  m_sp_removeTileCallback = make_shared<Set::TileCallback>(
-    [this](const Tile& tile) {
-      emit tileRemoved(tile);
-    }
+  QObject::connect(
+    sp_set.get(), SIGNAL(tileRemoved(const Tile&)),
+    this, SLOT(removeTile(const Tile&))
   );
-  sp_set->addRemoveTileCallback(m_sp_removeTileCallback);
+  // TODO unlock the sp_set
 }
 
 void
 SetWidget::unbindSet()
 {
+  if (m_sp_set) {
+    QObject::disconnect(
+      m_sp_set.get(), SIGNAL(tileInserted(const Tile&)),
+      this, SLOT(insertTile(const Tile&))
+    );
+    QObject::disconnect(
+      m_sp_set.get(), SIGNAL(tileRemoved(const Tile&)),
+      this, SLOT(removeTile(const Tile&))
+    );
+    m_sp_set = nullptr;
+  }
   for (auto* p_tileWidget : findChildren<TileWidget*>()) {
     p_tileWidget->deleteLater();
-  }
-  if (m_sp_set) {
-    m_sp_set->delInsertTileCallback(m_sp_insertTileCallback);
-    m_sp_set->delInsertTileCallback(m_sp_removeTileCallback);
-    m_sp_set = nullptr;
   }
 }
 
