@@ -19,6 +19,7 @@ class AgentDelegate {
 public:
   AgentDelegate(const s_ptr<Table>&,
                 const s_ptr<Player>&);
+  ~AgentDelegate();
   bool putTile(Tile, const cs_ptr<Set>& = cs_ptr<Set>{});
   bool moveTile(Tile, const cs_ptr<Set>&, const cs_ptr<Set>&);
   const cs_ptr<Table> getTable() const;
@@ -29,7 +30,7 @@ public:
 
 private:
   struct Member;
-  Member* _;
+  u_ptr<Member> _;
 };
 
 } // namespace core
