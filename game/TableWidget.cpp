@@ -16,46 +16,14 @@ TableWidget::TableWidget(QWidget *parent)
     ui(new Ui::TableWidget)
 {
   ui->setupUi(this);
-  QObject::connect(this, SIGNAL(setInserted(const s_ptr<Set>&)),
-                   this, SLOT(insertSet(const s_ptr<Set>&)));
-  QObject::connect(this, SIGNAL(setRemoved(const s_ptr<Set>&)),
-                   this, SLOT(removeSet(const s_ptr<Set>&)));
 }
 
 TableWidget::~TableWidget()
 {
-  unbindTable();
   delete ui;
 }
 
-void
-TableWidget::bindTable(const s_ptr<Table>& sp_table)
-{
-  m_sp_table = sp_table;
-  m_insertSetCallback = make_shared<Table::SetCallback>(
-    [this](const s_ptr<Set>& sp_set) {
-      emit setInserted(sp_set);
-    }
-  );
-  m_sp_table->addInsertSetCallback(m_insertSetCallback);
-  m_removeSetCallback = make_shared<Table::SetCallback>(
-    [this](const s_ptr<Set>& sp_set) {
-      emit setRemoved(sp_set);
-    }
-  );
-  m_sp_table->addRemoveSetCallback(m_removeSetCallback);
-}
-
-void
-TableWidget::unbindTable()
-{
-  if (m_sp_table) {
-    m_sp_table->delInsertSetCallback(m_insertSetCallback);
-    m_sp_table->delRemoveSetCallback(m_removeSetCallback);
-    m_sp_table = nullptr;
-  }
-}
-
+/*
 void
 TableWidget::insertSet(const s_ptr<Set>& sp_set)
 {
@@ -68,9 +36,10 @@ void
 TableWidget::removeSet(const s_ptr<Set>& sp_set)
 {
   // TODO
-  /* for (auto* p_SetWidget : findChildren<SetWidget*>()) {
-  } */
+  for (auto* p_SetWidget : findChildren<SetWidget*>()) {
+  }
 }
+*/
 
 } // namespace game
 } // namespace rummikub
