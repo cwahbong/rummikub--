@@ -12,7 +12,6 @@ namespace core {
 class Set {
 public:
   enum Type {RUN, GROUP, NONE};
-  using TileCallback = std::function<void(const Tile&)>;
 
 protected:
   Set(Set&&) = default;
@@ -20,10 +19,10 @@ protected:
   void validate() const;
 
 public:
-  Set();
-  virtual ~Set();
-
+  Set(const cw_ptr<Game>&);
   Set(const Set&);
+  ~Set();
+
   Set& operator=(const Set&) = delete;
 
   void insert(const Tile&);
@@ -32,12 +31,6 @@ public:
 
   Type getType() const;
   std::vector<Tile> getValidatedTiles() const;
-
-  void addInsertTileCallback(const s_ptr<TileCallback>&);
-  void addRemoveTileCallback(const s_ptr<TileCallback>&);
-
-  void delInsertTileCallback(const s_ptr<TileCallback>&);
-  void delRemoveTileCallback(const s_ptr<TileCallback>&);
 
 private:
   struct Member;

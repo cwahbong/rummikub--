@@ -12,41 +12,16 @@ namespace rummikub {
 namespace core {
 
 struct Player::Member {
-  s_ptr<Agent> sp_agent{};
-  Holder<Tile> holder{};
-  set<s_ptr<TileCallback>> insertTileCallbacks;
-  set<s_ptr<TileCallback>> removeTileCallbacks;
-
-  void
-  insertTileCall(const Tile& tile)
-  {
-    for (const auto& sp_callback : insertTileCallbacks) {
-      (*sp_callback)(tile);
-    }
-  }
-
-  void
-  removeTileCall(const Tile& tile)
-  {
-    for (const auto& sp_callback : removeTileCallbacks) {
-      (*sp_callback)(tile);
-    }
-  }
+  const cw_ptr<Game> wp_game;
+  Holder<Tile> holder;
 };
 
-s_ptr<Player>
-Player::newPlayer() {
-  return s_ptr<Player>{new Player{}};
-}
+Player::Player(const cw_ptr<Game>& wp_game)
+  : _{new Member{wp_game}}
+{/* Empty. */}
 
-s_ptr<Player>
-Player::clone() const
-{
-  return s_ptr<Player>{new Player{*this}};
-}
-
-Player::Player()
-  : _{new Member{}}
+Player::Player(const Player& player)
+  : _{new Member(*player._)}
 {/* Empty. */}
 
 Player::~Player()
@@ -58,17 +33,12 @@ void
 Player::addTile(const Tile& tile, size_t count)
 {
   _->holder.add(tile, count);
-  _->insertTileCall(tile);
 }
 
 bool
 Player::removeTile(const Tile& tile, size_t count)
 {
-  bool result = _->holder.remove(tile, count);
-  if (result) {
-    _->removeTileCall(tile);
-  }
-  return result;
+  return _->holder.remove(tile, count);
 }
 
 void
@@ -99,41 +69,6 @@ vector<Tile>
 Player::getKinds() const
 {
   return _->holder.kinds();
-}
-
-std::weak_ptr<Agent>
-Player::getAgent()
-{
-  return _->sp_agent;
-}
-
-void
-Player::setAgent(const s_ptr<Agent>& sp_agent)
-{
-  _->sp_agent = sp_agent;
-}
-void
-Player::addInsertTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->insertTileCallbacks.insert(callback);
-}
-
-void
-Player::addRemoveTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->removeTileCallbacks.insert(callback);
-}
-
-void
-Player::delInsertTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->insertTileCallbacks.erase(callback);
-}
-
-void
-Player::delRemoveTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->removeTileCallbacks.erase(callback);
 }
 
 void

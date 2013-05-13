@@ -5,6 +5,7 @@
 #include <set>
 
 using std::const_pointer_cast;
+using std::make_shared;
 using std::set;
 using std::shared_ptr;
 using std::vector;
@@ -14,9 +15,8 @@ namespace rummikub {
 namespace core {
 
 struct Table::Member {
-  set<shared_ptr<Set>> sets{};
-  set<s_ptr<SetCallback>> insertSetCallbacks;
-  set<s_ptr<SetCallback>> removeSetCallbacks;
+  const cw_ptr<Game> wp_game;
+  set<shared_ptr<Set>> sets;
 
   bool validate() const {
     for (const auto& sp_set : sets) {
@@ -28,18 +28,12 @@ struct Table::Member {
   }
 };
 
-shared_ptr<Table>
-Table::newTable()
-{
-  return shared_ptr<Table>{new Table{}};
-}
-
-Table::Table()
-  : _{new Member{}}
-{}
+Table::Table(const cw_ptr<Game>& wp_game)
+  : _{new Member{wp_game}}
+{/* Empty. */}
 
 Table::Table(const Table& table)
-  : _{new Member{}}
+  : _{new Member(*table._)}
 {
   for (const auto& sp_set : table._->sets) {
     _->sets.insert(std::make_shared<Set>(*sp_set));
@@ -51,16 +45,20 @@ Table::~Table()
   delete _;
 }
 
-shared_ptr<Table>
-Table::clone() const
+s_ptr<Set>
+Table::addSet()
 {
-  return shared_ptr<Table>{new Table{*this}};
+  const auto& sp_set = make_shared<Set>(_->wp_game);
+  _->sets.insert(sp_set);
+  return sp_set;
 }
 
-void
-Table::addSet(const shared_ptr<const Set>& set)
+s_ptr<Set>
+Table::addSet(const cs_ptr<Set>& sp_set)
 {
-  _->sets.insert(std::make_shared<Set>(*set));
+  const auto& sp_newSet = make_shared<Set>(*sp_set);
+  _->sets.insert(sp_newSet);
+  return sp_newSet;
 }
 
 void
@@ -96,30 +94,6 @@ Table::clean()
       ++it;
     }
   }
-}
-
-void
-Table::addInsertSetCallback(const s_ptr<SetCallback>& callback)
-{
-  _->insertSetCallbacks.insert(callback);
-}
-
-void
-Table::addRemoveSetCallback(const s_ptr<SetCallback>& callback)
-{
-  _->removeSetCallbacks.insert(callback);
-}
-
-void
-Table::delInsertSetCallback(const s_ptr<SetCallback>& callback)
-{
-  _->insertSetCallbacks.erase(callback);
-}
-
-void
-Table::delRemoveSetCallback(const s_ptr<SetCallback>& callback)
-{
-  _->removeSetCallbacks.erase(callback);
 }
 
 void

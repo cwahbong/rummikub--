@@ -15,22 +15,8 @@ namespace core {
 
 class Rummikub {
 public:
-  typedef std::function<void(const cs_ptr<Player>&)> TurnCallback;
-  typedef std::function<void()> GameCallback;
-
-public:
-  Rummikub(const std::vector<s_ptr<Agent>>&);
-  virtual ~Rummikub();
-
-  // std::vector<w_ptr<Player>> getPlayers();
-
-  void addTurnStartCallback(const s_ptr<TurnCallback>&);
-  void addTurnEndCallback(const s_ptr<TurnCallback>&);
-  void addGameEndCallback(const s_ptr<GameCallback>&);
-
-  void delTurnStartCallback(const s_ptr<TurnCallback>&);
-  void delTurnEndCallback(const s_ptr<TurnCallback>&);
-  void delGameEndCallback(const s_ptr<GameCallback>&);
+  Rummikub(const cw_ptr<Game>&, const std::vector<s_ptr<Agent>>&);
+  ~Rummikub();
 
   void startGame();
 

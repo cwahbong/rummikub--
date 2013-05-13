@@ -1,14 +1,19 @@
-#include "Agent.h"
+#include "AgentDelegate.h"
 
+#include "EventReceiver.h"
+#include "Game.h"
 #include "model/Player.h"
 #include "model/Set.h"
 #include "model/Table.h"
 #include "model/Tile.h"
 
+using std::make_shared;
+
 namespace rummikub {
 namespace core {
 
 struct AgentDelegate::Member {
+  const cw_ptr<Game> wp_game;
   const cs_ptr<Table> csp_oldTable;
   const cs_ptr<Player> csp_oldPlayer;
   const s_ptr<Table> sp_table;
@@ -16,15 +21,17 @@ struct AgentDelegate::Member {
   size_t put;
 };
 
-AgentDelegate::AgentDelegate(const s_ptr<Table>& sp_table,
+AgentDelegate::AgentDelegate(const cw_ptr<Game>& wp_game,
+                             const s_ptr<Table>& sp_table,
                              const s_ptr<Player>& sp_player)
   : _{new Member{
-    sp_table->clone(),
-    sp_player->clone(),
-    sp_table,
-    sp_player,
-    0
-  }}
+        wp_game,
+        make_shared<Table>(*sp_table),
+        make_shared<Player>(*sp_player),
+        sp_table,
+        sp_player,
+        0
+    }}
 {/* Empty. */}
 
 AgentDelegate::~AgentDelegate()
@@ -39,12 +46,12 @@ AgentDelegate::putTile(Tile tile, const cs_ptr<Set>& set)
     sp_set = _->sp_table->setRemoveConst(set).lock();
     sp_set->insert(tile);
   } else {
-    sp_set = std::make_shared<Set>();
+    const auto& sp_set = _->sp_table->addSet();
     sp_set->insert(tile);
-    _->sp_table->addSet(sp_set);
   }
   _->sp_player->removeTile(tile);
   ++_->put;
+  _->wp_game.lock()->getEventReceiver()->tilePut(_->sp_player, tile, set);
   return true;
 }
 
@@ -60,6 +67,7 @@ AgentDelegate::moveTile(
   if (!sp_f->remove(tile)) return false;
   _->sp_table->clean();
   sp_t->insert(tile);
+  _->wp_game.lock()->getEventReceiver()->tileMoved(tile, from, to);
   return true;
 }
 
@@ -98,6 +106,7 @@ AgentDelegate::restore()
   copyTiles(_->sp_table, _->csp_oldTable);
   copyTiles(_->sp_player, _->csp_oldPlayer);
   _->put = 0;
+  _->wp_game.lock()->getEventReceiver()->restored(_->sp_table, _->sp_player);
 }
 
 } // namespace core

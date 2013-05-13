@@ -10,21 +10,14 @@ namespace rummikub {
 namespace core {
 
 class Player {
-public:
-  using TileCallback = std::function<void(const Tile&)>;
-
 protected:
-  Player(const Player&) = default;
   Player& operator=(const Player&) = default;
   Player(Player&&) = default;
   Player& operator=(Player&&) = default;
 
 public:
-  static s_ptr<Player> newPlayer();
-
-  virtual s_ptr<Player> clone() const;
-
-  Player();
+  Player(const cw_ptr<Game>&);
+  Player(const Player&);
   ~Player();
 
   void addTile(const Tile& tile, size_t count = 1);
@@ -34,15 +27,6 @@ public:
   size_t count(const Tile& tile) const;
   std::vector<Tile> getKinds() const;
   bool empty() const;
-
-  std::weak_ptr<Agent> getAgent();
-  void setAgent(const std::shared_ptr<Agent>&);
-
-  void addInsertTileCallback(const s_ptr<TileCallback>&);
-  void addRemoveTileCallback(const s_ptr<TileCallback>&);
-
-  void delInsertTileCallback(const s_ptr<TileCallback>&);
-  void delRemoveTileCallback(const s_ptr<TileCallback>&);
 
 private:
   struct Member;

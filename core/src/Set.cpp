@@ -91,31 +91,19 @@ validateTiles(RandomAccessContainer& tiles)
 
 struct Set::Member
 {
+  const cw_ptr<Game> wp_game;
   mutable vector<Tile> tiles;
   mutable bool validated;
   mutable Type type;
-  set<s_ptr<TileCallback>> insertTileCallbacks;
-  set<s_ptr<TileCallback>> removeTileCallbacks;
-
-  void
-  insertTileCall(const Tile& tile)
-  {
-    for (const auto& sp_callback : insertTileCallbacks) {
-      (*sp_callback)(tile);
-    }
-  }
-
-  void
-  removeTileCall(const Tile& tile)
-  {
-    for (const auto& sp_callback : removeTileCallbacks) {
-      (*sp_callback)(tile);
-    }
-  }
 };
 
-Set::Set()
-  : _{new Member{{}, false, NONE}}
+Set::Set(const cw_ptr<Game>& wp_game)
+  : _{new Member{
+        wp_game,
+        {},
+        false,
+        NONE
+    }}
 {/* Empty. */}
 
 Set::Set(const Set& set)
@@ -139,7 +127,6 @@ Set::insert(const Tile& tile)
 {
   _->validated = false;
   _->tiles.push_back(tile);
-  _->insertTileCall(tile);
 }
 
 bool
@@ -149,7 +136,6 @@ Set::remove(const Tile& tile)
   if (it != _->tiles.end()) {
     _->tiles.erase(it);
     _->validated = false;
-    _->removeTileCall(tile);
     return true;
   }
   return false;
@@ -177,30 +163,6 @@ Set::getValidatedTiles() const
     validate();
   }
   return vector<Tile>{_->tiles.begin(), _->tiles.end()};
-}
-
-void
-Set::addInsertTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->insertTileCallbacks.insert(callback);
-}
-
-void
-Set::addRemoveTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->removeTileCallbacks.insert(callback);
-}
-
-void
-Set::delInsertTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->insertTileCallbacks.erase(callback);
-}
-
-void
-Set::delRemoveTileCallback(const s_ptr<TileCallback>& callback)
-{
-  _->removeTileCallbacks.erase(callback);
 }
 
 } // namespace core

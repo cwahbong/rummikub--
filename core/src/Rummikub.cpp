@@ -3,6 +3,9 @@
 #include "model/Table.h"
 #include "model/Tile.h"
 #include "Agent.h"
+#include "AgentDelegate.h"
+#include "Game.h"
+#include "EventReceiver.h"
 #include "TileManager.h"
 
 #include <map>
@@ -19,13 +22,11 @@ namespace rummikub {
 namespace core {
 
 struct Rummikub::Member {
+  const cw_ptr<Game> wp_game;
   s_ptr<TileManager> sp_tileManager;
   s_ptr<Table> sp_table;
   vector<s_ptr<Agent>> sp_agents;
   map<s_ptr<Agent>, s_ptr<Player>> playerMap;
-  set<s_ptr<TurnCallback>> turnStartCallbacks;
-  set<s_ptr<TurnCallback>> turnEndCallbacks;
-  set<s_ptr<GameCallback>> gameEndCallbacks;
 
   void
   initPlayers()
@@ -42,7 +43,7 @@ struct Rummikub::Member {
   turn(const s_ptr<Agent>& sp_agent)
   {
     const auto& sp_player = playerMap[sp_agent];
-    auto sp_delegate = make_shared<AgentDelegate>(sp_table, sp_player);
+    auto sp_delegate = make_shared<AgentDelegate>(wp_game, sp_table, sp_player); // XXX
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
@@ -51,82 +52,25 @@ struct Rummikub::Member {
       sp_player->addTile(sp_tileManager->drawTile());
     }
   }
-
-  void
-  turnStart(const cs_ptr<Player>& sp_player)
-  {
-    for (const auto& sp_callback : turnStartCallbacks) {
-      (*sp_callback)(sp_player);
-    }
-  }
-
-  void
-  turnEnd(const cs_ptr<Player>& sp_player)
-  {
-    for (const auto& sp_callback : turnEndCallbacks) {
-      (*sp_callback)(sp_player);
-    }
-  }
-
-  void
-  gameEnd()
-  {
-    for (const auto& sp_callback : gameEndCallbacks) {
-      (*sp_callback)();
-    }
-  }
 };
 
-Rummikub::Rummikub(const vector<s_ptr<Agent>>& agents)
-  : _{new Member{make_shared<TileManager>(), Table::newTable()}}
+Rummikub::Rummikub(const cw_ptr<Game>& wp_game, const vector<s_ptr<Agent>>& agents)
+  : _{new Member{
+        wp_game,
+        make_shared<TileManager>(),
+        make_shared<Table>(wp_game)
+    }}
 {
   _->sp_tileManager->shuffle();
   for (const auto& sp_agent : agents) {
-    const auto& sp_player = Player::newPlayer();
     _->sp_agents.push_back(sp_agent);
-    _->playerMap[sp_agent] = sp_player;
+    _->playerMap[sp_agent] = make_shared<Player>(wp_game);
   }
 }
 
 Rummikub::~Rummikub()
 {
   delete _;
-}
-
-void
-Rummikub::addTurnStartCallback(const s_ptr<TurnCallback>& callback)
-{
-  _->turnStartCallbacks.insert(callback);
-}
-
-void
-Rummikub::addTurnEndCallback(const s_ptr<TurnCallback>& callback)
-{
-  _->turnEndCallbacks.insert(callback);
-}
-
-void
-Rummikub::addGameEndCallback(const s_ptr<GameCallback>& callback)
-{
-  _->gameEndCallbacks.insert(callback);
-}
-
-void
-Rummikub::delTurnStartCallback(const s_ptr<TurnCallback>& callback)
-{
-  _->turnStartCallbacks.erase(callback);
-}
-
-void
-Rummikub::delTurnEndCallback(const s_ptr<TurnCallback>& callback)
-{
-  _->turnEndCallbacks.erase(callback);
-}
-
-void
-Rummikub::delGameEndCallback(const s_ptr<GameCallback>& callback)
-{
-  _->gameEndCallbacks.erase(callback);
 }
 
 s_ptr<Table>
@@ -166,18 +110,18 @@ void
 Rummikub::startGame()
 {
   _->initPlayers();
-  // TODO notify the callbacks that the game is started.
-  // start turns loop
+  const auto& sp_eventReceiver = _->wp_game.lock()->getEventReceiver();
+  sp_eventReceiver->gameStarted();
   while (true) {
     for (auto sp_agent : _->sp_agents) {
       auto sp_player = _->playerMap[sp_agent];
-      _->turnStart(sp_player);
+      sp_eventReceiver->turnStarted(sp_agent);
       _->turn(sp_agent);
       if (sp_player->empty() || _->sp_tileManager->empty()) {
-        _->gameEnd();
+        sp_eventReceiver->gameEnded();
         return;
       }
-      _->turnEnd(sp_player);
+      sp_eventReceiver->turnEnded(sp_agent);
     }
   }
 }

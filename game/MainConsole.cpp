@@ -2,6 +2,9 @@
 
 #include "CoreFwd.h"
 #include "Agent.h"
+#include "AgentDelegate.h"
+#include "EventReceiver.h"
+#include "Game.h"
 #include "model/Player.h"
 #include "model/Rummikub.h"
 #include "model/Set.h"
@@ -32,10 +35,14 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
+using rummikub::core::startGame;
 using rummikub::core::Agent;
 using rummikub::core::AgentDelegate;
+using rummikub::core::EventReceiver;
+using rummikub::core::Game;
 using rummikub::core::Player;
 using rummikub::core::Rummikub;
+using rummikub::core::Set;
 using rummikub::core::Table;
 using rummikub::core::Tile;
 
@@ -139,6 +146,17 @@ const map<string, ConsoleAgent::CmdType> ConsoleAgent::CMD_MAP = {
   {"end", ConsoleAgent::END},
 };
 
+class ConsoleReceiver : public EventReceiver {
+public:
+  virtual void tilePut(const cs_ptr<Player>& sp_player,
+                       const Tile& tile,
+                       const cs_ptr<Set>& sp_set) override {
+    cout << "Player puts tile (" << tile.getColorName() << ", "
+         << tile.getValueName() << ")\n";
+  }
+  // TODO implement other functions.
+};
+
 void
 MainConsole::start()
 {
@@ -149,23 +167,8 @@ MainConsole::start()
   } else {
     std::cerr << "OOOOO\n";
   }
-  Rummikub rummikub{vector<shared_ptr<Agent>>{sp_agents.begin(), sp_agents.end()}};
-  rummikub.addTurnStartCallback(make_shared<Rummikub::TurnCallback>(
-    [](const shared_ptr<const Player>&) {
-      cout << "turn start\n";
-    }
-  ));
-  rummikub.addTurnEndCallback(make_shared<Rummikub::TurnCallback>(
-    [](const shared_ptr<const Player>&) {
-      cout << "turn end\n";
-    }
-  ));
-  rummikub.addGameEndCallback(make_shared<Rummikub::GameCallback>(
-    []() {
-      cout << "game end.\n";
-    }
-  ));
-  rummikub.startGame();
+  startGame(make_shared<ConsoleReceiver>(),
+            vector<shared_ptr<Agent>>(sp_agents.begin(), sp_agents.end()));
   emit end();
 }
 
