@@ -19,7 +19,7 @@ protected:
   void validate() const;
 
 public:
-  Set(const cw_ptr<Game>&);
+  explicit Set(const cw_ptr<Game>&);
   Set(const Set&);
   ~Set();
 
