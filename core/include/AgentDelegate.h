@@ -11,12 +11,12 @@ class AgentDelegate {
 public:
   AgentDelegate(const cw_ptr<Game>&,
                 const s_ptr<Table>&,
-                const s_ptr<Player>&);
+                const s_ptr<Hand>&);
   ~AgentDelegate();
   bool putTile(Tile, const cs_ptr<Set>& = cs_ptr<Set>{});
   bool moveTile(Tile, const cs_ptr<Set>&, const cs_ptr<Set>&);
   const cs_ptr<Table> getTable() const;
-  const cs_ptr<Player> getPlayer() const;
+  const cs_ptr<Hand> getHand() const;
   size_t countPut() const;
   bool validate() const;
   void restore();

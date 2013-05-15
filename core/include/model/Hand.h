@@ -1,5 +1,5 @@
-#ifndef RUMMIKUB_CORE__PLAYER_H
-#define RUMMIKUB_CORE__PLAYER_H
+#ifndef RUMMIKUB_CORE__HAND_H
+#define RUMMIKUB_CORE__HAND_H
 
 #include "CoreFwd.h"
 #include "StdMemory.h"
@@ -9,16 +9,16 @@
 namespace rummikub {
 namespace core {
 
-class Player {
+class Hand {
 protected:
-  Player& operator=(const Player&) = default;
-  Player(Player&&) = default;
-  Player& operator=(Player&&) = default;
+  Hand& operator=(const Hand&) = default;
+  Hand(Hand&&) = default;
+  Hand& operator=(Hand&&) = default;
 
 public:
-  Player(const cw_ptr<Game>&);
-  Player(const Player&);
-  ~Player();
+  Hand(const cw_ptr<Game>&);
+  Hand(const Hand&);
+  ~Hand();
 
   void addTile(const Tile& tile, size_t count = 1);
   bool removeTile(const Tile& tile, size_t count = 1);
@@ -33,11 +33,11 @@ private:
   Member* _;
 };
 
-void copyTiles(const std::shared_ptr<Player>& to,
-               const std::shared_ptr<const Player>& from);
+void copyTiles(const std::shared_ptr<Hand>& to,
+               const std::shared_ptr<const Hand>& from);
 
 } // namespace core
 } // namespace rummikub
 
-#endif // RUMMIKUB_CORE__PLAYER_H
+#endif // RUMMIKUB_CORE__HAND_H
 

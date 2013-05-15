@@ -5,7 +5,7 @@
 #include "AgentDelegate.h"
 #include "EventReceiver.h"
 #include "Game.h"
-#include "model/Player.h"
+#include "model/Hand.h"
 #include "model/Rummikub.h"
 #include "model/Set.h"
 #include "model/Table.h"
@@ -40,7 +40,7 @@ using rummikub::core::Agent;
 using rummikub::core::AgentDelegate;
 using rummikub::core::EventReceiver;
 using rummikub::core::Game;
-using rummikub::core::Player;
+using rummikub::core::Hand;
 using rummikub::core::Rummikub;
 using rummikub::core::Set;
 using rummikub::core::Table;
@@ -79,7 +79,7 @@ private:
   {
     for (const auto& tile : tiles) {
       printTile(tile);
-      auto count = sp_delegate->getPlayer()->count(tile);
+      auto count = sp_delegate->getHand()->count(tile);
       if (count > 1) {
         cout << "x" << count;
       }
@@ -93,7 +93,7 @@ public:
   {
     while (true) {
       printTable(sp_delegate);
-      auto tiles = sp_delegate->getPlayer()->getKinds();
+      auto tiles = sp_delegate->getHand()->getKinds();
       cout << "Player:\n";
       printTiles(sp_delegate, tiles);
       string input;
@@ -148,7 +148,7 @@ const map<string, ConsoleAgent::CmdType> ConsoleAgent::CMD_MAP = {
 
 class ConsoleReceiver : public EventReceiver {
 public:
-  virtual void tilePut(const cs_ptr<Player>& sp_player,
+  virtual void tilePut(const cs_ptr<Hand>& sp_player,
                        const Tile& tile,
                        const cs_ptr<Set>& sp_set) override {
     cout << "Player puts tile (" << tile.getColorName() << ", "

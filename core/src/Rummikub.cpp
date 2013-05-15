@@ -2,6 +2,7 @@
 
 #include "model/Table.h"
 #include "model/Tile.h"
+#include "model/Hand.h"
 #include "Agent.h"
 #include "AgentDelegate.h"
 #include "Game.h"
@@ -26,10 +27,10 @@ struct Rummikub::Member {
   s_ptr<TileManager> sp_tileManager;
   s_ptr<Table> sp_table;
   vector<s_ptr<Agent>> sp_agents;
-  map<s_ptr<Agent>, s_ptr<Player>> playerMap;
+  map<s_ptr<Agent>, s_ptr<Hand>> playerMap;
 
   void
-  initPlayers()
+  initHands()
   {
     for (const auto& sp_agent : sp_agents) {
       const auto& sp_player = playerMap[sp_agent];
@@ -64,7 +65,7 @@ Rummikub::Rummikub(const cw_ptr<Game>& wp_game, const vector<s_ptr<Agent>>& agen
   _->sp_tileManager->shuffle();
   for (const auto& sp_agent : agents) {
     _->sp_agents.push_back(sp_agent);
-    _->playerMap[sp_agent] = make_shared<Player>(wp_game);
+    _->playerMap[sp_agent] = make_shared<Hand>(wp_game);
   }
 }
 
@@ -84,7 +85,7 @@ Rummikub::~Rummikub()
 void
 Rummikub::startGame()
 {
-  _->initPlayers();
+  _->initHands();
   const auto& sp_eventReceiver = _->wp_game.lock()->getEventReceiver();
   sp_eventReceiver->gameStarted();
   while (true) {

@@ -10,7 +10,7 @@ namespace core {
 struct EventReceiver {
   // for player
   virtual void tilePut(
-      const cs_ptr<Player>&,
+      const cs_ptr<Hand>&,
       const Tile&,
       const cs_ptr<Set>&
   ) {/* Empty. */}
@@ -21,7 +21,7 @@ struct EventReceiver {
   ) {/* Empty. */}
   virtual void restored(
       const cs_ptr<Table>&,
-      const cs_ptr<Player>&
+      const cs_ptr<Hand>&
   ) {/* Empty. */}
 
   // for table

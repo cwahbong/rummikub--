@@ -2,7 +2,7 @@
 
 #include "EventReceiver.h"
 #include "Game.h"
-#include "model/Player.h"
+#include "model/Hand.h"
 #include "model/Set.h"
 #include "model/Table.h"
 #include "model/Tile.h"
@@ -15,19 +15,19 @@ namespace core {
 struct AgentDelegate::Member {
   const cw_ptr<Game> wp_game;
   const cs_ptr<Table> csp_oldTable;
-  const cs_ptr<Player> csp_oldPlayer;
+  const cs_ptr<Hand> csp_oldHand;
   const s_ptr<Table> sp_table;
-  const s_ptr<Player> sp_player;
+  const s_ptr<Hand> sp_player;
   size_t put;
 };
 
 AgentDelegate::AgentDelegate(const cw_ptr<Game>& wp_game,
                              const s_ptr<Table>& sp_table,
-                             const s_ptr<Player>& sp_player)
+                             const s_ptr<Hand>& sp_player)
   : _{new Member{
         wp_game,
         make_shared<Table>(*sp_table),
-        make_shared<Player>(*sp_player),
+        make_shared<Hand>(*sp_player),
         sp_table,
         sp_player,
         0
@@ -77,8 +77,8 @@ AgentDelegate::getTable() const
   return _->sp_table;
 }
 
-const cs_ptr<Player>
-AgentDelegate::getPlayer() const
+const cs_ptr<Hand>
+AgentDelegate::getHand() const
 {
   return _->sp_player;
 }
@@ -104,7 +104,7 @@ void
 AgentDelegate::restore()
 {
   copyTiles(_->sp_table, _->csp_oldTable);
-  copyTiles(_->sp_player, _->csp_oldPlayer);
+  copyTiles(_->sp_player, _->csp_oldHand);
   _->put = 0;
   _->wp_game.lock()->getEventReceiver()->restored(_->sp_table, _->sp_player);
 }

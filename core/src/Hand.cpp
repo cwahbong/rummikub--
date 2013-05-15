@@ -1,4 +1,4 @@
-#include "model/Player.h"
+#include "model/Hand.h"
 
 #include "Holder.h"
 #include "model/Tile.h"
@@ -11,69 +11,69 @@ using std::vector;
 namespace rummikub {
 namespace core {
 
-struct Player::Member {
+struct Hand::Member {
   const cw_ptr<Game> wp_game;
   Holder<Tile> holder;
 };
 
-Player::Player(const cw_ptr<Game>& wp_game)
+Hand::Hand(const cw_ptr<Game>& wp_game)
   : _{new Member{wp_game}}
 {/* Empty. */}
 
-Player::Player(const Player& player)
+Hand::Hand(const Hand& player)
   : _{new Member(*player._)}
 {/* Empty. */}
 
-Player::~Player()
+Hand::~Hand()
 {
   delete _;
 }
 
 void
-Player::addTile(const Tile& tile, size_t count)
+Hand::addTile(const Tile& tile, size_t count)
 {
   _->holder.add(tile, count);
 }
 
 bool
-Player::removeTile(const Tile& tile, size_t count)
+Hand::removeTile(const Tile& tile, size_t count)
 {
   return _->holder.remove(tile, count);
 }
 
 void
-Player::clearTiles()
+Hand::clearTiles()
 {
   _->holder.clear();
 }
 
 bool
-Player::hasTile(const Tile& tile) const
+Hand::hasTile(const Tile& tile) const
 {
   return _->holder.has(tile);
 }
 
 size_t
-Player::count(const Tile& tile) const
+Hand::count(const Tile& tile) const
 {
   return _->holder.count(tile);
 }
 
 bool
-Player::empty() const
+Hand::empty() const
 {
   return _->holder.empty();
 }
 
 vector<Tile>
-Player::getKinds() const
+Hand::getKinds() const
 {
   return _->holder.kinds();
 }
 
 void
-copyTiles(const std::shared_ptr<Player>& to,
-          const std::shared_ptr<const Player>& from)
+copyTiles(const std::shared_ptr<Hand>& to,
+          const std::shared_ptr<const Hand>& from)
 {
   to->clearTiles();
   for (const auto& tile : from->getKinds()) {

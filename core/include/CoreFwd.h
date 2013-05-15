@@ -24,7 +24,7 @@ class AgentDelegate;
 class Component;
 class EventReceiver;
 class Game;
-class Player;
+class Hand;
 class Set;
 class Table;
 class TileManager;
