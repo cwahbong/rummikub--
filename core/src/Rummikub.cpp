@@ -73,31 +73,6 @@ Rummikub::~Rummikub()
   delete _;
 }
 
-s_ptr<Table>
-Rummikub::getTable()
-{
-  return const_pointer_cast<Table>(static_cast<const Rummikub*>(this)->getTable());
-}
-
-cs_ptr<Table>
-Rummikub::getTable() const
-{
-  return _->sp_table;
-}
-
-vector<s_ptr<Player>>
-Rummikub::getPlayers()
-{
-  // XXX using playerMap instead
-  // return vector<s_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
-}
-
-vector<cs_ptr<Player>>
-Rummikub::getPlayers() const
-{
-  //return vector<cs_ptr<Player>>{_->sp_players.begin(), _->sp_players.end()};
-}
-
 // Message Types:
 /*
     1. Game start

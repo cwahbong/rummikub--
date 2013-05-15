@@ -20,12 +20,6 @@ public:
 
   void startGame();
 
-  s_ptr<Table> getTable();
-  cs_ptr<Table> getTable() const;
-
-  std::vector<s_ptr<Player>> getPlayers();
-  std::vector<cs_ptr<Player>> getPlayers() const;
-
 private:
   struct Member;
   Member* _;
