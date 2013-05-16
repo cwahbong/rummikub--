@@ -35,7 +35,7 @@ enum CmdType {
     PUT,
     MOVE,
     RESTORE,
-    END
+    END,
 };
 
 const map<string, CmdType> CMD_MAP = {
@@ -54,8 +54,7 @@ printTile(const Tile& tile) {
 void
 printTable(const cs_ptr<AgentDelegate>& sp_delegate)
 {
-  cout << "Table:\n";
-  for (auto& wp_set : sp_delegate->getTable()->getSets()) {
+  for (const auto& wp_set : sp_delegate->getTable()->getSets()) {
     const auto& sp_set = wp_set.lock();
     for (const auto& tile : sp_set->getValidatedTiles()) {
       printTile(tile);
@@ -81,13 +80,30 @@ printTiles(
 }
 
 void
-putResponse(
+printWhole(const cs_ptr<AgentDelegate>& sp_delegate)
+{
+  cout << "Table:\n";
+  printTable(sp_delegate);
+  cout << "Player:\n";
+  printTiles(sp_delegate, sp_delegate->getHand()->getKinds());
+}
+
+CmdType
+extractCommand(istringstream& iss)
+{
+  string cmd;
+  iss >> cmd;
+  return CMD_MAP.at(cmd);
+}
+
+void
+extractPutResponse(
     istringstream& iss,
-    const s_ptr<AgentDelegate>& sp_delegate,
-    const vector<Tile>& tiles)
+    const s_ptr<AgentDelegate>& sp_delegate)
 {
   int tileOffset, setOffset;
   iss >> tileOffset;
+  const auto& tiles = sp_delegate->getHand()->getKinds();
   const auto& tile = tiles[tileOffset];
   if (iss >> setOffset) {
     const auto& sp_set = sp_delegate->getTable()->getSets()[setOffset].lock();
@@ -98,10 +114,9 @@ putResponse(
 }
 
 void
-moveResponse(
+extractMoveResponse(
     istringstream& iss,
-    const s_ptr<AgentDelegate>& sp_delegate,
-    const vector<Tile>& tiles)
+    const s_ptr<AgentDelegate>& sp_delegate)
 {
   int tileOffset;
   iss >> tileOffset;
@@ -119,22 +134,17 @@ void
 ConsoleAgent::response(const s_ptr<AgentDelegate>& sp_delegate)
 {
   while (true) {
-    printTable(sp_delegate);
-    auto tiles = sp_delegate->getHand()->getKinds();
-    cout << "Player:\n";
-    printTiles(sp_delegate, tiles);
+    printWhole(sp_delegate);
     string input;
     getline(cin, input);
     istringstream iss(input);
-    string cmd;
-    iss >> cmd;
     try {
-      switch (CMD_MAP.at(cmd)) {
+      switch (extractCommand(iss)) {
       case PUT:
-        putResponse(iss, sp_delegate, tiles);
+        extractPutResponse(iss, sp_delegate);
         break;
       case MOVE:
-        moveResponse(iss, sp_delegate, tiles);
+        extractMoveResponse(iss, sp_delegate);
         break;
       case RESTORE:
         sp_delegate->restore();
