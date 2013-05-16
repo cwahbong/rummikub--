@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Tile.h"
+#include "model/Tile.h"
 
 namespace rummikub {
 namespace core {

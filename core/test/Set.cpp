@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "Set.h"
-#include "Tile.h"
+#include "model/Set.h"
+#include "model/Tile.h"
 
 using std::make_shared;
 
