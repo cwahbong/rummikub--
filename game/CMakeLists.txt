@@ -13,6 +13,7 @@ SET(game_QT_FILES_WITHOUT_SUFFIX
 )
 
 SET(game_SOURCES_WITHOUT_SUFFIX
+  ConsoleAgent
   MainConsole
 )
 
