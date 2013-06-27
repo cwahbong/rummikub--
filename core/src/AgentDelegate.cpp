@@ -1,7 +1,6 @@
 #include "AgentDelegate.h"
 
 #include "EventReceiver.h"
-#include "Game.h"
 #include "model/Hand.h"
 #include "model/Set.h"
 #include "model/Table.h"
@@ -13,7 +12,7 @@ namespace rummikub {
 namespace core {
 
 struct AgentDelegate::Member {
-  const cw_ptr<Game> wp_game;
+  const w_ptr<EventReceiver> wp_eventReceiver;
   const cs_ptr<Table> csp_oldTable;
   const cs_ptr<Hand> csp_oldHand;
   const s_ptr<Table> sp_table;
@@ -21,11 +20,11 @@ struct AgentDelegate::Member {
   size_t put;
 };
 
-AgentDelegate::AgentDelegate(const cw_ptr<Game>& wp_game,
+AgentDelegate::AgentDelegate(const w_ptr<EventReceiver>& wp_eventReceiver,
                              const s_ptr<Table>& sp_table,
                              const s_ptr<Hand>& sp_player)
   : _{new Member{
-        wp_game,
+        wp_eventReceiver,
         make_shared<Table>(*sp_table),
         make_shared<Hand>(*sp_player),
         sp_table,
@@ -51,7 +50,7 @@ AgentDelegate::putTile(Tile tile, const cs_ptr<Set>& set)
   }
   _->sp_player->removeTile(tile);
   ++_->put;
-  _->wp_game.lock()->getEventReceiver()->tilePut(_->sp_player, tile, set);
+  _->wp_eventReceiver.lock()->tilePut(_->sp_player, tile, set);
   return true;
 }
 
@@ -67,7 +66,7 @@ AgentDelegate::moveTile(
   if (!sp_f->remove(tile)) return false;
   _->sp_table->clean();
   sp_t->insert(tile);
-  _->wp_game.lock()->getEventReceiver()->tileMoved(tile, from, to);
+  _->wp_eventReceiver.lock()->tileMoved(tile, from, to);
   return true;
 }
 
@@ -106,7 +105,7 @@ AgentDelegate::restore()
   copyTiles(_->sp_table, _->csp_oldTable);
   copyTiles(_->sp_player, _->csp_oldHand);
   _->put = 0;
-  _->wp_game.lock()->getEventReceiver()->restored(_->sp_table, _->sp_player);
+  _->wp_eventReceiver.lock()->restored(_->sp_table, _->sp_player);
 }
 
 } // namespace core

@@ -91,15 +91,13 @@ validateTiles(RandomAccessContainer& tiles)
 
 struct Set::Member
 {
-  const cw_ptr<Game> wp_game;
   mutable vector<Tile> tiles;
   mutable bool validated;
   mutable Type type;
 };
 
-Set::Set(const cw_ptr<Game>& wp_game)
+Set::Set()
   : _{new Member{
-        wp_game,
         {},
         false,
         NONE

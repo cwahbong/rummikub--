@@ -13,7 +13,7 @@ namespace rummikub {
 namespace core {
 
 enum Color : int {
-  INVALID,
+  INVALID = -1,
   RED,
   BLUE,
   YELLOW,

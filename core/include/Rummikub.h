@@ -14,7 +14,7 @@ namespace core {
 
 class Rummikub {
 public:
-  Rummikub(const cw_ptr<Game>&, const std::vector<s_ptr<Agent>>&);
+  Rummikub(const w_ptr<EventReceiver>&, const std::vector<s_ptr<Agent>>&);
   ~Rummikub();
 
   void startGame();

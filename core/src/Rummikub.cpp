@@ -1,11 +1,10 @@
-#include "model/Rummikub.h"
+#include "Rummikub.h"
 
 #include "model/Table.h"
 #include "model/Tile.h"
 #include "model/Hand.h"
 #include "Agent.h"
 #include "AgentDelegate.h"
-#include "Game.h"
 #include "EventReceiver.h"
 #include "TileManager.h"
 
@@ -19,11 +18,17 @@ using std::static_pointer_cast;
 using std::set;
 using std::vector;
 
+namespace {
+
+const unsigned INITIAL_HAND_NUM = 14;
+
+}
+
 namespace rummikub {
 namespace core {
 
 struct Rummikub::Member {
-  const cw_ptr<Game> wp_game;
+  const w_ptr<EventReceiver> wp_eventReceiver;
   s_ptr<TileManager> sp_tileManager;
   s_ptr<Table> sp_table;
   vector<s_ptr<Agent>> sp_agents;
@@ -34,7 +39,7 @@ struct Rummikub::Member {
   {
     for (const auto& sp_agent : sp_agents) {
       const auto& sp_player = playerMap[sp_agent];
-      for (unsigned i=0; i<14; ++i) {
+      for (unsigned i = 0; i < INITIAL_HAND_NUM; ++i) {
         sp_player->addTile(sp_tileManager->drawTile());
       }
     }
@@ -44,7 +49,7 @@ struct Rummikub::Member {
   turn(const s_ptr<Agent>& sp_agent)
   {
     const auto& sp_player = playerMap[sp_agent];
-    auto sp_delegate = make_shared<AgentDelegate>(wp_game, sp_table, sp_player); // XXX
+    auto sp_delegate = make_shared<AgentDelegate>(wp_eventReceiver, sp_table, sp_player); // XXX
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
@@ -55,17 +60,17 @@ struct Rummikub::Member {
   }
 };
 
-Rummikub::Rummikub(const cw_ptr<Game>& wp_game, const vector<s_ptr<Agent>>& agents)
+Rummikub::Rummikub(const w_ptr<EventReceiver>& wp_eventReceiver, const vector<s_ptr<Agent>>& agents)
   : _{new Member{
-        wp_game,
+        wp_eventReceiver,
         make_shared<TileManager>(),
-        make_shared<Table>(wp_game)
+        make_shared<Table>()
     }}
 {
   _->sp_tileManager->shuffle();
   for (const auto& sp_agent : agents) {
     _->sp_agents.push_back(sp_agent);
-    _->playerMap[sp_agent] = make_shared<Hand>(wp_game);
+    _->playerMap[sp_agent] = make_shared<Hand>();
   }
 }
 
@@ -86,7 +91,7 @@ void
 Rummikub::startGame()
 {
   _->initHands();
-  const auto& sp_eventReceiver = _->wp_game.lock()->getEventReceiver();
+  const auto& sp_eventReceiver = _->wp_eventReceiver.lock();
   sp_eventReceiver->gameStarted();
   while (true) {
     for (auto sp_agent : _->sp_agents) {

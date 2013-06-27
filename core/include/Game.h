@@ -13,19 +13,16 @@ class Game {
   Game(const Game&) = delete;
 
 public:
+  Game(const s_ptr<EventReceiver>&, const std::vector<s_ptr<Agent>>&);
   ~Game();
-  s_ptr<EventReceiver> getEventReceiver() const;
 
-  friend void startGame(const s_ptr<EventReceiver>&, const std::vector<s_ptr<Agent>>&);
+  void start();
 
 private:
-  Game(const s_ptr<EventReceiver>&);
 
   struct Member;
   u_ptr<Member> _;
 };
-
-void startGame(const s_ptr<EventReceiver>&, const std::vector<s_ptr<Agent>>&);
 
 } // namespace rummikub
 } // namespace core

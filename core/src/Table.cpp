@@ -15,7 +15,6 @@ namespace rummikub {
 namespace core {
 
 struct Table::Member {
-  const cw_ptr<Game> wp_game;
   set<shared_ptr<Set>> sets;
 
   bool validate() const {
@@ -28,8 +27,8 @@ struct Table::Member {
   }
 };
 
-Table::Table(const cw_ptr<Game>& wp_game)
-  : _{new Member{wp_game}}
+Table::Table()
+  : _{new Member{}}
 {/* Empty. */}
 
 Table::Table(const Table& table)
@@ -48,7 +47,7 @@ Table::~Table()
 s_ptr<Set>
 Table::addSet()
 {
-  const auto& sp_set = make_shared<Set>(_->wp_game);
+  const auto& sp_set = make_shared<Set>();
   _->sets.insert(sp_set);
   return sp_set;
 }

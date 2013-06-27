@@ -12,12 +12,11 @@ namespace rummikub {
 namespace core {
 
 struct Hand::Member {
-  const cw_ptr<Game> wp_game;
   Holder<Tile> holder;
 };
 
-Hand::Hand(const cw_ptr<Game>& wp_game)
-  : _{new Member{wp_game}}
+Hand::Hand()
+  : _{new Member{}}
 {/* Empty. */}
 
 Hand::Hand(const Hand& player)

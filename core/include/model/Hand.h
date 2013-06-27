@@ -16,7 +16,7 @@ protected:
   Hand& operator=(Hand&&) = default;
 
 public:
-  explicit Hand(const cw_ptr<Game>&);
+  Hand();
   Hand(const Hand&);
   ~Hand();
 

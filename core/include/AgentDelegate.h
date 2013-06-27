@@ -9,7 +9,7 @@ namespace core {
 
 class AgentDelegate {
 public:
-  AgentDelegate(const cw_ptr<Game>&,
+  AgentDelegate(const w_ptr<EventReceiver>&,
                 const s_ptr<Table>&,
                 const s_ptr<Hand>&);
   ~AgentDelegate();

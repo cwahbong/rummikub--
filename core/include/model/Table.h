@@ -14,7 +14,7 @@ protected:
   Table& operator=(const Table&) = default;
 
 public:
-  explicit Table(const cw_ptr<Game>&);
+  explicit Table();
   Table(const Table&);
   ~Table();
 
