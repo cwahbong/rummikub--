@@ -21,9 +21,9 @@ using std::make_shared;
 using std::shared_ptr;
 using std::vector;
 
-using rummikub::core::startGame;
 using rummikub::core::Agent;
 using rummikub::core::EventReceiver;
+using rummikub::core::Game;
 using rummikub::core::Hand;
 using rummikub::core::Set;
 using rummikub::core::Tile;
@@ -52,8 +52,8 @@ MainConsole::start()
   } else {
     std::cerr << "OOOOO\n";
   }
-  startGame(make_shared<ConsoleReceiver>(),
-            vector<shared_ptr<Agent>>(sp_agents.begin(), sp_agents.end()));
+  Game(make_shared<ConsoleReceiver>(),
+       vector<shared_ptr<Agent>>(sp_agents.begin(), sp_agents.end())).start();
   emit end();
 }
 
