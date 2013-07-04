@@ -6,7 +6,6 @@
 #include "StdMemory.h"
 #include "Util.h"
 
-#include <functional>
 #include <vector>
 
 namespace rummikub {
@@ -21,7 +20,7 @@ public:
 
 private:
   struct Member;
-  Member* _;
+  const u_ptr<Member> _;
 };
 
 } // namespace core

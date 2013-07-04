@@ -75,9 +75,7 @@ Rummikub::Rummikub(const w_ptr<EventReceiver>& wp_eventReceiver, const vector<s_
 }
 
 Rummikub::~Rummikub()
-{
-  delete _;
-}
+{/* Empty.*/}
 
 // Message Types:
 /*
