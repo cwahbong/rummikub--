@@ -5,7 +5,7 @@
 #include "CoreFwd.h"
 #include "AgentDelegate.h"
 #include "EventReceiver.h"
-#include "Game.h"
+#include "Rummikub.h"
 #include "model/Hand.h"
 #include "model/Tile.h"
 
@@ -23,8 +23,8 @@ using std::vector;
 
 using rummikub::core::Agent;
 using rummikub::core::EventReceiver;
-using rummikub::core::Game;
 using rummikub::core::Hand;
+using rummikub::core::Rummikub;
 using rummikub::core::Set;
 using rummikub::core::Tile;
 
@@ -52,8 +52,8 @@ MainConsole::start()
   } else {
     std::cerr << "OOOOO\n";
   }
-  Game(make_shared<ConsoleReceiver>(),
-       vector<shared_ptr<Agent>>(sp_agents.begin(), sp_agents.end())).start();
+  Rummikub(make_shared<ConsoleReceiver>(),
+      vector<shared_ptr<Agent>>(sp_agents.begin(), sp_agents.end())).startGame();
   emit end();
 }
 
