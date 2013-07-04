@@ -30,7 +30,7 @@ public:
 
 private:
   struct Member;
-  Member* _;
+  const u_ptr<Member> _;
 };
 
 void copyTiles(const std::shared_ptr<Hand>& to,

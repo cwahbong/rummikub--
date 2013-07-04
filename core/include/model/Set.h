@@ -34,7 +34,7 @@ public:
 
 private:
   struct Member;
-  Member* _;
+  const u_ptr<Member> _;
 };
 
 } // namespace core

@@ -40,9 +40,7 @@ Table::Table(const Table& table)
 }
 
 Table::~Table()
-{
-  delete _;
-}
+{/* Empty. */}
 
 s_ptr<Set>
 Table::addSet()

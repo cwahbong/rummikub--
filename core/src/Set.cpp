@@ -109,9 +109,7 @@ Set::Set(const Set& set)
 {/* Empty. */}
 
 Set::~Set()
-{
-  delete _;
-}
+{/* Empty. */}
 
 void
 Set::validate() const

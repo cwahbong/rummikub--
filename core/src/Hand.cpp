@@ -24,9 +24,7 @@ Hand::Hand(const Hand& player)
 {/* Empty. */}
 
 Hand::~Hand()
-{
-  delete _;
-}
+{/* Empty. */}
 
 void
 Hand::addTile(const Tile& tile, size_t count)
