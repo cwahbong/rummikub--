@@ -22,7 +22,6 @@ typedef BasicTile<unsigned, Color> Tile;
 class Agent;
 class AgentDelegate;
 class EventReceiver;
-class Game;
 class Hand;
 class Set;
 class Table;
