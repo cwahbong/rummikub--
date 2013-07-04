@@ -19,9 +19,8 @@ public:
   void start();
 
 private:
-
   struct Member;
-  u_ptr<Member> _;
+  const u_ptr<Member> _;
 };
 
 } // namespace rummikub
