@@ -6,21 +6,69 @@
 #include "Agent.h"
 #include "AgentDelegate.h"
 #include "EventReceiver.h"
-#include "TileManager.h"
 
+#include <algorithm>
 #include <map>
 #include <set>
 
 using std::const_pointer_cast;
 using std::make_shared;
 using std::map;
+using std::random_shuffle;
 using std::static_pointer_cast;
 using std::set;
 using std::vector;
 
 namespace {
 
+using rummikub::core::Tile;
+using rummikub::core::RED;
+using rummikub::core::BLUE;
+using rummikub::core::YELLOW;
+using rummikub::core::BLACK;
+
 const unsigned INITIAL_HAND_NUM = 14;
+
+vector<Tile> defaultTiles()
+{
+  vector<Tile> result;
+  for (auto v = Tile::MIN_VALUE; v <= Tile::MAX_VALUE; ++v) {
+    for(unsigned i = 0; i < 2; ++i) {
+      result.push_back(Tile{RED, v});
+      result.push_back(Tile{BLUE, v});
+      result.push_back(Tile{YELLOW, v});
+      result.push_back(Tile{BLACK, v});
+    }
+  }
+  result.push_back(Tile::joker(RED));
+  result.push_back(Tile::joker(BLACK));
+  return result;
+}
+
+template <typename T>
+class _Pile {
+public:
+
+  _Pile(const vector<T>& ts) : _ts(ts)
+  {/* Empty. */}
+
+  T draw() {
+    auto result = _ts.back();
+    _ts.pop_back();
+    return result;
+  }
+
+  bool empty() const {
+    return _ts.empty();
+  }
+
+  void shuffle() {
+    random_shuffle(_ts.begin(), _ts.end());
+  }
+
+private:
+  vector<T> _ts;
+};
 
 }
 
@@ -29,7 +77,7 @@ namespace core {
 
 struct Rummikub::Member {
   const w_ptr<EventReceiver> wp_eventReceiver;
-  s_ptr<TileManager> sp_tileManager;
+  s_ptr<_Pile<Tile>> sp_pileTiles;
   s_ptr<Table> sp_table;
   vector<s_ptr<Agent>> sp_agents;
   map<s_ptr<Agent>, s_ptr<Hand>> playerMap;
@@ -40,7 +88,7 @@ struct Rummikub::Member {
     for (const auto& sp_agent : sp_agents) {
       const auto& sp_player = playerMap[sp_agent];
       for (unsigned i = 0; i < INITIAL_HAND_NUM; ++i) {
-        sp_player->addTile(sp_tileManager->drawTile());
+        sp_player->addTile(sp_pileTiles->draw());
       }
     }
   }
@@ -53,9 +101,9 @@ struct Rummikub::Member {
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
-      sp_player->addTile(sp_tileManager->drawTile());
+      sp_player->addTile(sp_pileTiles->draw());
     } else if (sp_delegate->countPut() == 0) {
-      sp_player->addTile(sp_tileManager->drawTile());
+      sp_player->addTile(sp_pileTiles->draw());
     }
   }
 };
@@ -63,11 +111,11 @@ struct Rummikub::Member {
 Rummikub::Rummikub(const w_ptr<EventReceiver>& wp_eventReceiver, const vector<s_ptr<Agent>>& agents)
   : _{new Member{
         wp_eventReceiver,
-        make_shared<TileManager>(),
+        make_shared<_Pile<Tile>>(defaultTiles()),
         make_shared<Table>()
     }}
 {
-  _->sp_tileManager->shuffle();
+  _->sp_pileTiles->shuffle();
   for (const auto& sp_agent : agents) {
     _->sp_agents.push_back(sp_agent);
     _->playerMap[sp_agent] = make_shared<Hand>();
@@ -96,7 +144,7 @@ Rummikub::startGame()
       auto sp_player = _->playerMap[sp_agent];
       sp_eventReceiver->turnStarted(sp_agent);
       _->turn(sp_agent);
-      if (sp_player->empty() || _->sp_tileManager->empty()) {
+      if (sp_player->empty() || _->sp_pileTiles->empty()) {
         sp_eventReceiver->gameEnded();
         return;
       }
