@@ -3,8 +3,8 @@ PROJECT(rummicore)
 INCLUDE_DIRECTORIES(include)
 AUX_SOURCE_DIRECTORY(src rummicore_SOURCES)
 
-# For Qt creator to find the public headers.
-FILE(GLOB rummicore_HEADERS include/*.h include/model/*.h)
+# For Qt creator to find the headers.
+FILE(GLOB rummicore_HEADERS include/*.h include/model/*.h src/*.h)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${rummicore_SOURCES} ${rummicore_HEADERS})
 INSTALL(TARGETS ${PROJECT_NAME}
