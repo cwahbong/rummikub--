@@ -6,7 +6,6 @@
 using std::make_shared;
 
 namespace rummikub {
-namespace core {
 
 TEST(SetTest, ValidateRun) {
   const auto& sp_set = make_shared<Set>();
@@ -72,7 +71,6 @@ TEST(SetTest, ValidateNoneGroupWithJokers) {
   EXPECT_EQ(Set::NONE, sp_set->getType());
 }
 
-} // namespace core
 } // namespace rummikub
 
 

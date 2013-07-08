@@ -3,7 +3,6 @@
 #include "model/Tile.h"
 
 namespace rummikub {
-namespace core {
 
 TEST(TileTest, InitTile) {
   Tile joker{Tile::joker(BLACK)};
@@ -17,6 +16,5 @@ TEST(TileTest, InitTile) {
   EXPECT_FALSE(t1.isJoker());
 }
 
-} // namespace core
 } // namespace rummikub
 
