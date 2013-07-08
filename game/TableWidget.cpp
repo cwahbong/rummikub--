@@ -3,9 +3,6 @@
 
 #include "SetWidget.h"
 
-using rummikub::core::Set;
-using rummikub::core::Table;
-
 using std::make_shared;
 
 namespace rummikub {

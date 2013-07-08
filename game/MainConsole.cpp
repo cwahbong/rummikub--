@@ -21,13 +21,6 @@ using std::make_shared;
 using std::shared_ptr;
 using std::vector;
 
-using rummikub::core::Agent;
-using rummikub::core::EventReceiver;
-using rummikub::core::Hand;
-using rummikub::core::Rummikub;
-using rummikub::core::Set;
-using rummikub::core::Tile;
-
 namespace rummikub {
 namespace game {
 

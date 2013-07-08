@@ -10,7 +10,6 @@
 #include <utility>
 
 namespace rummikub {
-namespace core {
 
 template <typename ValueT, typename CounterT = size_t,
     typename KindContainerT = std::vector<ValueT>>
@@ -81,7 +80,6 @@ private:
   std::map<ValueT, CounterT> m_map;
 };
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__HOLDER_H

@@ -7,7 +7,6 @@
 #include <vector>
 
 namespace rummikub {
-namespace core {
 
 class Set {
 public:
@@ -37,7 +36,6 @@ private:
   const u_ptr<Member> _;
 };
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__SET_H

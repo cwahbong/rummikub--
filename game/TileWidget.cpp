@@ -4,9 +4,6 @@
 #include <QPainter>
 #include <QPen>
 
-using ::rummikub::core::Color;
-using ::rummikub::core::Tile;
-
 namespace rummikub {
 namespace game {
 
@@ -14,15 +11,15 @@ QString
 TileWidget::getColorStyleSheet(Color c)
 {
   switch (c) {
-  case core::INVALID:
+  case INVALID:
     return "color: grey;";
-  case core::RED:
+  case RED:
     return "color: red;";
-  case core::BLUE:
+  case BLUE:
     return "color: blue;";
-  case core::YELLOW:
+  case YELLOW:
     return "color: darkorange;";
-  case core::BLACK:
+  case BLACK:
     return "color: black;";
   default:
     return "color: green";

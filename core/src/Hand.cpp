@@ -9,7 +9,6 @@ using std::set;
 using std::vector;
 
 namespace rummikub {
-namespace core {
 
 struct Hand::Member {
   Holder<Tile> holder;
@@ -78,6 +77,5 @@ copyTiles(const std::shared_ptr<Hand>& to,
   }
 }
 
-} // namespace core
 } // namespace rummikub
 

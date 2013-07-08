@@ -21,11 +21,11 @@ using std::vector;
 
 namespace {
 
-using rummikub::core::Tile;
-using rummikub::core::RED;
-using rummikub::core::BLUE;
-using rummikub::core::YELLOW;
-using rummikub::core::BLACK;
+using rummikub::Tile;
+using rummikub::RED;
+using rummikub::BLUE;
+using rummikub::YELLOW;
+using rummikub::BLACK;
 
 const unsigned INITIAL_HAND_NUM = 14;
 
@@ -73,7 +73,6 @@ private:
 }
 
 namespace rummikub {
-namespace core {
 
 struct Rummikub::Member {
   const w_ptr<EventReceiver> wp_eventReceiver;
@@ -153,6 +152,5 @@ Rummikub::startGame()
   }
 }
 
-} // namespace core
 } // namespace rummikub
 

@@ -10,7 +10,6 @@
 #include <type_traits>
 
 namespace rummikub {
-namespace core {
 
 enum Color : int {
   INVALID = -1,
@@ -246,7 +245,6 @@ static_assert(std::is_nothrow_move_assignable<Tile>::value,
 static_assert(std::is_destructible<Tile>::value,
               "Tile should BE destructible.");
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__TILE_H

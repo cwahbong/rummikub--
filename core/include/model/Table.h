@@ -7,7 +7,6 @@
 #include <vector>
 
 namespace rummikub {
-namespace core {
 
 class Table {
 protected:
@@ -34,7 +33,6 @@ private:
 void copyTiles(const std::shared_ptr<Table>& to,
                const std::shared_ptr<const Table>& from);
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__TABLE_H

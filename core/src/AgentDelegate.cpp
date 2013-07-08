@@ -9,7 +9,6 @@
 using std::make_shared;
 
 namespace rummikub {
-namespace core {
 
 struct AgentDelegate::Member {
   const w_ptr<EventReceiver> wp_eventReceiver;
@@ -108,6 +107,5 @@ AgentDelegate::restore()
   _->wp_eventReceiver.lock()->restored(_->sp_table, _->sp_player);
 }
 
-} // namespace core
 } // namespace rummikub
 

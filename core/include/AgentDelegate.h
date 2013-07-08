@@ -5,7 +5,6 @@
 #include "StdMemory.h"
 
 namespace rummikub {
-namespace core {
 
 class AgentDelegate {
 public:
@@ -26,7 +25,6 @@ private:
   const u_ptr<Member> _;
 };
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__AGENTDELEGATE_H

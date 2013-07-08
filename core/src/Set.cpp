@@ -15,7 +15,6 @@ using std::sort;
 using std::vector;
 
 namespace rummikub {
-namespace core {
 
 namespace {
 
@@ -161,6 +160,5 @@ Set::getValidatedTiles() const
   return vector<Tile>{_->tiles.begin(), _->tiles.end()};
 }
 
-} // namespace core
 } // namespace rummikub
 

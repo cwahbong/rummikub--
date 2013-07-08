@@ -12,7 +12,6 @@ using std::vector;
 using std::weak_ptr;
 
 namespace rummikub {
-namespace core {
 
 struct Table::Member {
   set<shared_ptr<Set>> sets;
@@ -103,6 +102,5 @@ copyTiles(const std::shared_ptr<Table>& to,
   }
 }
 
-} // namespace core
 } // namespace rummikub
 

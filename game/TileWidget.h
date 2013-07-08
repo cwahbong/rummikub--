@@ -16,21 +16,21 @@ namespace game {
 class TileWidget : public QWidget
 {
   Q_OBJECT
-  static QString getColorStyleSheet(core::Color);
+  static QString getColorStyleSheet(Color);
 
 public:
   explicit TileWidget(QWidget *parent = 0);
   ~TileWidget();
 
-  void setTile(const core::Tile& tile);
-  core::Tile getTile() const;
+  void setTile(const Tile& tile);
+  Tile getTile() const;
 
 protected:
   virtual void paintEvent(QPaintEvent* event);
 
 private:
   Ui::TileWidget *ui;
-  core::Tile m_tile{core::INVALID, 14};
+  Tile m_tile{INVALID, 14};
 };
 
 } // namespace game

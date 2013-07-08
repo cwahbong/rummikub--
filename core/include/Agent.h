@@ -6,7 +6,6 @@
 #include "StdMemory.h"
 
 namespace rummikub {
-namespace core {
 
 /**
  */
@@ -15,7 +14,6 @@ public:
   virtual void response(const s_ptr<AgentDelegate>&) = 0;
 };
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__AGENT_H

@@ -14,9 +14,6 @@
 #include <string>
 #include <vector>
 
-using rummikub::core::AgentDelegate;
-using rummikub::core::Tile;
-
 using std::cin;
 using std::cout;
 using std::endl;

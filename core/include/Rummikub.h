@@ -9,7 +9,6 @@
 #include <vector>
 
 namespace rummikub {
-namespace core {
 
 class Rummikub {
 public:
@@ -23,7 +22,6 @@ private:
   const u_ptr<Member> _;
 };
 
-} // namespace core
 } // namespace rmmikub
 
 #endif // RUMMIKUB_CORE__RUMMIKUB_H

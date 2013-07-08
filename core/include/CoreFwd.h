@@ -4,7 +4,6 @@
 #include <string>
 
 namespace rummikub {
-namespace core {
 
 enum Color : int;
 
@@ -25,10 +24,8 @@ class EventReceiver;
 class Hand;
 class Set;
 class Table;
-class TileManager;
 class Rummikub;
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__CORE_FWD_H

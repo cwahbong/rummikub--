@@ -7,7 +7,6 @@
 #include <vector>
 
 namespace rummikub {
-namespace core {
 
 class Hand {
 protected:
@@ -36,7 +35,6 @@ private:
 void copyTiles(const std::shared_ptr<Hand>& to,
                const std::shared_ptr<const Hand>& from);
 
-} // namespace core
 } // namespace rummikub
 
 #endif // RUMMIKUB_CORE__HAND_H

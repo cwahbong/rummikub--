@@ -5,7 +5,6 @@
 #include "StdMemory.h"
 
 namespace rummikub {
-namespace core {
 
 struct EventReceiver {
   // for player
@@ -43,7 +42,6 @@ struct EventReceiver {
 };
 
 } // namespace rummikub
-} // namespace core
 
 #endif // RUMMIKUB_CORE__EVENTRECEIVER_H
 

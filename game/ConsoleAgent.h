@@ -7,9 +7,9 @@
 namespace rummikub {
 namespace game {
 
-class ConsoleAgent : public core::Agent {
+class ConsoleAgent : public Agent {
 public:
-  virtual void response(const s_ptr<core::AgentDelegate>& sp_delegate) override;
+  virtual void response(const s_ptr<AgentDelegate>& sp_delegate) override;
 };
 
 } // namespace game
