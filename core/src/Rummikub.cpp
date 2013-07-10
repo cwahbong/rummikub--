@@ -4,7 +4,6 @@
 #include "model/Tile.h"
 #include "model/Hand.h"
 #include "Agent.h"
-#include "AgentDelegate.h"
 #include "EventReceiver.h"
 
 #include <algorithm>
@@ -96,7 +95,7 @@ struct Rummikub::Member {
   turn(const s_ptr<Agent>& sp_agent)
   {
     const auto& sp_player = playerMap[sp_agent];
-    auto sp_delegate = make_shared<AgentDelegate>(wp_eventReceiver, sp_table, sp_player); // XXX
+    auto sp_delegate = make_shared<Agent::Delegate>(wp_eventReceiver, sp_table, sp_player); // XXX
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();

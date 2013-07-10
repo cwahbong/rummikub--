@@ -4,7 +4,6 @@
 #include "model/Set.h"
 #include "model/Table.h"
 #include "model/Tile.h"
-#include "AgentDelegate.h"
 #include "StdMemory.h"
 
 #include <exception>
@@ -49,7 +48,7 @@ printTile(const Tile& tile) {
 }
 
 void
-printTable(const cs_ptr<AgentDelegate>& sp_delegate)
+printTable(const cs_ptr<Agent::Delegate>& sp_delegate)
 {
   for (const auto& wp_set : sp_delegate->getTable()->getSets()) {
     const auto& sp_set = wp_set.lock();
@@ -62,7 +61,7 @@ printTable(const cs_ptr<AgentDelegate>& sp_delegate)
 
 void
 printTiles(
-    const cs_ptr<AgentDelegate>& sp_delegate,
+    const cs_ptr<Agent::Delegate>& sp_delegate,
     const vector<Tile>& tiles)
 {
   for (const auto& tile : tiles) {
@@ -77,7 +76,7 @@ printTiles(
 }
 
 void
-printWhole(const cs_ptr<AgentDelegate>& sp_delegate)
+printWhole(const cs_ptr<Agent::Delegate>& sp_delegate)
 {
   cout << "Table:\n";
   printTable(sp_delegate);
@@ -96,7 +95,7 @@ extractCommand(istringstream& iss)
 void
 extractPutResponse(
     istringstream& iss,
-    const s_ptr<AgentDelegate>& sp_delegate)
+    const s_ptr<Agent::Delegate>& sp_delegate)
 {
   int tileOffset, setOffset;
   iss >> tileOffset;
@@ -113,7 +112,7 @@ extractPutResponse(
 void
 extractMoveResponse(
     istringstream& iss,
-    const s_ptr<AgentDelegate>& sp_delegate)
+    const s_ptr<Agent::Delegate>& sp_delegate)
 {
   int tileOffset;
   iss >> tileOffset;
@@ -128,7 +127,7 @@ extractMoveResponse(
 } // namespace
 
 void
-ConsoleAgent::response(const s_ptr<AgentDelegate>& sp_delegate)
+ConsoleAgent::response(const s_ptr<Agent::Delegate>& sp_delegate)
 {
   while (true) {
     printWhole(sp_delegate);

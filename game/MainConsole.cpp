@@ -3,7 +3,6 @@
 #include "ConsoleAgent.h"
 
 #include "CoreFwd.h"
-#include "AgentDelegate.h"
 #include "EventReceiver.h"
 #include "Rummikub.h"
 #include "model/Hand.h"

@@ -1,4 +1,4 @@
-#include "AgentDelegate.h"
+#include "Agent.h"
 
 #include "EventReceiver.h"
 #include "model/Hand.h"
@@ -10,7 +10,7 @@ using std::make_shared;
 
 namespace rummikub {
 
-struct AgentDelegate::Member {
+struct Agent::Delegate::Member {
   const w_ptr<EventReceiver> wp_eventReceiver;
   const cs_ptr<Table> csp_oldTable;
   const cs_ptr<Hand> csp_oldHand;
@@ -19,9 +19,9 @@ struct AgentDelegate::Member {
   size_t put;
 };
 
-AgentDelegate::AgentDelegate(const w_ptr<EventReceiver>& wp_eventReceiver,
-                             const s_ptr<Table>& sp_table,
-                             const s_ptr<Hand>& sp_player)
+Agent::Delegate::Delegate(const w_ptr<EventReceiver>& wp_eventReceiver,
+                          const s_ptr<Table>& sp_table,
+                          const s_ptr<Hand>& sp_player)
   : _{new Member{
         wp_eventReceiver,
         make_shared<Table>(*sp_table),
@@ -32,11 +32,11 @@ AgentDelegate::AgentDelegate(const w_ptr<EventReceiver>& wp_eventReceiver,
     }}
 {/* Empty. */}
 
-AgentDelegate::~AgentDelegate()
+Agent::Delegate::~Delegate()
 {/* Empty. */}
 
 bool
-AgentDelegate::putTile(Tile tile, const cs_ptr<Set>& set)
+Agent::Delegate::putTile(Tile tile, const cs_ptr<Set>& set)
 {
   if (!_->sp_player->hasTile(tile)) return false;
   s_ptr<Set> sp_set;
@@ -54,7 +54,7 @@ AgentDelegate::putTile(Tile tile, const cs_ptr<Set>& set)
 }
 
 bool
-AgentDelegate::moveTile(
+Agent::Delegate::moveTile(
     Tile tile,
     const cs_ptr<Set>& from,
     const cs_ptr<Set>& to)
@@ -70,25 +70,25 @@ AgentDelegate::moveTile(
 }
 
 const cs_ptr<Table>
-AgentDelegate::getTable() const
+Agent::Delegate::getTable() const
 {
   return _->sp_table;
 }
 
 const cs_ptr<Hand>
-AgentDelegate::getHand() const
+Agent::Delegate::getHand() const
 {
   return _->sp_player;
 }
 
 size_t
-AgentDelegate::countPut() const
+Agent::Delegate::countPut() const
 {
   return _->put;
 }
 
 bool
-AgentDelegate::validate() const
+Agent::Delegate::validate() const
 {
   for (const auto& wp_set : _->sp_table->getSets()) {
     if (wp_set.lock()->getType() == Set::NONE) {
@@ -99,7 +99,7 @@ AgentDelegate::validate() const
 }
 
 void
-AgentDelegate::restore()
+Agent::Delegate::restore()
 {
   copyTiles(_->sp_table, _->csp_oldTable);
   copyTiles(_->sp_player, _->csp_oldHand);
