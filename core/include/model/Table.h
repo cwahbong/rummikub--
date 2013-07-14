@@ -21,8 +21,7 @@ public:
   s_ptr<Set> addSet(const cs_ptr<Set>&);
 
   void clear();
-  std::weak_ptr<Set> setRemoveConst(const std::shared_ptr<const Set>&);
-  std::vector<std::weak_ptr<const Set>> getSets() const;
+  std::vector<cw_ptr<Set>> getSets() const;
   void clean();
 
 private:

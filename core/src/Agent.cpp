@@ -7,6 +7,7 @@
 #include "model/Tile.h"
 
 using std::make_shared;
+using std::const_pointer_cast;
 
 namespace rummikub {
 
@@ -36,36 +37,28 @@ Agent::Delegate::~Delegate()
 {/* Empty. */}
 
 bool
-Agent::Delegate::putTile(Tile tile, const cs_ptr<Set>& set)
+Agent::Delegate::putTile(Tile tile, const cs_ptr<Set>& sp_set)
 {
   if (!_->sp_player->hasTile(tile)) return false;
-  s_ptr<Set> sp_set;
-  if (set) {
-    sp_set = _->sp_table->setRemoveConst(set).lock();
-    sp_set->insert(tile);
-  } else {
-    const auto& sp_set = _->sp_table->addSet();
-    sp_set->insert(tile);
-  }
+  const auto& sp_newSet = const_pointer_cast<Set>(sp_set ? sp_set : _->sp_table->addSet());
+  sp_newSet->insert(tile);
+  _->wp_eventReceiver.lock()->tilePut(_->sp_player, tile, sp_set);
   _->sp_player->removeTile(tile);
   ++_->put;
-  _->wp_eventReceiver.lock()->tilePut(_->sp_player, tile, set);
   return true;
 }
 
 bool
 Agent::Delegate::moveTile(
     Tile tile,
-    const cs_ptr<Set>& from,
-    const cs_ptr<Set>& to)
+    const cs_ptr<Set>& sp_from,
+    const cs_ptr<Set>& sp_to)
 {
-  auto sp_f = _->sp_table->setRemoveConst(from).lock();
-  auto sp_t = _->sp_table->setRemoveConst(to).lock();
-  if (!sp_f || !sp_t) return false;
-  if (!sp_f->remove(tile)) return false;
+  if (!sp_from || !sp_to) return false;
+  if (!const_pointer_cast<Set>(sp_from)->remove(tile)) return false;
   _->sp_table->clean();
-  sp_t->insert(tile);
-  _->wp_eventReceiver.lock()->tileMoved(tile, from, to);
+  const_pointer_cast<Set>(sp_to)->insert(tile);
+  _->wp_eventReceiver.lock()->tileMoved(tile, sp_from, sp_to);
   return true;
 }
 

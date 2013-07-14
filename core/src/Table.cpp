@@ -63,20 +63,10 @@ Table::clear()
   _->sets.clear();
 }
 
-weak_ptr<Set>
-Table::setRemoveConst(const shared_ptr<const Set>& set)
-{
-  auto it = _->sets.find(const_pointer_cast<Set>(set));
-  if (it != _->sets.end()) {
-    return weak_ptr<Set>{*it};
-  }
-  return weak_ptr<Set>{};
-}
-
-vector<weak_ptr<const Set>>
+vector<cw_ptr<Set>>
 Table::getSets() const
 {
-  return vector<weak_ptr<const Set>>{_->sets.begin(), _->sets.end()};
+  return vector<cw_ptr<Set>>{_->sets.begin(), _->sets.end()};
 }
 
 void
