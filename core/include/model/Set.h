@@ -9,20 +9,20 @@
 namespace rummikub {
 
 class Set {
+  Set(Set&&) = delete;
+  Set& operator=(Set&&) = delete;
+
 public:
   enum Type {RUN, GROUP, NONE};
 
 protected:
-  Set(Set&&) = default;
-  Set& operator=(Set&&) = default;
   void validate() const;
 
 public:
   Set();
   Set(const Set&);
+  Set& operator=(const Set&);
   ~Set();
-
-  Set& operator=(const Set&) = delete;
 
   void insert(const Tile&);
   bool remove(const Tile&);

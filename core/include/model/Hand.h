@@ -9,14 +9,13 @@
 namespace rummikub {
 
 class Hand {
-protected:
-  Hand& operator=(const Hand&) = default;
-  Hand(Hand&&) = default;
-  Hand& operator=(Hand&&) = default;
+  Hand(Hand&&) = delete;
+  Hand& operator=(Hand&&) = delete;
 
 public:
   Hand();
   Hand(const Hand&);
+  Hand& operator=(const Hand&);
   ~Hand();
 
   void addTile(const Tile& tile, size_t count = 1);
@@ -31,9 +30,6 @@ private:
   struct Member;
   const u_ptr<Member> _;
 };
-
-void copyTiles(const std::shared_ptr<Hand>& to,
-               const std::shared_ptr<const Hand>& from);
 
 } // namespace rummikub
 

@@ -9,12 +9,13 @@
 namespace rummikub {
 
 class Table {
-protected:
-  Table& operator=(const Table&) = default;
+  Table(Table&&) = delete;
+  Table& operator=(Table&&) = delete;
 
 public:
-  explicit Table();
+  Table();
   Table(const Table&);
+  Table& operator=(const Table&);
   ~Table();
 
   s_ptr<Set> addSet();
@@ -28,9 +29,6 @@ private:
   struct Member;
   const u_ptr<Member> _;
 };
-
-void copyTiles(const std::shared_ptr<Table>& to,
-               const std::shared_ptr<const Table>& from);
 
 } // namespace rummikub
 

@@ -107,6 +107,13 @@ Set::Set(const Set& set)
   : _{new Member(*set._)}
 {/* Empty. */}
 
+Set&
+Set::operator=(const Set& set)
+{
+  *_ = *set._;
+  return *this;
+}
+
 Set::~Set()
 {/* Empty. */}
 

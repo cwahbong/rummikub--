@@ -18,9 +18,16 @@ Hand::Hand()
   : _{new Member{}}
 {/* Empty. */}
 
-Hand::Hand(const Hand& player)
-  : _{new Member(*player._)}
+Hand::Hand(const Hand& hand)
+  : _{new Member(*hand._)}
 {/* Empty. */}
+
+Hand&
+Hand::operator=(const Hand& hand)
+{
+  *_ = *hand._;
+  return *this;
+}
 
 Hand::~Hand()
 {/* Empty. */}
@@ -65,16 +72,6 @@ vector<Tile>
 Hand::getKinds() const
 {
   return _->holder.kinds();
-}
-
-void
-copyTiles(const std::shared_ptr<Hand>& to,
-          const std::shared_ptr<const Hand>& from)
-{
-  to->clearTiles();
-  for (const auto& tile : from->getKinds()) {
-    to->addTile(tile, from->count(tile));
-  }
 }
 
 } // namespace rummikub

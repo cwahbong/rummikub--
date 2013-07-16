@@ -7,14 +7,12 @@
 using std::const_pointer_cast;
 using std::make_shared;
 using std::set;
-using std::shared_ptr;
 using std::vector;
-using std::weak_ptr;
 
 namespace rummikub {
 
 struct Table::Member {
-  set<shared_ptr<Set>> sets;
+  set<s_ptr<Set>> sets;
 
   bool validate() const {
     for (const auto& sp_set : sets) {
@@ -31,11 +29,21 @@ Table::Table()
 {/* Empty. */}
 
 Table::Table(const Table& table)
-  : _{new Member(*table._)}
+  : _{new Member{}}
 {
   for (const auto& sp_set : table._->sets) {
-    _->sets.insert(std::make_shared<Set>(*sp_set));
+    _->sets.insert(make_shared<Set>(*sp_set));
   }
+}
+
+Table&
+Table::operator=(const Table& table)
+{
+  _->sets.clear();
+  for (const auto& sp_set : table._->sets) {
+    _->sets.insert(make_shared<Set>(*sp_set));
+  }
+  return *this;
 }
 
 Table::~Table()
@@ -79,16 +87,6 @@ Table::clean()
     else {
       ++it;
     }
-  }
-}
-
-void
-copyTiles(const std::shared_ptr<Table>& to,
-          const std::shared_ptr<const Table>& from)
-{
-  to->clear();
-  for (const auto& wp_set : from->getSets()) {
-    to->addSet(wp_set.lock());
   }
 }
 

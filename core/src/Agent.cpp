@@ -94,8 +94,8 @@ Agent::Delegate::validate() const
 void
 Agent::Delegate::restore()
 {
-  copyTiles(_->sp_table, _->csp_oldTable);
-  copyTiles(_->sp_player, _->csp_oldHand);
+  *_->sp_table = *_->csp_oldTable;
+  *_->sp_player = *_->csp_oldHand;
   _->put = 0;
   _->wp_eventReceiver.lock()->restored(_->sp_table, _->sp_player);
 }
