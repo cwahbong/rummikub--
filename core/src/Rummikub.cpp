@@ -1,5 +1,6 @@
 #include "Rummikub.h"
 
+#include "model/Set.h"
 #include "model/Table.h"
 #include "model/Tile.h"
 #include "model/Hand.h"
@@ -73,6 +74,77 @@ private:
 
 namespace rummikub {
 
+class _AgentDelegate final : public Agent::Delegate {
+public:
+  _AgentDelegate(const w_ptr<EventReceiver>& er,
+           const s_ptr<Table>& t,
+           const s_ptr<Hand>& h)
+    : wp_eventReceiver{er},
+      csp_oldTable{make_shared<Table>(*t)},
+      csp_oldHand{make_shared<Hand>(*h)},
+      sp_table{t},
+      sp_hand{h},
+      put{0}
+  {/* Empty. */}
+
+  ~_AgentDelegate() {/* Empty. */}
+
+  bool putTile(Tile tile, const cs_ptr<Set>& sp_set = cs_ptr<Set>{}) {
+    if (!sp_hand->hasTile(tile)) return false;
+    const auto& sp_newSet = const_pointer_cast<Set>(sp_set ? sp_set : sp_table->addSet());
+    sp_newSet->insert(tile);
+    wp_eventReceiver.lock()->tilePut(sp_hand, tile, sp_set);
+    sp_hand->removeTile(tile);
+    ++put;
+    return true;
+  }
+
+  bool moveTile(Tile tile, const cs_ptr<Set>& sp_from, const cs_ptr<Set>& sp_to) {
+    if (!sp_from || !sp_to) return false;
+    if (!const_pointer_cast<Set>(sp_from)->remove(tile)) return false;
+    sp_table->clean();
+    const_pointer_cast<Set>(sp_to)->insert(tile);
+    wp_eventReceiver.lock()->tileMoved(tile, sp_from, sp_to);
+    return true;
+  }
+
+  const cs_ptr<Table> getTable() const {
+    return sp_table;
+  }
+
+  const cs_ptr<Hand> getHand() const {
+    return sp_hand;
+  }
+
+  size_t countPut() const {
+    return put;
+  }
+
+  bool validate() const {
+    for (const auto& wp_set : sp_table->getSets()) {
+      if (wp_set.lock()->getType() == Set::NONE) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void restore() {
+    *sp_table = *csp_oldTable;
+    *sp_hand = *csp_oldHand;
+    put = 0;
+    wp_eventReceiver.lock()->restored(sp_table, sp_hand);
+  }
+
+private:
+  const w_ptr<EventReceiver> wp_eventReceiver;
+  const cs_ptr<Table> csp_oldTable;
+  const cs_ptr<Hand> csp_oldHand;
+  const s_ptr<Table> sp_table;
+  const s_ptr<Hand> sp_hand;
+  size_t put;
+};
+
 struct Rummikub::Member {
   const w_ptr<EventReceiver> wp_eventReceiver;
   s_ptr<_Pile<Tile>> sp_pileTiles;
@@ -95,7 +167,7 @@ struct Rummikub::Member {
   turn(const s_ptr<Agent>& sp_agent)
   {
     const auto& sp_player = playerMap[sp_agent];
-    auto sp_delegate = make_shared<Agent::Delegate>(wp_eventReceiver, sp_table, sp_player); // XXX
+    auto sp_delegate = make_shared<_AgentDelegate>(wp_eventReceiver, sp_table, sp_player); // XXX
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
