@@ -22,6 +22,7 @@ struct Agent {
     virtual void restore() = 0;
   };
 
+  virtual ~Agent();
   virtual void response(const s_ptr<Delegate>&) = 0;
 };
 
