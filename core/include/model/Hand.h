@@ -8,7 +8,7 @@
 
 namespace rummikub {
 
-class Hand {
+class Hand final {
   Hand(Hand&&) = delete;
   Hand& operator=(Hand&&) = delete;
 

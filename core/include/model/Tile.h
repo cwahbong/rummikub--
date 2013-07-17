@@ -155,7 +155,7 @@ std::map<NameT, Color> ColorTraits<Color, NameT>::m_colorMap;
 template <typename ValueT, typename ColorT, typename NameT,
     typename VTraits,
     typename CTraits>
-class BasicTile {
+class BasicTile final {
 public:
   typedef ValueT ValueType;
   typedef VTraits ValueTraitsType;

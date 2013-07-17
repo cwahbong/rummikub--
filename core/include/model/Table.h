@@ -8,7 +8,7 @@
 
 namespace rummikub {
 
-class Table {
+class Table final {
   Table(Table&&) = delete;
   Table& operator=(Table&&) = delete;
 

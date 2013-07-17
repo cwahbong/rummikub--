@@ -8,7 +8,7 @@
 
 namespace rummikub {
 
-class Set {
+class Set final {
   Set(Set&&) = delete;
   Set& operator=(Set&&) = delete;
 
