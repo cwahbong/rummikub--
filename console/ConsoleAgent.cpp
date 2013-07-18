@@ -23,7 +23,6 @@ using std::string;
 using std::vector;
 
 namespace rummikub {
-namespace game {
 
 namespace {
 
@@ -154,6 +153,5 @@ ConsoleAgent::response(const s_ptr<Agent::Delegate>& sp_delegate)
   }
 }
 
-} // namespace game
 } // namsepace rummikub
 
