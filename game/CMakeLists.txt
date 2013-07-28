@@ -6,8 +6,7 @@ FIND_PACKAGE(Qt5Gui)
 
 SET(CMAKE_AUTOMOC ON)
 
-FILE(GLOB rummigame_SOURCES *.cpp)
-FILE(GLOB rummigame_HEADERS *.h)
+AUX_SOURCE_DIRECTORY(. rummigame_SOURCES)
 FILE(GLOB rummigame_FORMS *.ui)
 
 QT5_WRAP_UI(rummigame_FORMS_HEADERS ${rummigame_FORMS})
