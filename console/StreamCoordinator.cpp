@@ -1,5 +1,8 @@
 #include "StreamCoordinator.h"
 
+#include "LineExecutor.h"
+#include "OutputFormatter.h"
+
 #include "model/Tile.h"
 
 #include <map>
@@ -15,12 +18,31 @@ namespace rummikub {
 struct StreamCoordinator::Member {
   istream& is;
   ostream& os;
+  LineExecutor lineExecutor;
+  OutputFormatter outputFormatter;
+
+  string
+  getLine()
+  {
+    string result;
+    getline(is, result);
+    return result;
+  }
+
+  void
+  printWhole(const s_ptr<Delegate>& sp_delegate)
+  {
+    os << "Table:\n";
+    os << outputFormatter.format(sp_delegate->getTable());
+    os << "Player:\n";
+    os << outputFormatter.format(sp_delegate->getHand());
+  }
 };
 
 StreamCoordinator::StreamCoordinator(istream& is, ostream& os)
-  : Agent{}, EventReceiver{}, _{new Member{is, os}}
-{
-}
+  : Agent{}, EventReceiver{},
+    _{new Member{is, os, defaultLineExecutor(), defaultOutputFormatter()}}
+{/* Empty. */}
 
 StreamCoordinator::~StreamCoordinator()
 {/* Empty. */}
@@ -30,6 +52,11 @@ StreamCoordinator::~StreamCoordinator()
 void
 StreamCoordinator::response(const s_ptr<Delegate>& sp_delegate)
 {
+  while (true) {
+    _->printWhole(sp_delegate);
+    const auto& line = _->getLine();
+    if (!_->lineExecutor(line, sp_delegate)) break;
+  }
 }
 
 // EventReceiver
