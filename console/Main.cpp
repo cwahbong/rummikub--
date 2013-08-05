@@ -23,11 +23,11 @@ int
 main(int argc, char* argv[])
 {
   // TODO parse argument and make console ui more user friendly.
-  const auto coordinator = make_shared<StreamCoordinator>(cin, cout);
-  array<s_ptr<Agent>, 1> sp_agents;
-  sp_agents.fill(coordinator);
-  Rummikub(coordinator,
-     vector<s_ptr<Agent>>(begin(sp_agents), end(sp_agents))).startGame();
+  const auto& coordinator = make_shared<StreamCoordinator>(cin, cout);
+  Rummikub(coordinator, {
+    {"Player 1", coordinator},
+    {"Player 2", coordinator},
+  }).startGame();
   return 0;
 }
 

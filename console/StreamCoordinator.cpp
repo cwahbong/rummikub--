@@ -30,7 +30,7 @@ struct StreamCoordinator::Member {
   }
 
   void
-  printWhole(const s_ptr<Delegate>& sp_delegate)
+  printWhole(const s_ptr<Delegate>& sp_delegate) const
   {
     os << "Table:\n";
     os << outputFormatter.format(sp_delegate->getTable());
@@ -50,7 +50,7 @@ StreamCoordinator::~StreamCoordinator()
 // Agent
 
 void
-StreamCoordinator::response(const s_ptr<Delegate>& sp_delegate)
+StreamCoordinator::response(const s_ptr<Delegate>& sp_delegate) const
 {
   while (true) {
     _->printWhole(sp_delegate);
@@ -63,7 +63,7 @@ StreamCoordinator::response(const s_ptr<Delegate>& sp_delegate)
 
 void
 StreamCoordinator::tilePut(
-    const cs_ptr<Hand>&,
+    const cs_ptr<Player>&,
     const Tile& tile,
     const cs_ptr<Set>&) {
   _->os << "Player puts tile (" << tile.getColorName() << ", "

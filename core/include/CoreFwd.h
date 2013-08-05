@@ -21,6 +21,7 @@ typedef BasicTile<unsigned, Color> Tile;
 class Agent;
 class EventReceiver;
 class Hand;
+class Player;
 class Set;
 class Table;
 class Rummikub;

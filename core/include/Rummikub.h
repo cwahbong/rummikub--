@@ -6,13 +6,13 @@
 #include "StdMemory.h"
 #include "Util.h"
 
-#include <vector>
+#include <map>
 
 namespace rummikub {
 
 class Rummikub {
 public:
-  Rummikub(const w_ptr<EventReceiver>&, const std::vector<s_ptr<Agent>>&);
+  Rummikub(const s_ptr<EventReceiver>&, const std::map<std::string, s_ptr<Agent>>&);
   ~Rummikub();
 
   void startGame();

@@ -7,37 +7,33 @@
 namespace rummikub {
 
 struct EventReceiver {
-  // for player
+  // Invoked by Agent::Delegate.
   virtual void tilePut(
-      const cs_ptr<Hand>&,
+      const cs_ptr<Player>&,
       const Tile&,
       const cs_ptr<Set>&
   ) {/* Empty. */}
   virtual void tileMoved(
+      const cs_ptr<Player>&,
       const Tile&,
       const cs_ptr<Set>&,
       const cs_ptr<Set>&
   ) {/* Empty. */}
   virtual void restored(
-      const cs_ptr<Table>&,
-      const cs_ptr<Hand>&
+      const cs_ptr<Player>&,
+      const cs_ptr<Table>&
   ) {/* Empty. */}
 
-  // for table
-  virtual void setAdded(
-      const cs_ptr<Set>&
-  ) {/* Empty. */}
-
-  // for rummikub
+  // Invoke by rummikub
   virtual void gameStarted(
   ) {/* Empty. */}
   virtual void gameEnded(
   ) {/* Empty. */}
   virtual void turnStarted(
-    const cs_ptr<Agent>&
+    const cs_ptr<Player>&
   ) {/* Empty. */}
   virtual void turnEnded(
-    const cs_ptr<Agent>&
+    const cs_ptr<Player>&
   ) {/* Empty. */}
 };
 

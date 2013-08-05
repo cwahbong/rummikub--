@@ -23,7 +23,7 @@ struct Agent {
   };
 
   virtual ~Agent();
-  virtual void response(const s_ptr<Delegate>&) = 0;
+  virtual void response(const s_ptr<Delegate>&) const = 0;
 };
 
 } // namespace rummikub

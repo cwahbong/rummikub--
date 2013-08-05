@@ -6,9 +6,9 @@
 #include "model/Hand.h"
 #include "Agent.h"
 #include "EventReceiver.h"
+#include "Player.h"
 
 #include <algorithm>
-#include <map>
 #include <set>
 
 using std::const_pointer_cast;
@@ -17,6 +17,7 @@ using std::map;
 using std::random_shuffle;
 using std::static_pointer_cast;
 using std::set;
+using std::string;
 using std::vector;
 
 namespace {
@@ -77,13 +78,14 @@ namespace rummikub {
 class _AgentDelegate final : public Agent::Delegate {
 public:
   _AgentDelegate(const w_ptr<EventReceiver>& er,
-           const s_ptr<Table>& t,
-           const s_ptr<Hand>& h)
+                 const s_ptr<Table>& t,
+                 const s_ptr<Player>& p)
     : wp_eventReceiver{er},
       csp_oldTable{make_shared<Table>(*t)},
-      csp_oldHand{make_shared<Hand>(*h)},
+      csp_oldHand{make_shared<Hand>(*p->getHand())},
+      sp_player{p},
       sp_table{t},
-      sp_hand{h},
+      sp_hand{p->getHand()},
       put{0}
   {/* Empty. */}
 
@@ -93,7 +95,7 @@ public:
     if (!sp_hand->hasTile(tile)) return false;
     const auto& sp_newSet = const_pointer_cast<Set>(sp_set ? sp_set : sp_table->addSet());
     sp_newSet->insert(tile);
-    wp_eventReceiver.lock()->tilePut(sp_hand, tile, sp_set);
+    wp_eventReceiver.lock()->tilePut(sp_player, tile, sp_set);
     sp_hand->removeTile(tile);
     ++put;
     return true;
@@ -104,7 +106,7 @@ public:
     if (!const_pointer_cast<Set>(sp_from)->remove(tile)) return false;
     sp_table->clean();
     const_pointer_cast<Set>(sp_to)->insert(tile);
-    wp_eventReceiver.lock()->tileMoved(tile, sp_from, sp_to);
+    wp_eventReceiver.lock()->tileMoved(sp_player, tile, sp_from, sp_to);
     return true;
   }
 
@@ -133,62 +135,63 @@ public:
     *sp_table = *csp_oldTable;
     *sp_hand = *csp_oldHand;
     put = 0;
-    wp_eventReceiver.lock()->restored(sp_table, sp_hand);
+    wp_eventReceiver.lock()->restored(sp_player, sp_table);
   }
 
 private:
   const w_ptr<EventReceiver> wp_eventReceiver;
   const cs_ptr<Table> csp_oldTable;
   const cs_ptr<Hand> csp_oldHand;
+  const s_ptr<Player> sp_player;
   const s_ptr<Table> sp_table;
   const s_ptr<Hand> sp_hand;
   size_t put;
 };
 
 struct Rummikub::Member {
-  const w_ptr<EventReceiver> wp_eventReceiver;
+  const s_ptr<EventReceiver> sp_eventReceiver;
   s_ptr<_Pile<Tile>> sp_pileTiles;
   s_ptr<Table> sp_table;
-  vector<s_ptr<Agent>> sp_agents;
-  map<s_ptr<Agent>, s_ptr<Hand>> playerMap;
+  vector<s_ptr<Player>> sp_players;
 
   void
   initHands()
   {
-    for (const auto& sp_agent : sp_agents) {
-      const auto& sp_player = playerMap[sp_agent];
+    for (const auto& sp_player : sp_players) {
+      const auto& sp_hand = sp_player->getHand();
       for (unsigned i = 0; i < INITIAL_HAND_NUM; ++i) {
-        sp_player->addTile(sp_pileTiles->draw());
+        sp_hand->addTile(sp_pileTiles->draw());
       }
     }
   }
 
   void
-  turn(const s_ptr<Agent>& sp_agent)
+  turn(const s_ptr<Player>& sp_player)
   {
-    const auto& sp_player = playerMap[sp_agent];
-    auto sp_delegate = make_shared<_AgentDelegate>(wp_eventReceiver, sp_table, sp_player); // XXX
+    const auto& sp_agent = sp_player->getAgent();
+    const auto& sp_hand = sp_player->getHand();
+    auto sp_delegate = make_shared<_AgentDelegate>(sp_eventReceiver, sp_table, sp_player); // XXX
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
-      sp_player->addTile(sp_pileTiles->draw());
+      sp_hand->addTile(sp_pileTiles->draw());
     } else if (sp_delegate->countPut() == 0) {
-      sp_player->addTile(sp_pileTiles->draw());
+      sp_hand->addTile(sp_pileTiles->draw());
     }
   }
 };
 
-Rummikub::Rummikub(const w_ptr<EventReceiver>& wp_eventReceiver, const vector<s_ptr<Agent>>& agents)
+Rummikub::Rummikub(const s_ptr<EventReceiver>& sp_eventReceiver,
+                   const map<string, s_ptr<Agent>>& sp_playerInfos)
   : _{new Member{
-        wp_eventReceiver,
+        sp_eventReceiver,
         make_shared<_Pile<Tile>>(defaultTiles()),
         make_shared<Table>()
     }}
 {
   _->sp_pileTiles->shuffle();
-  for (const auto& sp_agent : agents) {
-    _->sp_agents.push_back(sp_agent);
-    _->playerMap[sp_agent] = make_shared<Hand>();
+  for (const auto& info : sp_playerInfos) {
+    _->sp_players.push_back(make_shared<Player>(info.first, info.second));
   }
 }
 
@@ -207,18 +210,17 @@ void
 Rummikub::startGame()
 {
   _->initHands();
-  const auto& sp_eventReceiver = _->wp_eventReceiver.lock();
-  sp_eventReceiver->gameStarted();
+  _->sp_eventReceiver->gameStarted();
   while (true) {
-    for (auto sp_agent : _->sp_agents) {
-      auto sp_player = _->playerMap[sp_agent];
-      sp_eventReceiver->turnStarted(sp_agent);
-      _->turn(sp_agent);
-      if (sp_player->empty() || _->sp_pileTiles->empty()) {
-        sp_eventReceiver->gameEnded();
+    for (const auto& sp_player : _->sp_players) {
+      const auto& sp_agent = sp_player->getAgent();
+      _->sp_eventReceiver->turnStarted(sp_player);
+      _->turn(sp_player);
+      if (sp_player->getHand()->empty() || _->sp_pileTiles->empty()) {
+        _->sp_eventReceiver->gameEnded();
         return;
       }
-      sp_eventReceiver->turnEnded(sp_agent);
+      _->sp_eventReceiver->turnEnded(sp_player);
     }
   }
 }
