@@ -4,7 +4,9 @@ INCLUDE_DIRECTORIES(include)
 AUX_SOURCE_DIRECTORY(src rummicore_SOURCES)
 
 # For Qt creator to find the headers.
-FILE(GLOB rummicore_HEADERS include/*.h include/model/*.h src/*.h)
+FILE(GLOB_RECURSE rummicore_INCLUDE_HEADERS include *.h)
+FILE(GLOB rummicore_SOURCE_HEADERS src/*.h)
+SET(rummicore_HEADERS ${rummicore_INCLUDE_HEADERS} ${rummicore_SOURCE_HEADERS})
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${rummicore_SOURCES} ${rummicore_HEADERS})
 INSTALL(TARGETS ${PROJECT_NAME}
