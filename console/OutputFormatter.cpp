@@ -1,16 +1,17 @@
 #include "OutputFormatter.h"
 
+#include "StdMemory.h"
+
 #include "model/Hand.h"
 #include "model/Set.h"
 #include "model/Table.h"
 #include "model/Tile.h"
 
+#include <string>
+  using std::string;
+  using std::to_string;
 #include <utility>
-
-using std::make_shared;
-using std::move;
-using std::string;
-using std::to_string;
+  using std::move;
 
 namespace rummikub {
 

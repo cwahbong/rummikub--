@@ -4,14 +4,16 @@
 #include "OutputFormatter.h"
 
 #include "model/Tile.h"
+#include "StdMemory.h"
 
+#include <istream>
+  using std::istream;
 #include <map>
-
-using std::istream;
-using std::make_shared;
-using std::map;
-using std::ostream;
-using std::string;
+  using std::map;
+#include <ostream>
+  using std::ostream;
+#include <string>
+  using std::string;
 
 namespace rummikub {
 

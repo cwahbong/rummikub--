@@ -7,16 +7,15 @@
 #include "Agent.h"
 
 #include <istream>
+  using std::istream;
 #include <map>
+  using std::map;
 #include <sstream>
+  using std::istringstream;
 #include <stdexcept>
+  using std::out_of_range;
 #include <string>
-
-using std::istream;
-using std::istringstream;
-using std::map;
-using std::out_of_range;
-using std::string;
+  using std::string;
 
 #include <iostream>
 
