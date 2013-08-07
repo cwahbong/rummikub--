@@ -12,7 +12,6 @@
 #include <set>
 
 using std::const_pointer_cast;
-using std::make_shared;
 using std::map;
 using std::random_shuffle;
 using std::static_pointer_cast;
@@ -81,8 +80,8 @@ public:
                  const s_ptr<Table>& t,
                  const s_ptr<Player>& p)
     : wp_eventReceiver{er},
-      csp_oldTable{make_shared<Table>(*t)},
-      csp_oldHand{make_shared<Hand>(*p->getHand())},
+      csp_oldTable{make_s<Table>(*t)},
+      csp_oldHand{make_s<Hand>(*p->getHand())},
       sp_player{p},
       sp_table{t},
       sp_hand{p->getHand()},
@@ -170,7 +169,7 @@ struct Rummikub::Member {
   {
     const auto& sp_agent = sp_player->getAgent();
     const auto& sp_hand = sp_player->getHand();
-    auto sp_delegate = make_shared<_AgentDelegate>(sp_eventReceiver, sp_table, sp_player); // XXX
+    auto sp_delegate = make_s<_AgentDelegate>(sp_eventReceiver, sp_table, sp_player); // XXX
     sp_agent->response(sp_delegate);
     if (!sp_delegate->validate()) {
       sp_delegate->restore();
@@ -185,13 +184,13 @@ Rummikub::Rummikub(const s_ptr<EventReceiver>& sp_eventReceiver,
                    const map<string, s_ptr<Agent>>& sp_playerInfos)
   : _{new Member{
         sp_eventReceiver,
-        make_shared<_Pile<Tile>>(defaultTiles()),
-        make_shared<Table>()
+        make_s<_Pile<Tile>>(defaultTiles()),
+        make_s<Table>()
     }}
 {
   _->sp_pileTiles->shuffle();
   for (const auto& info : sp_playerInfos) {
-    _->sp_players.push_back(make_shared<Player>(info.first, info.second));
+    _->sp_players.push_back(make_s<Player>(info.first, info.second));
   }
 }
 

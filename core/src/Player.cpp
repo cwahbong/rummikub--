@@ -2,7 +2,6 @@
 
 #include "model/Hand.h"
 
-using std::make_shared;
 using std::string;
 
 namespace rummikub {
@@ -14,7 +13,7 @@ struct Player::Member {
 };
 
 Player::Player(const string& id, const cs_ptr<Agent>& sp_agent)
-  : _{new Member{id, sp_agent, make_shared<Hand>()}}
+  : _{new Member{id, sp_agent, make_s<Hand>()}}
 {/* Empty. */}
 
 Player::~Player()

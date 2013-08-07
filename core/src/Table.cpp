@@ -5,7 +5,6 @@
 #include <set>
 
 using std::const_pointer_cast;
-using std::make_shared;
 using std::set;
 using std::vector;
 
@@ -32,7 +31,7 @@ Table::Table(const Table& table)
   : _{new Member{}}
 {
   for (const auto& sp_set : table._->sets) {
-    _->sets.insert(make_shared<Set>(*sp_set));
+    _->sets.insert(make_s<Set>(*sp_set));
   }
 }
 
@@ -41,7 +40,7 @@ Table::operator=(const Table& table)
 {
   _->sets.clear();
   for (const auto& sp_set : table._->sets) {
-    _->sets.insert(make_shared<Set>(*sp_set));
+    _->sets.insert(make_s<Set>(*sp_set));
   }
   return *this;
 }
@@ -52,7 +51,7 @@ Table::~Table()
 s_ptr<Set>
 Table::addSet()
 {
-  const auto& sp_set = make_shared<Set>();
+  const auto& sp_set = make_s<Set>();
   _->sets.insert(sp_set);
   return sp_set;
 }
@@ -60,7 +59,7 @@ Table::addSet()
 s_ptr<Set>
 Table::addSet(const cs_ptr<Set>& sp_set)
 {
-  const auto& sp_newSet = make_shared<Set>(*sp_set);
+  const auto& sp_newSet = make_s<Set>(*sp_set);
   _->sets.insert(sp_newSet);
   return sp_newSet;
 }
