@@ -16,7 +16,7 @@ namespace game {
 class TileWidget : public QWidget
 {
   Q_OBJECT
-  static QString getColorStyleSheet(Color);
+  static QString getColorStyleSheet(const Tile::Color&);
 
 public:
   explicit TileWidget(QWidget *parent = 0);
@@ -30,7 +30,7 @@ protected:
 
 private:
   Ui::TileWidget *ui;
-  Tile m_tile{INVALID, 14};
+  Tile m_tile{Tile::Color::INVALID, 14};
 };
 
 } // namespace game

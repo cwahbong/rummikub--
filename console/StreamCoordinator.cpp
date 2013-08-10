@@ -68,8 +68,8 @@ StreamCoordinator::tilePut(
     const cs_ptr<Player>&,
     const Tile& tile,
     const cs_ptr<Set>&) {
-  _->os << "Player puts tile (" << tile.getColorName() << ", "
-        << tile.getValueName() << ")\n";
+  _->os << "Player puts tile (" << tile.getColor() << ", "
+        << tile.getValue() << ")\n";
 }
 
 /// TODO

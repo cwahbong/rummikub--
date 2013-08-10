@@ -4,22 +4,25 @@
 #include <QPainter>
 #include <QPen>
 
+
 namespace rummikub {
 namespace game {
 
+using Color = Tile::Color;
+
 QString
-TileWidget::getColorStyleSheet(Color c)
+TileWidget::getColorStyleSheet(const Color& c)
 {
   switch (c) {
-  case INVALID:
+  case Color::INVALID:
     return "color: grey;";
-  case RED:
+  case Color::RED:
     return "color: red;";
-  case BLUE:
+  case Color::BLUE:
     return "color: blue;";
-  case YELLOW:
+  case Color::YELLOW:
     return "color: darkorange;";
-  case BLACK:
+  case Color::BLACK:
     return "color: black;";
   default:
     return "color: green";
@@ -55,7 +58,7 @@ void
 TileWidget::setTile(const Tile& tile)
 {
   ui->m_content->setStyleSheet(getColorStyleSheet(tile.getColor()));
-  ui->m_content->setText(tile.getValueName().c_str());
+  ui->m_content->setText(Tile::to_string(tile.getValue()).c_str());
   m_tile = tile;
 }
 

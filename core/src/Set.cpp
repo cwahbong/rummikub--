@@ -4,13 +4,11 @@
 
 #include <algorithm>
 #include <array>
-#include <set>
 
 using std::array;
 using std::find;
 using std::max;
 using std::min;
-using std::set;
 using std::sort;
 using std::vector;
 
@@ -27,8 +25,8 @@ validateTiles(RandomAccessContainer& tiles)
   }
   array<int, 14> valueCount{};
   array<int, 5> colorCount{};
-  Tile::ValueType minValue{Tile::MAX_VALUE};
-  Tile::ValueType maxValue{Tile::MIN_VALUE};
+  const auto& minValue = Tile::minValue();
+  const auto& maxValue = Tile::maxValue();
   int jokerCount{};
   for (const auto& tile : tiles) {
     if (tile.isJoker()) {

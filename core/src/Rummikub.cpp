@@ -22,26 +22,25 @@ using std::vector;
 namespace {
 
 using rummikub::Tile;
-using rummikub::RED;
-using rummikub::BLUE;
-using rummikub::YELLOW;
-using rummikub::BLACK;
+
+using Color = Tile::Color;
+using Value = Tile::Value;
 
 const unsigned INITIAL_HAND_NUM = 14;
 
 vector<Tile> defaultTiles()
 {
   vector<Tile> result;
-  for (auto v = Tile::MIN_VALUE; v <= Tile::MAX_VALUE; ++v) {
+  for (auto v = Tile::minValue(); v <= Tile::maxValue(); ++v) {
     for(unsigned i = 0; i < 2; ++i) {
-      result.push_back(Tile{RED, v});
-      result.push_back(Tile{BLUE, v});
-      result.push_back(Tile{YELLOW, v});
-      result.push_back(Tile{BLACK, v});
+      result.push_back(Tile{Color::RED, v});
+      result.push_back(Tile{Color::BLUE, v});
+      result.push_back(Tile{Color::YELLOW, v});
+      result.push_back(Tile{Color::BLACK, v});
     }
   }
-  result.push_back(Tile::joker(RED));
-  result.push_back(Tile::joker(BLACK));
+  result.push_back(Tile::jokerTile(Color::RED));
+  result.push_back(Tile::jokerTile(Color::BLACK));
   return result;
 }
 

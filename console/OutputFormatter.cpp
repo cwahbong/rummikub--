@@ -15,25 +15,6 @@
 
 namespace rummikub {
 
-namespace {
-
-string
-to_string_short(const Color& color) {
-  switch (color) {
-  case RED:
-    return "R";
-  case BLUE:
-    return "B";
-  case YELLOW:
-    return "Y";
-  case BLACK:
-    return "X";
-  }
-  return ".";
-}
-
-} // namespace
-
 struct OutputFormatter::Member {
   TileF tileF;
   SetF setF;
@@ -84,9 +65,9 @@ OutputFormatter::TileF
 defaultTileF()
 {
   return [](const OutputFormatter&, const Tile& tile) {
-    return to_string_short(tile.getColor())
+    return Tile::to_string_short(tile.getColor())
          + "-"
-         + to_string(tile.getValue());
+         + Tile::to_string(tile.getValue());
   };
 }
 
