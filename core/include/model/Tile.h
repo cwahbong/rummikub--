@@ -2,15 +2,10 @@
 #define RUMMIKUB_CORE__TILE_H
 
 #include "CoreFwd.h"
-#include "Util.h"
 
-#include <cctype>
-#include <map>
 #include <string>
-#include <type_traits>
 
 namespace rummikub {
-
 
 class Tile {
 public:
