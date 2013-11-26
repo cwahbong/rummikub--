@@ -1,5 +1,7 @@
 PROJECT(rummiconsole)
 
+FIND_PACKAGE(Boost 1.40 REQUIRED)
+
 AUX_SOURCE_DIRECTORY(. rummiconsole_SOURCES)
 
 INCLUDE_DIRECTORIES(${rummicore_SOURCE_DIR}/include)
