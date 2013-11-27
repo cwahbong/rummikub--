@@ -7,6 +7,14 @@ using std::make_shared;
 
 namespace rummikub {
 
+namespace {
+
+constexpr Tile::Color BLACK = Tile::Color::BLACK;
+constexpr Tile::Color RED = Tile::Color::RED;
+constexpr Tile::Color YELLOW = Tile::Color::YELLOW;
+
+} // namespace rummikub::<anonymous>
+
 TEST(SetTest, ValidateRun) {
   const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
@@ -19,8 +27,8 @@ TEST(SetTest, ValidateRunWithJokers) {
   const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{RED, 6});
-  sp_set->insert(Tile::joker(BLACK));
-  sp_set->insert(Tile::joker(BLACK));
+  sp_set->insert(Tile::jokerTile(BLACK));
+  sp_set->insert(Tile::jokerTile(BLACK));
   sp_set->insert(Tile{RED, 8});
   sp_set->insert(Tile{RED, 10});
   sp_set->insert(Tile{RED, 7});
@@ -39,8 +47,8 @@ TEST(SetTest, ValidateGroupWithJokers) {
   const auto& sp_set = make_shared<Set>();
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{BLACK, 5});
-  sp_set->insert(Tile::joker(BLACK));
-  sp_set->insert(Tile::joker(BLACK));
+  sp_set->insert(Tile::jokerTile(BLACK));
+  sp_set->insert(Tile::jokerTile(BLACK));
   EXPECT_EQ(Set::GROUP, sp_set->getType());
 }
 
@@ -66,8 +74,8 @@ TEST(SetTest, ValidateNoneGroupWithJokers) {
   sp_set->insert(Tile{RED, 5});
   sp_set->insert(Tile{BLACK, 5});
   sp_set->insert(Tile{YELLOW, 5});
-  sp_set->insert(Tile::joker(BLACK));
-  sp_set->insert(Tile::joker(RED));
+  sp_set->insert(Tile::jokerTile(BLACK));
+  sp_set->insert(Tile::jokerTile(RED));
   EXPECT_EQ(Set::NONE, sp_set->getType());
 }
 
