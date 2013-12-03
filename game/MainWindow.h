@@ -1,6 +1,8 @@
 #ifndef RUMMIKUB_GAME__MAINWINDOW_H
 #define RUMMIKUB_GAME__MAINWINDOW_H
 
+#include "GameSetDialog.h"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -24,6 +26,7 @@ private slots:
 
 private:
   Ui::MainWindow *ui;
+  GameSetDialog *gameSetDialog;
 };
 
 } // namespace game
