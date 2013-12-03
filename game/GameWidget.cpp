@@ -27,10 +27,10 @@ void
 GameWidget::startNewGame()
 {
   QRummikub* p_qRummikub = new QRummikub();
-  Rummikub* p_rummikub; // = new Rummikub(...); TODO
+  Rummikub* p_rummikub = NULL; // = new Rummikub(...); TODO
   p_qRummikub->setRummikub(u_ptr<Rummikub>(p_rummikub));
-  connect(this, SIGNAL(ready),
-          p_qRummikub, SLOT(startGame()));
+  connect(this, SIGNAL(ready()),
+          p_qRummikub, SLOT(rummiStartGame()));
 
   QThread* p_thread = new QThread();
   connect(p_thread, SIGNAL(finished()),
