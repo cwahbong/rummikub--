@@ -25,8 +25,8 @@ validateTiles(RandomAccessContainer& tiles)
   }
   array<int, 14> valueCount{};
   array<int, 5> colorCount{};
-  const auto& minValue = Tile::minValue();
-  const auto& maxValue = Tile::maxValue();
+  auto minValue = Tile::maxValue();
+  auto maxValue = Tile::minValue();
   int jokerCount{};
   for (const auto& tile : tiles) {
     if (tile.isJoker()) {
