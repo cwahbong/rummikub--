@@ -12,11 +12,16 @@ namespace game {
 
 class GameWidget : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
     
 public:
-    explicit GameWidget(QWidget *parent = 0);
-    ~GameWidget();
+  explicit GameWidget(QWidget *parent = 0);
+  ~GameWidget();
+
+  void startNewGame();
+
+signals:
+  void ready();
     
 private:
     Ui::GameWidget *ui;
