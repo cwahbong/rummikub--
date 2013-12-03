@@ -16,7 +16,7 @@ public:
   StreamCoordinator(std::istream&, std::ostream&);
   ~StreamCoordinator();
 
-  void response(const s_ptr<Delegate>&) const override;
+  void response(const s_ptr<Delegate>&) override;
 
   void tilePut(const cs_ptr<Player>&, const Tile& tile, const cs_ptr<Set>&) override;
 

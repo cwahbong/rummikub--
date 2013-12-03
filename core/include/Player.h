@@ -14,11 +14,14 @@ class Player final {
   Player& operator=(Player&&) = delete;
 
 public:
-  Player(const std::string&, const cs_ptr<Agent>&);
+  Player(
+      const std::string& id,
+      const s_ptr<Agent>& sp_agent
+  );
   ~Player();
 
   std::string getId() const;
-  cs_ptr<Agent> getAgent() const;
+  s_ptr<Agent> getAgent() const;
   s_ptr<Hand> getHand();
 
 private:

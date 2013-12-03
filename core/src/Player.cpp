@@ -8,11 +8,11 @@ namespace rummikub {
 
 struct Player::Member {
   string id;
-  cs_ptr<Agent> sp_agent;
+  s_ptr<Agent> sp_agent;
   s_ptr<Hand> sp_hand;
 };
 
-Player::Player(const string& id, const cs_ptr<Agent>& sp_agent)
+Player::Player(const string& id, const s_ptr<Agent>& sp_agent)
   : _{new Member{id, sp_agent, make_s<Hand>()}}
 {/* Empty. */}
 
@@ -25,7 +25,7 @@ Player::getId() const
   return _->id;
 }
 
-cs_ptr<Agent>
+s_ptr<Agent>
 Player::getAgent() const
 {
   return _->sp_agent;

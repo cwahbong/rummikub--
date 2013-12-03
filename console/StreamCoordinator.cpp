@@ -225,7 +225,7 @@ StreamCoordinator::~StreamCoordinator()
 // Agent
 
 void
-StreamCoordinator::response(const s_ptr<Delegate>& sp_delegate) const
+StreamCoordinator::response(const s_ptr<Delegate>& sp_delegate)
 {
   while (true) {
     _->printWhole(sp_delegate);
