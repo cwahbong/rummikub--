@@ -51,6 +51,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="restoreButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -70,6 +73,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="doneButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>

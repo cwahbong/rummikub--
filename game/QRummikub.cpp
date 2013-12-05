@@ -8,13 +8,14 @@
   using std::string;
   using std::move;
 
+#include <QWaitCondition>
+
 namespace rummikub {
 namespace game {
 
 /*  QRummikub is a QObject.  It can not be passed as a shared pointer,
  *  or it will be freed by both s_ptr and its parent.
  */
-#if 0
 class _EventReceiverSharedGuard : public EventReceiver {
 public:
   explicit _EventReceiverSharedGuard(EventReceiver* receiver)
@@ -70,21 +71,42 @@ public:
 private:
   EventReceiver* const _receiver;
 };
-#endif
+
+class _AgentSharedGuard : public Agent {
+public:
+  _AgentSharedGuard(Agent* agent)
+    : _agent(agent)
+  {/* Empty. */}
+
+  virtual void response(
+      const s_ptr<Delegate>& sp_delegate) override
+  {
+    _agent->response(sp_delegate);
+  }
+
+private:
+  Agent* const _agent;
+};
 
 QRummikub::QRummikub(
+    map<string, s_ptr<Agent>> players,
     QObject* parent)
-  : QObject(parent)
-{/* Empty. */}
+  : QObject(parent),
+    EventReceiver(),
+    Agent(),
+    _sp_eventReceiver(make_s<_EventReceiverSharedGuard>(this)),
+    _sp_agent(make_s<_AgentSharedGuard>(this))
+{
+  for (auto& pair : players) {
+    if (pair.second == nullptr) {
+      pair.second = _sp_agent;
+    }
+  }
+  _up_rummikub = u_ptr<Rummikub>(new Rummikub(_sp_eventReceiver, players));
+}
 
 QRummikub::~QRummikub()
 {/* Empty. */}
-
-void
-QRummikub::setRummikub(u_ptr<Rummikub>&& up_rummikub)
-{
-  _up_rummikub = move(up_rummikub);
-}
 
 void
 QRummikub::tilePut(
@@ -93,6 +115,17 @@ QRummikub::tilePut(
     const cs_ptr<Set>& sp_set)
 {
   emit rummiTilePut(sp_player, tile, sp_set);
+}
+
+void
+QRummikub::response(
+    const s_ptr<Delegate>& sp_delegate)
+{
+  _rummiMutex.lock();
+  QDelegate qDelegate(sp_delegate, &_rummiMutex, &_rummiWaitCondition);
+  emit readyForResponse(&qDelegate);
+  _rummiWaitCondition.wait(&_rummiMutex);
+  _rummiMutex.unlock();
 }
 
 void

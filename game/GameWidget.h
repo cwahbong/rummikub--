@@ -1,6 +1,8 @@
 #ifndef RUMMIKUB_GAME__GAMEWIDGET_H
 #define RUMMIKUB_GAME__GAMEWIDGET_H
 
+#include "QDelegate.h"
+
 #include <QWidget>
 
 namespace Ui {
@@ -21,10 +23,22 @@ public:
   void startNewGame();
 
 signals:
-  void ready();
-    
+  void readyForNewGame();
+
+  void putTile(); // TODO
+  void moveTile(); // TODO
+  void restore();
+
+public slots:
+  void responseAsked(QDelegate*);
+
+private slots:
+  void on_doneButton_clicked(bool);
+  void on_restoreButton_clicked(bool);
+
 private:
-    Ui::GameWidget *ui;
+  Ui::GameWidget *ui;
+  QDelegate* _p_qDelegate;
 };
 
 } // namespace game
