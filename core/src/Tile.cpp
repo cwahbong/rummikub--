@@ -20,8 +20,9 @@ Tile::to_string(const Color& c)
     return "yellow";
   case Color::BLACK:
     return "black";
+  default:
+    return "invalid";
   }
-  return "invalid";
 }
 
 // static
@@ -37,8 +38,9 @@ Tile::to_string_short(const Color& c)
     return "Y";
   case Color::BLACK:
     return "X";
+  default:
+    return ".";
   }
-  return ".";
 }
 
 // static
