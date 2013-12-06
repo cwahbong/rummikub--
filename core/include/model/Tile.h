@@ -22,6 +22,7 @@ public:
   static std::string to_string_short(const Color&);
   static std::string to_string(const Value&);
 
+  Tile();
   Tile(const Color& c, const Value& v);
 
   void setColor(const Color&);

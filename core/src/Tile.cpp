@@ -50,6 +50,10 @@ Tile::to_string(const Value& v)
   return std::to_string(v);
 }
 
+Tile::Tile()
+  : Tile(INVALID, 0)
+{/* Empty. */}
+
 Tile::Tile(const Color& c, const Value& v)
   : _c{c}, _v{v}
 {/* Empty. */}
