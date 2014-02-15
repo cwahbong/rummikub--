@@ -36,17 +36,50 @@ public:
       const Tile&,
       const cs_ptr<Set>&) override;
 
-  // TODO other events in EventReceiver
+  virtual void tileMoved(
+      const cs_ptr<Player>&,
+      const Tile&,
+      const cs_ptr<Set>&,
+      const cs_ptr<Set>&) override;
+
+  virtual void restored(
+      const cs_ptr<Player>&,
+      const cs_ptr<Table>&) override;
+
+  virtual void gameStarted() override;
+
+  virtual void gameEnded() override;
+
+  virtual void turnStarted(const cs_ptr<Player>&) override;
+
+  virtual void turnEnded(const cs_ptr<Player>&) override;
 
   virtual void response(
       const s_ptr<Delegate>& sp_delegate) override;
 
 signals:
   void rummiTilePut(
-    const cs_ptr<Player>&,
-    const Tile& tile,
-    const cs_ptr<Set>& sp_set);
-  // TODO  other events in EventReceiver
+      const cs_ptr<Player>&,
+      const Tile& tile,
+      const cs_ptr<Set>& sp_set);
+
+  void rummiTileMoved(
+      const cs_ptr<Player>&,
+      const Tile&,
+      const cs_ptr<Set>&,
+      const cs_ptr<Set>&);
+
+  void rummiRestored(
+      const cs_ptr<Player>&,
+      const cs_ptr<Table>&);
+
+  void rummiGameStarted();
+
+  void rummiGameEnded();
+
+  void rummiTurnStarted(const cs_ptr<Player>&);
+
+  void rummiTurnEnded(const cs_ptr<Player>&);
 
   void readyForResponse(QDelegate*);
 

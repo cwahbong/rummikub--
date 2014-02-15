@@ -118,6 +118,48 @@ QRummikub::tilePut(
 }
 
 void
+QRummikub::tileMoved(
+    const cs_ptr<Player>& sp_player,
+    const Tile& tile,
+    const cs_ptr<Set>& sp_set_from,
+    const cs_ptr<Set>& sp_set_to)
+{
+  emit rummiTileMoved(sp_player, tile, sp_set_from, sp_set_to);
+}
+
+void
+QRummikub::restored(
+    const cs_ptr<Player>& sp_player,
+    const cs_ptr<Table>& sp_table)
+{
+  emit rummiRestored(sp_player, sp_table);
+}
+
+void
+QRummikub::gameStarted()
+{
+  emit rummiGameStarted();
+}
+
+void
+QRummikub::gameEnded()
+{
+  emit rummiGameEnded();
+}
+
+void
+QRummikub::turnStarted(const cs_ptr<Player>& sp_player)
+{
+  emit rummiTurnStarted(sp_player);
+}
+
+void
+QRummikub::turnEnded(const cs_ptr<Player>& sp_player)
+{
+  emit rummiTurnEnded(sp_player);
+}
+
+void
 QRummikub::response(
     const s_ptr<Delegate>& sp_delegate)
 {
