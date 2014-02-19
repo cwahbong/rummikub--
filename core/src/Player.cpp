@@ -32,7 +32,7 @@ Player::getAgent() const
 }
 
 s_ptr<Hand>
-Player::getHand()
+Player::getHand() const
 {
   return _->sp_hand;
 }

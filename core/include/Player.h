@@ -22,7 +22,8 @@ public:
 
   std::string getId() const;
   s_ptr<Agent> getAgent() const;
-  s_ptr<Hand> getHand();
+
+  s_ptr<Hand> getHand() const;
 
 private:
   struct Member;
