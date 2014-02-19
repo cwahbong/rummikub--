@@ -30,10 +30,13 @@ TileWidget::getColorStyleSheet(const Color& c)
 }
 
 TileWidget::TileWidget(QWidget *parent)
-  : QWidget(parent),
+  : QAbstractButton(parent),
     ui(new Ui::TileWidget)
 {
   ui->setupUi(this);
+  setCheckable(true);
+  setAutoExclusive(true);
+  setAutoRepeat(false);
 }
 
 TileWidget::~TileWidget()
@@ -45,7 +48,7 @@ void
 TileWidget::paintEvent(QPaintEvent* event)
 {
   QWidget::paintEvent(event);
-  int lineWidth = 3;
+  int lineWidth = (isChecked() ? 3 : 2);
   int padding = lineWidth / 2;
   QPen pen;
   pen.setWidth(lineWidth);

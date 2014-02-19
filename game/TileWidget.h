@@ -1,7 +1,7 @@
 #ifndef RUMMIKUB_GAME__TILEWIDGET_H
 #define RUMMIKUB_GAME__TILEWIDGET_H
 
-#include <QWidget>
+#include <QAbstractButton>
 
 #include "CoreFwd.h"
 #include "model/Tile.h"
@@ -13,7 +13,7 @@ class TileWidget;
 namespace rummikub {
 namespace game {
 
-class TileWidget : public QWidget
+class TileWidget : public QAbstractButton
 {
   Q_OBJECT
   static QString getColorStyleSheet(const Tile::Color&);
