@@ -24,6 +24,12 @@ SetWidget::~SetWidget()
   delete ui;
 }
 
+cs_ptr<Set>
+SetWidget::getSet()
+{
+  return sp_set;
+}
+
 /*
 void
 SetWidget::insertTile(const Tile& tile)

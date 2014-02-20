@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
      <item>
       <widget class="rummikub::game::TableWidget" name="tableWidget" native="true">
        <property name="sizePolicy">
@@ -27,12 +27,14 @@
       </widget>
      </item>
      <item>
-      <widget class="rummikub::game::PlayerWidget" name="playerWidget" native="true"/>
+      <widget class="rummikub::game::PlayerWidget" name="playerWidget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <layout class="QVBoxLayout" name="commandLayout">
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
@@ -40,6 +42,9 @@
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>

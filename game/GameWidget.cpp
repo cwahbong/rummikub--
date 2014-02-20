@@ -1,11 +1,13 @@
 #include "GameWidget.h"
 #include "ui_GameWidget.h"
 
+#include "Player.h"
 #include "Rummikub.h"
 #include "StdMemory.h"
 
 #include "QRummikub.h"
 
+#include <QMessageBox>
 #include <QThread>
 
 namespace rummikub {
@@ -30,20 +32,47 @@ GameWidget::startNewGame()
   ui->doneButton->setEnabled(false);
 
   QRummikub* p_qRummikub = new QRummikub({{"player 1", nullptr}});
-  connect(this,        SIGNAL(readyForNewGame()),
-          p_qRummikub, SLOT(rummiStartGame()));
-  connect(p_qRummikub, SIGNAL(readyForResponse(QDelegate*)),
-          this,        SLOT(responseAsked(QDelegate*)));
+  connect(this,        &GameWidget::readyForNewGame,
+          p_qRummikub, &QRummikub::rummiStartGame);
+  connect(p_qRummikub, &QRummikub::readyForResponse,
+          this,        &GameWidget::responseAsked);
+
+  connect(p_qRummikub, &QRummikub::rummiTilePut,
+          this,        &GameWidget::someonePutTile);
+  connect(p_qRummikub, &QRummikub::rummiTileMoved,
+          this,        &GameWidget::someoneMoveTile);
+  connect(p_qRummikub, &QRummikub::rummiRestored,
+          this,        &GameWidget::someoneRestore);
+  connect(p_qRummikub, &QRummikub::rummiGameStarted,
+          this,        &GameWidget::onGameStarted);
+  connect(p_qRummikub, &QRummikub::rummiGameEnded,
+          this,        &GameWidget::onGameEnded);
+  connect(p_qRummikub, &QRummikub::rummiTurnStarted,
+          this,        &GameWidget::onTurnStarted);
+  connect(p_qRummikub, &QRummikub::rummiTurnEnded,
+          this,        &GameWidget::onTurnEnded);
 
   QThread* p_thread = new QThread();
-  connect(p_thread, SIGNAL(finished()),
-          p_thread, SLOT(deleteLater()));
-  connect(p_thread,    SIGNAL(finished()),
-          p_qRummikub, SLOT(deleteLater()));
+  connect(p_thread, &QThread::finished,
+          p_thread, &QThread::deleteLater);
+  connect(p_thread,    &QThread::finished,
+          p_qRummikub, &QRummikub::deleteLater);
   p_qRummikub->moveToThread(p_thread);
   p_thread->start();
 
   emit readyForNewGame();
+}
+
+void
+GameWidget::tileChoosed(TileWidget* p_tileWidget)
+{
+  auto* p_senderWidget = sender();
+  if (p_senderWidget == ui->playerWidget) {
+    selectTile(p_tileWidget, nullptr);
+  }
+  else if (p_senderWidget == ui->tableWidget) {
+    // TODO
+  }
 }
 
 void
@@ -55,15 +84,110 @@ GameWidget::responseAsked(QDelegate* p_qDelegate)
   p_qDelegate->startResponse();
 }
 
-void GameWidget::on_doneButton_clicked(bool)
+void
+GameWidget::someonePutTile(
+    const cs_ptr<Player>& sp_player,
+    const Tile& tile,
+    const cs_ptr<Set>& sp_set)
+{
+  if (false) { // ui not handle this player
+    // TODO UI perform put tile animation
+    // table.addTile(sp_set, tile);
+  }
+}
+
+void
+GameWidget::someoneMoveTile(
+    const cs_ptr<Player>& sp_player,
+    const Tile& tile,
+    const cs_ptr<Set>& sp_set_from,
+    const cs_ptr<Set>& sp_set_to)
+{
+  if (false) { // ui not handle this player
+    // TODO UI perform move tile animation
+    // table.moveTile(sp_set_from, sp_set_to, tile);
+  }
+}
+
+void
+GameWidget::someoneRestore(
+    const cs_ptr<Player>& sp_player,
+    const cs_ptr<Table>& sp_table)
+{
+  if (false) {
+    // TODO UI perform restore animation
+    // table.to(sp_table);
+  }
+}
+
+void
+GameWidget::onGameStarted()
+{
+  // TODO
+}
+
+void
+GameWidget::onGameEnded()
+{
+  // TODO announce the winner and the score
+}
+
+void
+GameWidget::onTurnStarted(
+    const cs_ptr<Player>& sp_player)
+{
+  QMessageBox::information(this, "turn started", "hi");
+  if (true) { // UI handle this player
+    ui->playerWidget->setTiles(sp_player->getHand());
+  } else {
+    // Showing that it is OOO's turn
+  }
+}
+
+void
+GameWidget::onTurnEnded(
+    const cs_ptr<Player>&)
+{
+  if (true) { // UI handle this player
+    // finalize the playerWidget
+    // playerWidget.setPlayer(nullptr);
+  } else {
+    // Showing that a player ends its turn
+  }
+}
+
+void
+GameWidget::selectTile(TileWidget* p_tileWidget, SetWidget* p_setWidget)
+{
+  _selectedTile = p_tileWidget;
+  _selectedSetFrom = p_setWidget;
+}
+
+void
+GameWidget::selectSetTo(SetWidget* p_setWidget)
+{
+
+  if (_selectedSetFrom) { // from other set
+    _p_qDelegate->moveTile(_selectedTile->getTile(), _selectedSetFrom->getSet(), p_setWidget->getSet());
+  }
+  else { // from hand
+    _p_qDelegate->putTile(_selectedTile->getTile(), p_setWidget->getSet());
+  }
+  _selectedTile = nullptr;
+  _selectedSetFrom = nullptr;
+}
+
+void
+GameWidget::on_doneButton_clicked(bool)
 {
   ui->restoreButton->setEnabled(false);
   ui->doneButton->setEnabled(false);
   _p_qDelegate->endResponse();
-  _p_qDelegate = NULL;
+  _p_qDelegate = nullptr;
 }
 
-void GameWidget::on_restoreButton_clicked(bool)
+void
+GameWidget::on_restoreButton_clicked(bool)
 {
   _p_qDelegate->restore();
 }
