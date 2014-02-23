@@ -64,15 +64,31 @@ GameWidget::startNewGame()
 }
 
 void
-GameWidget::tileChoosed(TileWidget* p_tileWidget)
+GameWidget::chooseTile(TileWidget* p_tileWidget, SetWidget* p_setWidget)
 {
   auto* p_senderWidget = sender();
   if (p_senderWidget == ui->playerWidget) {
-    selectTile(p_tileWidget, nullptr);
+    // ui->tableWidget->uncheckTiles();
   }
   else if (p_senderWidget == ui->tableWidget) {
-    // TODO
+    // ui->playerWidget->uncheckTiles();
   }
+  _selectedTile = p_tileWidget;
+  _selectedSetFrom = p_setWidget;
+}
+
+void
+GameWidget::chooseSet(SetWidget* p_setWidget)
+{
+  const auto sp_toSet = (p_setWidget ? p_setWidget->getSet() : s_ptr<Set>());
+  if (_selectedSetFrom) { // from other set
+    _p_qDelegate->moveTile(_selectedTile->getTile(), _selectedSetFrom->getSet(), sp_toSet);
+  }
+  else { // from hand
+    _p_qDelegate->putTile(_selectedTile->getTile(), sp_toSet);
+  }
+  _selectedTile = nullptr;
+  _selectedSetFrom = nullptr;
 }
 
 void
@@ -90,10 +106,8 @@ GameWidget::someonePutTile(
     const Tile& tile,
     const cs_ptr<Set>& sp_set)
 {
-  if (false) { // ui not handle this player
-    // TODO UI perform put tile animation
-    // table.addTile(sp_set, tile);
-  }
+  QMessageBox::information(this, "player put tile", "orz");
+  ui->tableWidget->addTile(sp_set, tile);
 }
 
 void
@@ -154,27 +168,6 @@ GameWidget::onTurnEnded(
   } else {
     // Showing that a player ends its turn
   }
-}
-
-void
-GameWidget::selectTile(TileWidget* p_tileWidget, SetWidget* p_setWidget)
-{
-  _selectedTile = p_tileWidget;
-  _selectedSetFrom = p_setWidget;
-}
-
-void
-GameWidget::selectSetTo(SetWidget* p_setWidget)
-{
-
-  if (_selectedSetFrom) { // from other set
-    _p_qDelegate->moveTile(_selectedTile->getTile(), _selectedSetFrom->getSet(), p_setWidget->getSet());
-  }
-  else { // from hand
-    _p_qDelegate->putTile(_selectedTile->getTile(), p_setWidget->getSet());
-  }
-  _selectedTile = nullptr;
-  _selectedSetFrom = nullptr;
 }
 
 void

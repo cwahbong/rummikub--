@@ -4,6 +4,7 @@
 #include "model/Hand.h"
 #include "StdMemory.h"
 
+#include "SetWidget.h"
 #include "TileWidget.h"
 
 #include <QWidget>
@@ -26,7 +27,7 @@ public:
   void setTiles(const cs_ptr<Hand>&);
 
 signals:
-  void tileChoosed(TileWidget*);
+  void tileChoosed(TileWidget*, SetWidget*);
 
 public slots:
   void insertTile(const Tile&);

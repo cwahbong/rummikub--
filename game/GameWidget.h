@@ -28,7 +28,8 @@ signals:
   void readyForNewGame();
 
 public slots:
-  void tileChoosed(TileWidget*);
+  void chooseTile(TileWidget*, SetWidget*);
+  void chooseSet(SetWidget*);
 
 private slots:
   void responseAsked(QDelegate*);
@@ -50,9 +51,6 @@ private slots:
   void onGameEnded();
   void onTurnStarted(const cs_ptr<Player>&);
   void onTurnEnded(const cs_ptr<Player>&);
-
-  void selectTile(TileWidget*, SetWidget*);
-  void selectSetTo(SetWidget*);
 
   void on_doneButton_clicked(bool);
   void on_restoreButton_clicked(bool);

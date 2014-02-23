@@ -3,9 +3,6 @@
 
 #include "TileWidget.h"
 
-#include <QSizePolicy>
-#include <QSpacerItem>
-
 namespace rummikub {
 namespace game {
 
@@ -27,8 +24,7 @@ PlayerWidget::setTiles(const cs_ptr<Hand>& sp_hand)
   for (auto* p_tileWidget : findChildren<TileWidget*>()) {
     delete p_tileWidget;
   }
-  auto* p_layout = layout();
-  p_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
+  auto* p_layout = ui->tilesLayout;
   for (const auto& tile : sp_hand->getKinds()) {
     for (auto c = sp_hand->count(tile); c > 0; --c) {
       auto* p_tileWidget = new TileWidget();
@@ -38,7 +34,6 @@ PlayerWidget::setTiles(const cs_ptr<Hand>& sp_hand)
       p_layout->addWidget(p_tileWidget);
     }
   }
-  p_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding));
 }
 
 void
@@ -58,7 +53,7 @@ PlayerWidget::tileToggled(bool checked)
 {
   auto* p_tileWidget = qobject_cast<TileWidget*>(sender());
   if (p_tileWidget && p_tileWidget->isChecked()) {
-    emit tileChoosed(p_tileWidget);
+    emit tileChoosed(p_tileWidget, nullptr);
   }
 }
 
