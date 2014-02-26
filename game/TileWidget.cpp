@@ -1,9 +1,13 @@
 #include "TileWidget.h"
 #include "ui_TileWidget.h"
 
+#include <QDrag>
+#include <QMimeData>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPen>
 
+#include <QMessageBox>
 
 namespace rummikub {
 namespace game {
@@ -30,13 +34,10 @@ TileWidget::getColorStyleSheet(const Color& c)
 }
 
 TileWidget::TileWidget(QWidget *parent)
-  : QAbstractButton(parent),
+  : QWidget(parent),
     ui(new Ui::TileWidget)
 {
   ui->setupUi(this);
-  setCheckable(true);
-  setAutoExclusive(true);
-  setAutoRepeat(false);
 }
 
 TileWidget::~TileWidget()
@@ -48,13 +49,39 @@ void
 TileWidget::paintEvent(QPaintEvent* event)
 {
   QWidget::paintEvent(event);
-  int lineWidth = (isChecked() ? 3 : 2);
+  int lineWidth = 2;
   int padding = lineWidth / 2;
   QPen pen;
   pen.setWidth(lineWidth);
   QPainter painter(this);
   painter.setPen(pen);
   painter.drawRoundedRect(padding, padding, width() - lineWidth, height() - lineWidth, 8.0, 6.0);
+}
+
+void
+TileWidget::mousePressEvent(QMouseEvent* event)
+{
+  if (event->button() == Qt::LeftButton) {
+    pressStartPoint = event->pos();
+  }
+}
+
+void
+TileWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  if (event->buttons() & Qt::LeftButton) {
+    if ((event->pos() - pressStartPoint).manhattanLength() >=
+        QApplication::startDragDistance()) {
+      event->accept();
+      QDrag* drag = new QDrag(this);
+      drag->setMimeData(new QMimeData);
+      drag->setPixmap(grab());
+      drag->setHotSpot(QPoint(16, 36));
+      setVisible(false);
+      drag->exec();
+      setVisible(true);
+    }
+  }
 }
 
 void

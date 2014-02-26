@@ -1,7 +1,7 @@
 #ifndef RUMMIKUB_GAME__TILEWIDGET_H
 #define RUMMIKUB_GAME__TILEWIDGET_H
 
-#include <QAbstractButton>
+#include <QWidget>
 
 #include "CoreFwd.h"
 #include "model/Tile.h"
@@ -13,7 +13,7 @@ class TileWidget;
 namespace rummikub {
 namespace game {
 
-class TileWidget : public QAbstractButton
+class TileWidget : public QWidget
 {
   Q_OBJECT
   static QString getColorStyleSheet(const Tile::Color&);
@@ -22,15 +22,19 @@ public:
   explicit TileWidget(QWidget *parent = 0);
   ~TileWidget();
 
-  void setTile(const Tile& tile);
+  void setTile(const Tile&);
   Tile getTile() const;
 
 protected:
-  virtual void paintEvent(QPaintEvent* event);
+  virtual void paintEvent(QPaintEvent*) override;
+
+  virtual void mousePressEvent(QMouseEvent*) override;
+  virtual void mouseMoveEvent(QMouseEvent*) override;
 
 private:
   Ui::TileWidget *ui;
   Tile m_tile{Tile::Color::INVALID, 14};
+  QPoint pressStartPoint;
 };
 
 } // namespace game
