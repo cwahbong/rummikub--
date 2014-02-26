@@ -27,9 +27,7 @@
       </widget>
      </item>
      <item>
-      <widget class="rummikub::game::PlayerWidget" name="playerWidget" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
-      </widget>
+      <widget class="rummikub::game::PlayerWidget" name="playerWidget" native="true"/>
      </item>
     </layout>
    </item>
