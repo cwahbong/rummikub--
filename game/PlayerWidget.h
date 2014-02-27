@@ -27,13 +27,15 @@ public:
   void setTiles(const cs_ptr<Hand>&);
 
 signals:
-  void tileChoosed(TileWidget*, SetWidget*);
+  void tileChosen(TileWidget*, SetWidget*);
 
 public slots:
   void insertTile(const Tile&);
   void removeTile(const Tile&);
 
-  void tileToggled(bool);
+private slots:
+  void onTileChosen();
+  void onTileUnchosen();
 
 private:
   Ui::PlayerWidget *ui;

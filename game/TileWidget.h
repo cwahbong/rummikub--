@@ -31,6 +31,10 @@ protected:
   virtual void mousePressEvent(QMouseEvent*) override;
   virtual void mouseMoveEvent(QMouseEvent*) override;
 
+signals:
+  void chosen();
+  void unchosen();
+
 private:
   Ui::TileWidget *ui;
   Tile m_tile{Tile::Color::INVALID, 14};

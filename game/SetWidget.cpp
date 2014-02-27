@@ -4,6 +4,7 @@
 #include "TileWidget.h"
 
 #include "model/Tile.h"
+#include "model/Set.h"
 
 #include <QLayout>
 
@@ -24,19 +25,31 @@ SetWidget::~SetWidget()
   delete ui;
 }
 
+void
+SetWidget::setSet(const cs_ptr<Set>& sp_set)
+{
+  for (auto* p_tileWidget : findChildren<TileWidget*>()) {
+    delete p_tileWidget;
+  }
+  for (const auto& tile : sp_set->getValidatedTiles()) {
+    insertTile(tile);
+  }
+}
+
 cs_ptr<Set>
 SetWidget::getSet()
 {
-  return sp_set;
+  return _sp_set;
 }
 
-/*
 void
 SetWidget::insertTile(const Tile& tile)
 {
   auto* p_tile = new TileWidget();
   p_tile->setTile(tile);
-  layout()->addWidget(p_tile);
+  ui->tilesLayout->addWidget(p_tile);
+  // connect(p_tileWidget, &TileWidget::toggled,
+  //         this, &PlayerWidget::tileToggled);
 }
 
 void
@@ -49,7 +62,6 @@ SetWidget::removeTile(const Tile& tile)
     }
   }
 }
-*/
 
 } // namespace game
 } // namespace rummikub

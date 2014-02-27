@@ -29,8 +29,10 @@ PlayerWidget::setTiles(const cs_ptr<Hand>& sp_hand)
     for (auto c = sp_hand->count(tile); c > 0; --c) {
       auto* p_tileWidget = new TileWidget();
       p_tileWidget->setTile(tile);
-      connect(p_tileWidget, &TileWidget::toggled,
-              this, &PlayerWidget::tileToggled);
+      connect(p_tileWidget, &TileWidget::chosen,
+              this, &PlayerWidget::onTileChosen);
+      connect(p_tileWidget, &TileWidget::unchosen,
+              this, &PlayerWidget::onTileUnchosen);
       p_layout->addWidget(p_tileWidget);
     }
   }
@@ -49,12 +51,16 @@ PlayerWidget::removeTile(const Tile&)
 }
 
 void
-PlayerWidget::tileToggled(bool checked)
+PlayerWidget::onTileChosen()
 {
   auto* p_tileWidget = qobject_cast<TileWidget*>(sender());
-  if (p_tileWidget && p_tileWidget->isChecked()) {
-    emit tileChoosed(p_tileWidget, nullptr);
-  }
+  emit tileChosen(p_tileWidget, nullptr);
+}
+
+void
+PlayerWidget::onTileUnchosen()
+{
+  emit tileChosen(nullptr, nullptr);
 }
 
 } // namespace game

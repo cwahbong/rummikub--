@@ -22,15 +22,15 @@ public:
   explicit SetWidget(QWidget *parent = 0);
   ~SetWidget();
 
+  void setSet(const cs_ptr<Set>&);
   cs_ptr<Set> getSet();
 
-private slots:
-  // void insertTile(const Tile& tile);
-  // void removeTile(const Tile& tile);
+  void insertTile(const Tile& tile);
+  void removeTile(const Tile& tile);
 
 private:
   Ui::SetWidget *ui;
-  cs_ptr<Set> sp_set;
+  cs_ptr<Set> _sp_set;
 };
 
 } // namespace game

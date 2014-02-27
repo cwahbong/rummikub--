@@ -77,8 +77,11 @@ TileWidget::mouseMoveEvent(QMouseEvent* event)
       drag->setMimeData(new QMimeData);
       drag->setPixmap(grab());
       drag->setHotSpot(QPoint(16, 36));
+
       setVisible(false);
+      emit chosen();
       drag->exec();
+      emit unchosen();
       setVisible(true);
     }
   }

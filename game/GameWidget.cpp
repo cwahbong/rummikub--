@@ -18,6 +18,10 @@ GameWidget::GameWidget(QWidget *parent) :
     ui(new Ui::GameWidget)
 {
     ui->setupUi(this);
+    connect(ui->playerWidget, &PlayerWidget::tileChosen,
+            this, &GameWidget::chooseTile);
+    connect(ui->tableWidget, &TableWidget::setChosen,
+            this, &GameWidget::chooseSet);
 }
 
 GameWidget::~GameWidget()
@@ -106,8 +110,7 @@ GameWidget::someonePutTile(
     const Tile& tile,
     const cs_ptr<Set>& sp_set)
 {
-  QMessageBox::information(this, "player put tile", "orz");
-  ui->tableWidget->addTile(sp_set, tile);
+  ui->tableWidget->putTile(tile, sp_set);
 }
 
 void

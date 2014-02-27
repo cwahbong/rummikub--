@@ -5,7 +5,12 @@
 #include "StdMemory.h"
 #include "model/Table.h"
 
+#include "TileWidget.h"
+#include "SetWidget.h"
+
 #include <QWidget>
+
+#include <map>
 
 namespace Ui {
 class TableWidget;
@@ -22,16 +27,24 @@ public:
   explicit TableWidget(QWidget *parent = 0);
   ~TableWidget();
 
-signals:
-  // void setInserted(const s_ptr<Set>&);
-  // void setRemoved(const s_ptr<Set>&);
+  void putTile(const Tile&, const cs_ptr<Set>&);
+  void moveTile(const Tile&, const cs_ptr<Set>&, const cs_ptr<Set>&);
+  void restore(const cs_ptr<Table>&);
 
-private slots:
-  // void insertSet(const s_ptr<Set>&);
-  // void removeSet(const s_ptr<Set>&);
-    
+  void insertSet(const cs_ptr<Set>&);
+
+protected:
+  virtual void dragEnterEvent(QDragEnterEvent*) override;
+  virtual void dragLeaveEvent(QDragLeaveEvent*) override;
+  virtual void dropEvent(QDropEvent*) override;
+
+signals:
+  void tileChosen(TileWidget*, SetWidget*);
+  void setChosen(SetWidget*);
+
 private:
   Ui::TableWidget *ui;
+  std::map<cs_ptr<Set>, SetWidget*> _setMap;
 };
 
 } // namespace game
