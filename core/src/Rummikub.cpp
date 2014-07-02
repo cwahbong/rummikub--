@@ -93,18 +93,19 @@ public:
     if (!sp_hand->hasTile(tile)) return false;
     const auto& sp_newSet = const_pointer_cast<Set>(sp_set ? sp_set : sp_table->addSet());
     sp_newSet->insert(tile);
-    wp_eventReceiver.lock()->tilePut(sp_player, tile, sp_set);
+    wp_eventReceiver.lock()->tilePut(sp_player, tile, sp_newSet);
     sp_hand->removeTile(tile);
     ++put;
     return true;
   }
 
   bool moveTile(Tile tile, const cs_ptr<Set>& sp_from, const cs_ptr<Set>& sp_to) {
-    if (!sp_from || !sp_to) return false;
+    if (!sp_from) return false;
+    const auto& sp_newTo = const_pointer_cast<Set>(sp_to ? sp_to : sp_table->addSet());
+    const_pointer_cast<Set>(sp_newTo)->insert(tile);
     if (!const_pointer_cast<Set>(sp_from)->remove(tile)) return false;
     sp_table->clean();
-    const_pointer_cast<Set>(sp_to)->insert(tile);
-    wp_eventReceiver.lock()->tileMoved(sp_player, tile, sp_from, sp_to);
+    wp_eventReceiver.lock()->tileMoved(sp_player, tile, sp_from, sp_newTo);
     return true;
   }
 
