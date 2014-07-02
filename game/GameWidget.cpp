@@ -10,6 +10,8 @@
 #include <QMessageBox>
 #include <QThread>
 
+#include <QDebug>
+
 namespace rummikub {
 namespace game {
 
@@ -22,6 +24,8 @@ GameWidget::GameWidget(QWidget *parent) :
             this, &GameWidget::chooseTile);
     connect(ui->tableWidget, &TableWidget::setChosen,
             this, &GameWidget::chooseSet);
+    connect(ui->tableWidget, &TableWidget::tileChosen,
+            this, &GameWidget::chooseTile);
 }
 
 GameWidget::~GameWidget()
@@ -70,15 +74,10 @@ GameWidget::startNewGame()
 void
 GameWidget::chooseTile(TileWidget* p_tileWidget, SetWidget* p_setWidget)
 {
-  auto* p_senderWidget = sender();
-  if (p_senderWidget == ui->playerWidget) {
-    // ui->tableWidget->uncheckTiles();
+  if (p_tileWidget) {
+    _selectedTile = p_tileWidget;
+    _selectedSetFrom = p_setWidget;
   }
-  else if (p_senderWidget == ui->tableWidget) {
-    // ui->playerWidget->uncheckTiles();
-  }
-  _selectedTile = p_tileWidget;
-  _selectedSetFrom = p_setWidget;
 }
 
 void
@@ -86,10 +85,18 @@ GameWidget::chooseSet(SetWidget* p_setWidget)
 {
   const auto sp_toSet = (p_setWidget ? p_setWidget->getSet() : s_ptr<Set>());
   if (_selectedSetFrom) { // from other set
-    _p_qDelegate->moveTile(_selectedTile->getTile(), _selectedSetFrom->getSet(), sp_toSet);
+    if (_selectedSetFrom->getSet() != sp_toSet) {
+      emit tileMoved(_selectedTile->getTile(), _selectedSetFrom->getSet(), sp_toSet);
+      qDebug() << "Move" << _selectedTile->getTile().getValue();
+    }
   }
   else { // from hand
-    _p_qDelegate->putTile(_selectedTile->getTile(), sp_toSet);
+    if (_selectedTile) {
+      emit tilePut(_selectedTile->getTile(), sp_toSet);
+      qDebug() << "Put" << _selectedTile->getTile().getValue() << sp_toSet.get();
+    } else {
+      qDebug() << "ChooseSet error: no tile selected.";
+    }
   }
   _selectedTile = nullptr;
   _selectedSetFrom = nullptr;
@@ -100,8 +107,15 @@ GameWidget::responseAsked(QDelegate* p_qDelegate)
 {
   ui->restoreButton->setEnabled(true);
   ui->doneButton->setEnabled(true);
-  _p_qDelegate = p_qDelegate;
-  p_qDelegate->startResponse();
+  connect(this, &GameWidget::tilePut,
+          p_qDelegate, &QDelegate::putTile);
+  connect(this, &GameWidget::tileMoved,
+          p_qDelegate, &QDelegate::moveTile);
+  connect(this, &GameWidget::restored,
+          p_qDelegate, &QDelegate::restore);
+  connect(this, &GameWidget::endResponse,
+          p_qDelegate, &QDelegate::endResponse);
+  qDebug() << "GameWidget response asked.\n";
 }
 
 void
@@ -110,7 +124,11 @@ GameWidget::someonePutTile(
     const Tile& tile,
     const cs_ptr<Set>& sp_set)
 {
+  qDebug() << "someone put tile.\n";
   ui->tableWidget->putTile(tile, sp_set);
+  if (true) { // ui handled player
+    ui->playerWidget->removeTile(tile);
+  }
 }
 
 void
@@ -121,8 +139,10 @@ GameWidget::someoneMoveTile(
     const cs_ptr<Set>& sp_set_to)
 {
   if (false) { // ui not handle this player
-    // TODO UI perform move tile animation
-    // table.moveTile(sp_set_from, sp_set_to, tile);
+    ui->tableWidget->animateMoveTile(sp_set_from, sp_set_to, tile);
+  } else {
+    qDebug() << "GameWidget: someoneMoveTile";
+    ui->tableWidget->moveTile(tile, sp_set_from, sp_set_to);
   }
 }
 
@@ -131,10 +151,9 @@ GameWidget::someoneRestore(
     const cs_ptr<Player>& sp_player,
     const cs_ptr<Table>& sp_table)
 {
-  if (false) {
-    // TODO UI perform restore animation
-    // table.to(sp_table);
-  }
+  // ui->tableWidget->animateTo(sp_table);
+  ui->tableWidget->restore(sp_table);
+  ui->playerWidget->setTiles(sp_player->getHand());
 }
 
 void
@@ -154,6 +173,7 @@ GameWidget::onTurnStarted(
     const cs_ptr<Player>& sp_player)
 {
   QMessageBox::information(this, "turn started", "hi");
+  // ui->tableWidget->setTable(p_qDelegate->getTable());
   if (true) { // UI handle this player
     ui->playerWidget->setTiles(sp_player->getHand());
   } else {
@@ -165,9 +185,9 @@ void
 GameWidget::onTurnEnded(
     const cs_ptr<Player>&)
 {
+  // ui->tableWidget->setTable(p_qDelegate->getTable());
   if (true) { // UI handle this player
-    // finalize the playerWidget
-    // playerWidget.setPlayer(nullptr);
+    // playerWidget.setTiles(sp_player->getHand());
   } else {
     // Showing that a player ends its turn
   }
@@ -178,14 +198,13 @@ GameWidget::on_doneButton_clicked(bool)
 {
   ui->restoreButton->setEnabled(false);
   ui->doneButton->setEnabled(false);
-  _p_qDelegate->endResponse();
-  _p_qDelegate = nullptr;
+  emit endResponse();
 }
 
 void
 GameWidget::on_restoreButton_clicked(bool)
 {
-  _p_qDelegate->restore();
+  emit restored();
 }
 
 } // namespace game

@@ -26,6 +26,16 @@ public:
 
 signals:
   void readyForNewGame();
+  void endResponse();
+
+  void tilePut(
+      const Tile&,
+      const cs_ptr<Set>&);
+  void tileMoved(
+      const Tile&,
+      const cs_ptr<Set>&,
+      const cs_ptr<Set>&);
+  void restored();
 
 public slots:
   void chooseTile(TileWidget*, SetWidget*);

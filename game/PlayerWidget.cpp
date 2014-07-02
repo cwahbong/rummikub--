@@ -3,6 +3,8 @@
 
 #include "TileWidget.h"
 
+#include <QMessageBox>
+
 namespace rummikub {
 namespace game {
 
@@ -31,8 +33,6 @@ PlayerWidget::setTiles(const cs_ptr<Hand>& sp_hand)
       p_tileWidget->setTile(tile);
       connect(p_tileWidget, &TileWidget::chosen,
               this, &PlayerWidget::onTileChosen);
-      connect(p_tileWidget, &TileWidget::unchosen,
-              this, &PlayerWidget::onTileUnchosen);
       p_layout->addWidget(p_tileWidget);
     }
   }
@@ -45,9 +45,15 @@ PlayerWidget::insertTile(const Tile&)
 }
 
 void
-PlayerWidget::removeTile(const Tile&)
+PlayerWidget::removeTile(const Tile& tile)
 {
-  // TODO
+  for (auto* p_tileWidget : findChildren<TileWidget*>()) {
+    if (p_tileWidget->getTile() == tile) {
+      p_tileWidget->deleteLater();
+      return;
+    }
+  }
+  QMessageBox::critical(this, "PlayerWidget", "remove tile failed.");
 }
 
 void
@@ -55,12 +61,6 @@ PlayerWidget::onTileChosen()
 {
   auto* p_tileWidget = qobject_cast<TileWidget*>(sender());
   emit tileChosen(p_tileWidget, nullptr);
-}
-
-void
-PlayerWidget::onTileUnchosen()
-{
-  emit tileChosen(nullptr, nullptr);
 }
 
 } // namespace game

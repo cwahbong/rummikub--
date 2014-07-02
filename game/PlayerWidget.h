@@ -35,7 +35,6 @@ public slots:
 
 private slots:
   void onTileChosen();
-  void onTileUnchosen();
 
 private:
   Ui::PlayerWidget *ui;

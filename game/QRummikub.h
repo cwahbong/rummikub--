@@ -8,8 +8,6 @@
 #include "EventReceiver.h"
 #include "StdMemory.h"
 
-#include <QMutex>
-#include <QWaitCondition>
 #include <QObject>
 
 #include <map>
@@ -90,8 +88,6 @@ private:
   const s_ptr<EventReceiver>& _sp_eventReceiver;
   const s_ptr<Agent>& _sp_agent;
   u_ptr<Rummikub> _up_rummikub;
-  QMutex _rummiMutex;
-  QWaitCondition _rummiWaitCondition;
 };
 
 } // namespace game

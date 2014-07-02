@@ -8,7 +8,8 @@
   using std::string;
   using std::move;
 
-#include <QWaitCondition>
+#include <QDebug>
+#include <QEventLoop>
 
 namespace rummikub {
 namespace game {
@@ -163,11 +164,13 @@ void
 QRummikub::response(
     const s_ptr<Delegate>& sp_delegate)
 {
-  _rummiMutex.lock();
-  QDelegate qDelegate(sp_delegate, &_rummiMutex, &_rummiWaitCondition);
+  QDelegate qDelegate(sp_delegate);
+  QEventLoop eventLoop;
+  connect(&qDelegate, &QDelegate::endResponse,
+          &eventLoop, &QEventLoop::quit);
   emit readyForResponse(&qDelegate);
-  _rummiWaitCondition.wait(&_rummiMutex);
-  _rummiMutex.unlock();
+  eventLoop.exec();
+  qDebug() << "QRummikub response end.";
 }
 
 void

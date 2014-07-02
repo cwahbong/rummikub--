@@ -5,6 +5,8 @@
 
 #include "CoreFwd.h"
 
+#include "TileWidget.h"
+
 #include <QWidget>
 
 namespace Ui {
@@ -27,6 +29,18 @@ public:
 
   void insertTile(const Tile& tile);
   void removeTile(const Tile& tile);
+
+signals:
+  void chosen();
+  void tileChosen(TileWidget*);
+
+protected:
+  virtual void dragEnterEvent(QDragEnterEvent*) override;
+  virtual void dragLeaveEvent(QDragLeaveEvent*) override;
+  virtual void dropEvent(QDropEvent*) override;
+
+private slots:
+  void onTileChosen();
 
 private:
   Ui::SetWidget *ui;

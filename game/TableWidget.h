@@ -33,6 +33,9 @@ public:
 
   void insertSet(const cs_ptr<Set>&);
 
+  void animateMoveTile(const cs_ptr<Set>&, const cs_ptr<Set>&, const Tile&);
+  void animateTo(const cs_ptr<Table>&);
+
 protected:
   virtual void dragEnterEvent(QDragEnterEvent*) override;
   virtual void dragLeaveEvent(QDragLeaveEvent*) override;
@@ -41,6 +44,10 @@ protected:
 signals:
   void tileChosen(TileWidget*, SetWidget*);
   void setChosen(SetWidget*);
+
+private slots:
+  void onSetChosen();
+  void onTileChosen(TileWidget*);
 
 private:
   Ui::TableWidget *ui;

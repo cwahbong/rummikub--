@@ -6,8 +6,6 @@
 #include "StdMemory.h"
 #include "model/Tile.h"
 
-#include <QMutex>
-#include <QWaitCondition>
 #include <QWidget>
 
 namespace rummikub {
@@ -18,22 +16,19 @@ class QDelegate : public QWidget
   Q_OBJECT
 
 public:
-  QDelegate(
-      const s_ptr<Agent::Delegate>& sp_delegate,
-      QMutex* p_mutex,
-      QWaitCondition* p_waitCondition);
+  QDelegate(const s_ptr<Agent::Delegate>& sp_delegate);
 
-  void startResponse();
+signals:
   void endResponse();
 
 public slots:
 
   void putTile(
-      Tile tile,
+      const Tile& tile,
       const cs_ptr<Set>& sp_set);
 
   void moveTile(
-      Tile tile,
+      const Tile& tile,
       const cs_ptr<Set>& sp_from,
       const cs_ptr<Set>& sp_to);
 
@@ -49,8 +44,6 @@ public slots:
 
 private:
   const s_ptr<Agent::Delegate> _sp_delegate;
-  QMutex* _p_mutex;
-  QWaitCondition* _p_waitCondition;
 };
 
 } // game
