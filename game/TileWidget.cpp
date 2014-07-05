@@ -81,7 +81,6 @@ TileWidget::mouseMoveEvent(QMouseEvent* event)
       setVisible(false);
       emit chosen();
       drag->exec();
-      emit unchosen();
       setVisible(true);
     }
   }

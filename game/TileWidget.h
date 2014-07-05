@@ -33,7 +33,6 @@ protected:
 
 signals:
   void chosen();
-  void unchosen();
 
 private:
   Ui::TileWidget *ui;
