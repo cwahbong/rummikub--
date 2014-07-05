@@ -24,6 +24,7 @@ class QRummikub : public QObject,
 {
   Q_OBJECT
   QRummikub(const QRummikub&) = delete;
+  QRummikub& operator=(const QRummikub&) = delete;
 
 public:
   explicit QRummikub(std::map<std::string, s_ptr<Agent>>, QObject *parent = 0);
